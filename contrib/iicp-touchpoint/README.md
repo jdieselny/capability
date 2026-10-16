@@ -35,7 +35,7 @@ operation = { "id": "std/payments-v1:transfer",
 `out-python.txt` 与 `out-typescript.txt` 的 sha256 相同：
 
 ```
-293b4a22e8377037daae9330dfaf0c006c31a06f6884b35b4d6825c32a8d6544
+b74ddd73b9844063bd163eb9a565bd82a2863054bdcb9e91f4784f8f193d9e45
 ```
 
 | 例 | 场景 | CLC 判定 |
@@ -78,8 +78,10 @@ admission-v2 自己在 failover 上的要求一致。
 
 ```bash
 cd contrib/iicp-touchpoint
-PYTHONPATH=/home/varwof/src/github.com/clc-python python3 probe.py | tee out-python.txt
-node --disable-warning=ExperimentalWarning --experimental-strip-types probe.mjs | tee out-typescript.txt
+export CLC_PY_DIR=/path/to/aic-capability-demo
+export CLC_TS_FILE=file:///path/to/aic-capability-demo/ts/clc_semantics.ts
+python3 probe.py > out-python.txt
+node --disable-warning=ExperimentalWarning --experimental-strip-types probe.mjs > out-typescript.txt
 cmp out-python.txt out-typescript.txt && echo AGREE
 ```
 

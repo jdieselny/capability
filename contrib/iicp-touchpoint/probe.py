@@ -12,8 +12,9 @@ unknown required constraint / retry to another provider。
 （action `transfer`；params `amount` number、`currency` 大写 ISO 枚举、
 `counterparty` 数组），而不是自造名字。
 
-运行：
-  PYTHONPATH=/home/varwof/src/github.com/clc-python python3 probe.py
+运行（实现路径可配）：
+  export CLC_PY_DIR=/path/to/an/implementation   # 默认 /home/varwof/src/github.com/clc-python
+  python3 probe.py
 """
 import json
 import os

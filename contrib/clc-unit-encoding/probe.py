@@ -5,8 +5,9 @@
 是否可直接表达，并产出可与 TypeScript 侧逐字比对的判定与 reason。
 
 依赖：clc-python（本机 /home/varwof/src/github.com/clc-python）。
-运行：
-  PYTHONPATH=/home/varwof/src/github.com/clc-python python3 probe.py
+运行（实现路径可配）：
+  export CLC_PY_DIR=/path/to/an/implementation   # 默认 /home/varwof/src/github.com/clc-python
+  python3 probe.py
 """
 import json
 

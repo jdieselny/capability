@@ -30,8 +30,10 @@ CLC §6.2 的 `object` 规则是 "every grant key in op, **values recurse**"—�
 
 ```bash
 cd contrib/clc-unit-encoding
-PYTHONPATH=/home/varwof/src/github.com/clc-python python3 probe.py | tee out-python.txt
-node --disable-warning=ExperimentalWarning --experimental-strip-types probe.mjs | tee out-typescript.txt
+export CLC_PY_DIR=/path/to/aic-capability-demo
+export CLC_TS_FILE=file:///path/to/aic-capability-demo/ts/clc_semantics.ts
+python3 probe.py > out-python.txt
+node --disable-warning=ExperimentalWarning --experimental-strip-types probe.mjs > out-typescript.txt
 cmp out-python.txt out-typescript.txt && echo AGREE
 ```
 
@@ -40,10 +42,10 @@ cmp out-python.txt out-typescript.txt && echo AGREE
 `out-python.txt` 与 `out-typescript.txt` 的 sha256 相同：
 
 ```
-0bd2337de2bfd0fc818f76def13bc04f3348a73373aea15f12b1facccecfda30
+9221ddc6fe78c54e3819268cb03b6d81800ead3554c2513726e3861027e4598c
 ```
 
-（两者均声明 `CLC_REVISION = CLC-1.15`。）
+（两者均声明 `CLC_REVISION = CLC-1.17`——由维护中的 `aic-capability-demo` 端口产生。）
 
 | 用例 | 判定 / reason |
 |---|---|
