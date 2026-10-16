@@ -30,7 +30,7 @@ operation = { "id": "std/payments-v1:transfer",
 若某 scheme 要把量与单位绑成一个值，也可用对象 `{value, unit}`——见
 `../clc-unit-encoding/README.md`，那是同一机制的另一种编码。）
 
-## 二、结果（11 例；两实现**逐字节一致**）
+## 二、结果（12 例；两实现**逐字节一致**）
 
 `out-python.txt` 与 `out-typescript.txt` 的 sha256 相同：
 
