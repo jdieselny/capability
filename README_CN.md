@@ -94,11 +94,26 @@ CLC 与本仓的语料面向**第三方可用**，而不是作者专有：
 - [`docs/reference/`](docs/reference/) —— **16 页可读语言参考**（开发者文档，非规范正本）。
   中文版：[`docs/reference/zh/`](docs/reference/zh/)，与英文参考页同步维护，已覆盖 §13 与附录 C。
 
+## 当前语言版本
+
+本仓语言的当前修订为 **CLC-1.17**：规范在 §12.1 中声明该版本，语料带有标注到
+该版本的向量，三个消费方实现（`register` 的 Go、`aic-capability-demo` 的
+Python/TypeScript）均在同一版本上。逐版差异与裁决影响见
+[`docs/capability-language-core-v1.md`](docs/capability-language-core-v1.md)
+的 changelog 表。
+
+已发布的 Internet-Draft
+[`draft-wei-capability-language-core-00`](https://datatracker.ietf.org/doc/draft-wei-capability-language-core/)
+为 **CLC-1.15**。两者相差两版，其中 **CLC-1.16**（I-JSON 整数上界、前导 BOM 拒绝、
+宿主数值载体归一化、§13.4.3 params 收窄决策表）**含裁决变更**。因此按 -00 文本
+实现的实现方，在该子集上与本仓行为不同，且在 §12.1 的 minor 门之下，面对标注为
+CLC-1.16/1.17 的输入会 fail-closed 拒绝。引用行为时请引**仓库版本**。
+
 ## CLC-v1 一致性向量与 scheme
 
 本仓同时承载 **CLC-v1**（极小能力判定语言）的机器可读部分：
 
-- `data/_vectors/clc-v1/` —— **146 条一致性向量**与 **32 条证据侧向量**
+- `data/_vectors/clc-v1/` —— **154 条一致性向量**与 **32 条证据侧向量**
   （`evidence-vectors.json`：证据约束、requirements、`ActionId` 与 `Match`）、
   `vectors.schema.json`、`clc-v1-ambiguities.md`（裁决记录）、
   **1184 条确定性 P11 属性用例**（`property-cases.json`，由
@@ -112,10 +127,14 @@ CLC 与本仓的语料面向**第三方可用**，而不是作者专有：
   `allow_unresolved` 独立 verdict 与 §9.1 多 grant 聚合；属性测试与 offline 检查在 CI 中
   运行（`scripts/`）。
 - `data/_vectors/clc-d/` —— **CLC-D 委派包含**语料（rev CLC-1.9，规范 §13）：
-  **64 条包含向量**、**784 条前向闭包属性用例**（`scripts/gen-contain-property-cases.py`）
+  **64 条包含向量**、**784 条前向闭包属性用例**（`scripts/gen-contain-property-cases.py`，
+  同时承载 §13.3 反对称断言）
   与 **44 条跨厂商 crosswalk 向量**（AIC-JWT DA、OAuth RAR、UCAN、委派链、ATN、AAT、AIP、
-  AAE、AOA、AEGIS）。该关系及其 profile 契约、reason code 与载体映射见规范 §13 与附录 C。
-- `data/_vectors/clc-v1/param-bounds-vectors.json` —— §6.5 扩展参数界的 **43 条向量**
+  AAE、AOA、AEGIS，含 §13.8.1 义务三的 `out_of_scope` 声明），另有 §13.5 的
+  **3 条 reason 折叠策略向量**（`reason-collapse-vectors.json`）与 profile 持有的
+  §13.4.5 **5 条 AIC-JWT DA 模式格向量**（`profile-owned/`）。该关系及其 profile
+  契约、reason code 与载体映射见规范 §13 与附录 C。
+- `data/_vectors/clc-v1/param-bounds-vectors.json` —— §6.5 扩展参数界的 **49 条向量**
   （rev CLC-1.10）：闭区间、`step`、枚举基数、可选键、嵌套递归、scheme 默认值与
   单表示绑定规则，配 `param-bounds-vectors.schema.json`。
 - `data/_vectors/clc-v1/resolve-vectors.json` —— §8.5 `Resolve` 消费方循环的 **26 条向量**

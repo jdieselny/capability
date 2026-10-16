@@ -282,10 +282,10 @@ three agree.
 
 | Item | State |
 |---|---|
-| Conformance corpus | `vectors.json` — **120 vectors** (syntax 9 / entail 47 / intersect 14 / decide 50) |
-| Revision extensions | `param-bounds-vectors.json` — **43** §6.5 vectors (CLC-1.10); `resolve-vectors.json` — **26** §8.5 vectors (CLC-1.11); `constraint-union-vectors.json` — **12** §7.1 vectors (CLC-1.12); `authorize-chain-vectors.json` — **15** §13.11 vectors (CLC-1.13/1.14); `param-bounds-meet-vectors.json` — **25** §6.6 vectors (CLC-1.14) |
+| Conformance corpus | `vectors.json` — **154 vectors** (syntax 9 / entail 65 / intersect 17 / decide 63) |
+| Revision extensions | `param-bounds-vectors.json` — **49** §6.5 vectors (CLC-1.10; corner pins in CLC-1.17); `resolve-vectors.json` — **26** §8.5 vectors (CLC-1.11); `constraint-union-vectors.json` — **12** §7.1 vectors (CLC-1.12); `authorize-chain-vectors.json` — **15** §13.11 vectors (CLC-1.13/1.14); `param-bounds-meet-vectors.json` — **27** §6.6 vectors (CLC-1.14/1.15) |
 | Property corpus | `property-cases.json` — 1184 deterministic P11 cases, reproducible byte-for-byte |
-| Implementations | Go (`varwof/register`), Python and TypeScript (`varwof/aic-capability-demo`) — all three 120/120, 1184/1184, param-bounds 43/43, resolve 26/26, constraint-union 12/12, authorize-chain 15/15 and param-bounds-meet 25/25 (0 failures; counters 869/841) |
+| Implementations | Go (`varwof/register`), Python and TypeScript (`varwof/aic-capability-demo`) — all three 154/154, 1184/1184, param-bounds 49/49, resolve 26/26, constraint-union 12/12, authorize-chain 15/15 and param-bounds-meet 27/27 (0 failures; counters 869/841) |
 | Schema | `vectors.schema.json` (verdict enum incl. `allow_unresolved`, `multi` switch), `param-bounds-vectors.schema.json`, `resolve-vectors.schema.json`, `constraint-union-vectors.schema.json`, `authorize-chain-vectors.schema.json` and `param-bounds-meet-vectors.schema.json`, enforced in CI together with the documented counts |
 
 Engineering discipline carried from the principles: one contract with several

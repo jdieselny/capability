@@ -733,5 +733,107 @@
     },
     "expect": {"verdict": "allow"},
     "derivation": "a default for a key the grant does not declare is not injected"
+  },
+  {
+    "id": "pb-044",
+    "kind": "param-bounds",
+    "spec_clause": "CLC-v1 §6.5 (numeric family, negative axis, inclusive min/max), §9.1 layer 9",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "param_bounds": {"n": {"min": -5, "max": -1}}
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {"n": -3}
+    },
+    "expect": {"verdict": "allow"},
+    "derivation": "a negative axis is an ordinary inclusive interval: -5 <= -3 <= -1 (rev CLC-1.17)"
+  },
+  {
+    "id": "pb-045",
+    "kind": "param-bounds",
+    "spec_clause": "CLC-v1 §6.5 (below min, negative axis), §9.1 layer 9",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "param_bounds": {"n": {"min": -5, "max": -1}}
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {"n": -6}
+    },
+    "expect": {"verdict": "deny", "reason": "params_out_of_range"},
+    "derivation": "-6 < -5: below the negative min (rev CLC-1.17)"
+  },
+  {
+    "id": "pb-046",
+    "kind": "param-bounds",
+    "spec_clause": "CLC-v1 §6.5 (above max, negative axis), §9.1 layer 9",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "param_bounds": {"n": {"min": -5, "max": -1}}
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {"n": 0}
+    },
+    "expect": {"verdict": "deny", "reason": "params_out_of_range"},
+    "derivation": "0 > -1: above the negative max (rev CLC-1.17)"
+  },
+  {
+    "id": "pb-047",
+    "kind": "param-bounds",
+    "spec_clause": "CLC-v1 §6.5 (step, binary64 arithmetic), §9.1 layer 9",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "param_bounds": {"amount": {"step": 0.1}}
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {"amount": 0.3}
+    },
+    "expect": {"verdict": "deny", "reason": "params_not_multiple"},
+    "derivation": "0.3/0.1 is 2.9999999999999996 in binary64, not an integer: the step rule is arithmetic on the binary64 values, so a decimal-looking multiple can fail (rev CLC-1.17)"
+  },
+  {
+    "id": "pb-048",
+    "kind": "param-bounds",
+    "spec_clause": "CLC-v1 §6.5 (step, binary64 arithmetic), §9.1 layer 9",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "param_bounds": {"amount": {"step": 0.1}}
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {"amount": 0.2}
+    },
+    "expect": {"verdict": "allow"},
+    "derivation": "0.2/0.1 is exactly 2.0 in binary64, so 0.2 is a step multiple (rev CLC-1.17)"
+  },
+  {
+    "id": "pb-049",
+    "kind": "param-bounds",
+    "spec_clause": "CLC-v1 §6.5 (numeric family, zero-sign bound), §9.1 layer 9",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "param_bounds": {"n": {"min": -0.0, "max": 0.0}}
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {"n": -0.0}
+    },
+    "expect": {"verdict": "allow"},
+    "derivation": "-0.0 and 0.0 are the same JSON number: the singleton interval [0,0] contains negative zero (rev CLC-1.17)"
   }
 ]

@@ -3414,5 +3414,198 @@
       "reason": "invalid_params_number"
     },
     "derivation": "BOM × size precedence (§6.2 step 8 with step 5): this text is both BOM-prefixed and over the 512-octet cap. The BOM is refused before parsing, so it outranks the size check and the stable code is invalid_params_number, not invalid_params_size."
+  },
+  {
+    "id": "params-063",
+    "kind": "entail",
+    "spec_clause": "CLC-v1 §6.2 (rev CLC-1.17)",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 0
+      }
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 0
+      }
+    },
+    "raw_params": "{\"n\":-0}",
+    "expect": {
+      "verdict": "allow"
+    },
+    "derivation": "zero sign is not a number distinction: the raw token `-0` and `0` denote the same JSON number (§6.2 step 3, number identity; JCS renders both as `0`), so the granted upper bound 0 is met (rev CLC-1.17)."
+  },
+  {
+    "id": "params-064",
+    "kind": "entail",
+    "spec_clause": "CLC-v1 §6.2 (rev CLC-1.17)",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 1000
+      }
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 1000
+      }
+    },
+    "raw_params": "{\"n\":1e3}",
+    "expect": {
+      "verdict": "allow"
+    },
+    "derivation": "number identity is the value, not the spelling: `1e3` and `1000` are one JSON number after step-1 canonicalization (§6.2 step 3), so 1000 <= 1000 (rev CLC-1.17)."
+  },
+  {
+    "id": "params-065",
+    "kind": "entail",
+    "spec_clause": "CLC-v1 §6.2 (rev CLC-1.17)",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 0.0015
+      }
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 0.0015
+      }
+    },
+    "raw_params": "{\"n\":1.5e-3}",
+    "expect": {
+      "verdict": "allow"
+    },
+    "derivation": "`1.5e-3` and `0.0015` are one JSON number (§6.2 step 3): a fraction's exponent spelling does not change the value (rev CLC-1.17)."
+  },
+  {
+    "id": "params-066",
+    "kind": "entail",
+    "spec_clause": "CLC-v1 §6.2 (rev CLC-1.17)",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 1e+100
+      }
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 1e+100
+      }
+    },
+    "raw_params": "{\"n\":1e100}",
+    "expect": {
+      "verdict": "deny",
+      "reason": "invalid_params_number"
+    },
+    "derivation": "exactly-representable over-bound value: binary64 holds `1e100` exactly, but it is integer-valued with magnitude > 2^53 - 1, so the I-JSON integer bound refuses it on the mathematical value - acceptance must not turn on the carrier's representability (§6.2 step 3, rev CLC-1.17)."
+  },
+  {
+    "id": "params-067",
+    "kind": "entail",
+    "spec_clause": "CLC-v1 §6.2 (rev CLC-1.17)",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 1.7976931348623157e+308
+      }
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 1.7976931348623157e+308
+      }
+    },
+    "raw_params": "{\"n\":1.7976931348623157e308}",
+    "expect": {
+      "verdict": "deny",
+      "reason": "invalid_params_number"
+    },
+    "derivation": "the largest finite binary64 is integer-valued and exceeds 2^53 - 1, so the I-JSON integer bound refuses it like any other over-bound integer-valued number, representable though it is (§6.2 step 3, rev CLC-1.17)."
+  },
+  {
+    "id": "params-068",
+    "kind": "entail",
+    "spec_clause": "CLC-v1 §6.2 (rev CLC-1.17)",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 5e-324
+      }
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 0
+      }
+    },
+    "expect": {
+      "verdict": "allow"
+    },
+    "derivation": "a subnormal is a finite in-range number, not a special case: 5e-324 is the smallest positive binary64 and 0 <= 5e-324, so the granted upper bound is met (§6.2 step 3, rev CLC-1.17)."
+  },
+  {
+    "id": "params-069",
+    "kind": "entail",
+    "spec_clause": "CLC-v1 §6.2 (rev CLC-1.17)",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 0
+      }
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 5e-324
+      }
+    },
+    "raw_params": "{\"n\":5e-324}",
+    "expect": {
+      "verdict": "deny",
+      "reason": "params_exceed_grant"
+    },
+    "derivation": "the inverse bound direction: 5e-324 > 0, so a zero upper bound is exceeded by the smallest positive subnormal (§6.2 step 3, rev CLC-1.17)."
+  },
+  {
+    "id": "params-070",
+    "kind": "entail",
+    "spec_clause": "CLC-v1 §6.2 (rev CLC-1.17)",
+    "clc_revision": "CLC-1.17",
+    "conformance_class": "CLC-A",
+    "grant": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": -0.0
+      }
+    },
+    "request": {
+      "id": "std/database-v1:query:SELECT",
+      "params": {
+        "n": 0.0
+      }
+    },
+    "expect": {
+      "verdict": "allow"
+    },
+    "derivation": "decoded negative zero: a `-0.0` grant and a `0.0` request are the same JSON number, so the upper bound is met (§6.2 step 3, number identity; rev CLC-1.17)."
   }
 ]

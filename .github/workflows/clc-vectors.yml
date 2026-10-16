@@ -95,6 +95,36 @@ jobs:
           print(f"schema OK, {len(v)} containment vectors")
           PY
 
+      - name: Validate the CLC-D containment cross-walk vectors against their schema
+        run: |
+          python3 - <<'PY'
+          import json, jsonschema
+          v = json.load(open("data/_vectors/clc-d/containment-crosswalk-vectors.json"))
+          s = json.load(open("data/_vectors/clc-d/containment-crosswalk-vectors.schema.json"))
+          jsonschema.validate(v, s)
+          print(f"schema OK, {len(v)} cross-walk vectors")
+          PY
+
+      - name: Validate the §13.5 reason-collapse policy vectors against their schema
+        run: |
+          python3 - <<'PY'
+          import json, jsonschema
+          v = json.load(open("data/_vectors/clc-d/reason-collapse-vectors.json"))
+          s = json.load(open("data/_vectors/clc-d/reason-collapse-vectors.schema.json"))
+          jsonschema.validate(v, s)
+          print(f"schema OK, {len(v)} reason-collapse vectors")
+          PY
+
+      - name: Validate the §13.4.5 profile-owned mode-lattice vectors against their schema
+        run: |
+          python3 - <<'PY'
+          import json, jsonschema
+          v = json.load(open("data/_vectors/clc-d/profile-owned/aic-jwt-da-mode-lattice-vectors.json"))
+          s = json.load(open("data/_vectors/clc-d/profile-owned/aic-jwt-da-mode-lattice-vectors.schema.json"))
+          jsonschema.validate(v, s)
+          print(f"schema OK, {len(v)} mode-lattice vectors")
+          PY
+
       - name: Validate the §7.1 ConstraintUnion vectors against their schema
         run: |
           python3 - <<'PY'
@@ -143,3 +173,23 @@ jobs:
 
       - name: OCMP offline vectors (coverage + vocabulary)
         run: python3 scripts/check-offline-vectors.py
+
+      # contrib/ 的门：两个探针必须能被两个独立实现跑出**逐字节相同**的输出。
+      # 门是"两实现一致"，不是与提交时的 out-*.txt 逐字节比——实现升版时
+      # 打印的 CLC_REVISION 行会变，而判定与 reason 应当不变。
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Contributed probes agree across implementations
+        run: |
+          set -e
+          git clone --depth 1 https://github.com/varwof/aic-capability-demo.git ../aic-capability-demo
+          export CLC_PY_DIR=../aic-capability-demo
+          export CLC_TS_FILE="file://$PWD/../aic-capability-demo/ts/clc_semantics.ts"
+          for d in contrib/clc-unit-encoding contrib/iicp-touchpoint; do
+            python3 "$d/probe.py" > /tmp/probe-py.txt
+            node --disable-warning=ExperimentalWarning --experimental-strip-types "$d/probe.mjs" > /tmp/probe-ts.txt
+            cmp /tmp/probe-py.txt /tmp/probe-ts.txt
+            echo "contrib probe agree: $d"
+          done

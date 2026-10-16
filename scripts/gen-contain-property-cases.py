@@ -15,6 +15,13 @@ Property under test (CLC-D, "forward closure"):
       boundary sound and the reason the §5 collapse of layer-2 failures into
       child_exceeds_parent is safe).
 
+  The same case list also asserts antisymmetry on semantic equivalence classes
+  (core §13.3, CL 13.10.8): Contains(P, C) and Contains(C, P) both true is
+  allowed only when P and C fall in the same semantic class (same id, params
+  with `params:{}` ≡ absent), never across two distinct classes.  This is the
+  corpus-level "reference grade" pin: the relation must not report mutual
+  containment for two observably different grants.
+
 The operation sample is shared (`ops`) rather than repeated per case, which
 keeps the file comparable in size to the CLC-A property corpus.
 
@@ -117,7 +124,10 @@ def main():
             "generator": "capability/scripts/gen-contain-property-cases.py",
             "property": "CLC-D forward closure: Contains(P,C) never raises; and when "
                         "Contains(P,C) is true and Entails(C,o) is true, Entails(P,o) "
-                        "is true, for every o in `ops`",
+                        "is true, for every o in `ops`.  Antisymmetry on semantic "
+                        "equivalence classes (core §13.3, CL 13.10.8): mutual "
+                        "containment is reported only between members of the same "
+                        "semantic class (`params:{}` ≡ absent).",
             "spec_clause": "CLC §13.4 (layers 2-4) and §13.3 antisymmetry; "
                            "CLC-v1 §5 Entails side",
             "status": "reference",

@@ -1,0 +1,62 @@
+[
+ {
+  "id": "aij-ml-001",
+  "kind": "mode-lattice",
+  "spec_clause": "CLC §13.4.5",
+  "profile": "aic-jwt-da->clc-v1",
+  "parent_mode": "representative",
+  "child_mode": "authorized",
+  "expect": {
+   "pre_check": "narrows"
+  },
+  "derivation": "AIC-JWT order authorized < representative: a child that is only authorized under a representative parent narrows"
+ },
+ {
+  "id": "aij-ml-002",
+  "kind": "mode-lattice",
+  "spec_clause": "CLC §13.4.5",
+  "profile": "aic-jwt-da->clc-v1",
+  "parent_mode": "authorized",
+  "child_mode": "representative",
+  "expect": {
+   "pre_check": "delegation_mode_not_narrower"
+  },
+  "derivation": "A child that acts representative under an authorized-only parent widens the mode"
+ },
+ {
+  "id": "aij-ml-003",
+  "kind": "mode-lattice",
+  "spec_clause": "CLC §13.4.5",
+  "profile": "aic-jwt-da->clc-v1",
+  "parent_mode": "authorized",
+  "child_mode": "authorized",
+  "expect": {
+   "pre_check": "narrows"
+  },
+  "derivation": "Equal mode: child is no wider, the pre-check passes"
+ },
+ {
+  "id": "aij-ml-004",
+  "kind": "mode-lattice",
+  "spec_clause": "CLC §13.4.5",
+  "profile": "aic-jwt-da->clc-v1",
+  "parent_mode": "representative",
+  "child_mode": "representative",
+  "expect": {
+   "pre_check": "narrows"
+  },
+  "derivation": "Equal mode: child is no wider, the pre-check passes"
+ },
+ {
+  "id": "aij-ml-005",
+  "kind": "mode-lattice",
+  "spec_clause": "CLC §13.4.5",
+  "profile": "aic-jwt-da->clc-v1",
+  "parent_mode": null,
+  "child_mode": null,
+  "expect": {
+   "pre_check": "narrows"
+  },
+  "derivation": "No delegation mode bound: there is no lattice to consult, the pre-check is a pass"
+ }
+]

@@ -106,12 +106,30 @@ specification, the corpora, and the reference implementation in
   documentation, not the normative text).  Chinese edition: [`docs/reference/zh/`](docs/reference/zh/),
   maintained in sync with the English pages and covering §13 and Appendix C.
 
+## Current language revision
+
+The repository's current revision of the language is **CLC-1.17**: the
+specification declares it in its §12.1, the corpora carry vectors tagged up to it,
+and all three consumer implementations (`register` Go, `aic-capability-demo`
+Python/TypeScript) are on it.  The changelog table in
+[`docs/capability-language-core-v1.md`](docs/capability-language-core-v1.md) lists
+each revision and its verdict impact.
+
+The published Internet-Draft
+[`draft-wei-capability-language-core-00`](https://datatracker.ietf.org/doc/draft-wei-capability-language-core/)
+is **CLC-1.15**.  The delta is two revisions, and one of them (**CLC-1.16**, the
+I-JSON integer bound, the leading-BOM refusal, host numeric-carrier normalization
+and the §13.4.3 params narrowing table) **changes verdicts**.  An implementation
+written against the -00 text therefore differs from this repository's behavior on
+that subset, and fails closed on inputs tagged CLC-1.16/1.17 under the §12.1 minor
+gate.  When citing behavior, cite the repository revision.
+
 ## CLC-v1 conformance vectors and schemes
 
 This repository also carries the machine-readable side of **CLC-v1** (the
 minimal capability decision language):
 
-- `data/_vectors/clc-v1/` — **146 conformance vectors** and **32 evidence-side vectors**
+- `data/_vectors/clc-v1/` — **154 conformance vectors** and **32 evidence-side vectors**
   (`evidence-vectors.json`: evidence constraints, requirements, `ActionId` and
   `Match`), `vectors.schema.json`, `clc-v1-ambiguities.md`
   (resolution log), **1184 deterministic P11 property cases**
@@ -127,11 +145,14 @@ minimal capability decision language):
   checks run in CI (`scripts/`).
 - `data/_vectors/clc-d/` — the **CLC-D delegation-containment** corpus (rev
   CLC-1.9, spec §13): **64 containment vectors**, **784 forward-closure
-  property cases** (`scripts/gen-contain-property-cases.py`) and **44
-  cross-vendor crosswalk vectors** (AIC-JWT DA, OAuth RAR, UCAN, delegation
-  chain, ATN, AAT, AIP, AAE, AOA, AEGIS).  The relation and its profile
-  contract, reason codes and carrier mapping are spec §13 and Appendix C.
-- `data/_vectors/clc-v1/param-bounds-vectors.json` — **43 vectors** for the
+  property cases** (`scripts/gen-contain-property-cases.py`, also carrying the
+  §13.3 antisymmetry assertion) and **44 cross-vendor crosswalk vectors** (AIC-JWT
+  DA, OAuth RAR, UCAN, delegation chain, ATN, AAT, AIP, AAE, AOA, AEGIS, with §13.8.1
+  obligation-3 `out_of_scope` declarations), plus the §13.5 **3 reason-collapse
+  policy vectors** (`reason-collapse-vectors.json`) and the profile-owned §13.4.5
+  **5 AIC-JWT DA mode-lattice vectors** (`profile-owned/`).  The relation and its
+  profile contract, reason codes and carrier mapping are spec §13 and Appendix C.
+- `data/_vectors/clc-v1/param-bounds-vectors.json` — **49 vectors** for the
   §6.5 extended parameter bounds (rev CLC-1.10): inclusive intervals, `step`,
   enum cardinality, optional keys, nested recursion, scheme defaults and the
   one-representation binding rule, with `param-bounds-vectors.schema.json`.

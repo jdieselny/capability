@@ -18,7 +18,7 @@ three-valued verdict (`allow`, `deny`, `allow_unresolved`).
 The language is carrier-neutral: it defines what is evaluated, not how it is
 carried or trusted.  Trust models, native verification, execution lifecycle,
 and receipt or token formats are out of scope (Section 11).  Conformance is
-exercised by a published corpus of 146 vectors and 1184 property cases; three
+exercised by a published corpus of 154 vectors and 1184 property cases; three
 implementations (Go, Python, TypeScript) that share an author pass both.
 **Implementation conformance and this document's claim of a conformance class
 are separate.**  An implementation conforms to CLC-A when it meets the
@@ -64,7 +64,8 @@ which is retired.
 | CLC-1.13 | 2026-09-21 | §13.6, §13.10.4, §13.11(new), §13.12(renumbered), §12.1, Appendix B | **Additive, CLC-D-scoped: `AuthorizeWithChain`, the fused chain check.**  §13.11 adds `AuthorizeWithChain(chain, op)`: an empty chain denies `absent_source`; each adjacent hop is checked with `Contains` and the first failure denies with that hop's §13.5 code (before op validation); otherwise the operation is authorized against `Intersect(chain...)`, which is what brings every ancestor's params **and** constraints (a union axis, outside containment) into force.  Authorizing against the leaf alone was rejected as unsound.  It closes §13.10.4: the fourth relation is now defined, as a CLC-D function, not a core change.  CLC-D conformance now also requires it.  It adds 14 `authorize-chain-vectors.json` vectors; no CLC-A verdict changes.  **Editorial review corrections to this revision (text only, no verdict or corpus change):** §6.3 `Entails` now shows the §6.5 `param_bounds` step and reads the declared key set; §6.5 states that intersecting `param_bounds` is undefined and fails closed (`invalid_params_binding`) and renders the Bound grammar as JSON; §9.2 widens `invalid_params_number` to "no canonical form" (matching §6.2 step 7); §7's object example now intersects numeric leaves to their minimum (`{"a":1}`∩`{"a":2}`→`{"a":1}`) instead of denying; §8.1's `time:window` rule is stated in seconds-of-day, defining the reserved `end:"00:00"` as 86400; §8.5/§11 add the caching horizon for a core-clock discharge; §9 runs the grant-side pre-check before op validation and unions residuals only across covering-*and-allowing* grants; §10 says a top-level `unknown` yields `UNSATISFIED` (no evidence-side `allow_unresolved`); §13.2's `ContainmentResult` is rendered as JSON; the BCP 14 / RFC 3339 / JCS / I-JSON conventions and references are added; and stale cross-references (Appendix D15, §5.1/§9.3, "four foreign representations") are corrected.  **Second editorial pass (text only):** §7 rule 3 states the constraint merge as a **union** (constraints are conjunctive; a tighter same-type bound binds by construction, nothing is dropped as a "meet"); §6.5 closes the `optional` × `param_defaults` precedence (presence is decided first, `optional` wins over a default, no "is the default needed?" recursion) and states that a default is not part of the declared set nor the containment lattice; §6.5 adds the four-layer presence/declaration/constraint/value model that keeps the three senses of `{}` distinct; and §7 makes the **value → authorization-set denotation** explicit (numbers denote `(-∞,v]`, so `{"a":1}∩{"a":2}={"a":1}` is a minimum, and an empty meet needs genuinely disjoint denotations). |
 | CLC-1.14 | 2026-09-21 | §6.6(new), §7, §13.11, §12.1, Appendix B | **Additive: `Intersect` now meets `param_bounds` (`BoundMeet`).**  CLC-1.10 grafted the extended bounds onto the grant but left their intersection undefined, so `Intersect` refused any source carrying `param_bounds` (`invalid_params_binding`) and a delegation chain that used `param_bounds` could never be fused-authorized (`AuthorizeWithChain` denies at its `Intersect` step).  §6.6 defines the meet per family: numeric `min`=greatest, `max`=least, `step`=the coarser grid when one exactly divides the other (else fail-closed); enum member intersection and tightened cardinality; `nested` recursion over identical key sets; `optional` by conjunction; numeric∩enum reduces to the filtered enum; scalar∩nested and `min>max` are an empty meet (`no_overlap`).  A key must keep one declaration site across sources (§13.4.3 already guarantees this for a valid chain).  It adds no reason code and is strictly additive: a chain without `param_bounds` is byte-for-byte unchanged, so every existing verdict, reason code and vector is untouched.  It adds `param-bounds-meet-vectors.json`, and updates `authorize-chain-vectors.json` (`ac-012` now allows — a `param_bounds` chain fuses — and `ac-015` denies with `params_out_of_range` at a meet that is empty). |
 | CLC-1.15 | 2026-09-25 | §6.5, §6.6, §7, §7.1, §12.1, §13.2, §13.3, §13.4.5, §13.5, §13.6, §13.11, §13.12, Appendix B.12, IANA | **Corrective: the Iman Schrock review of CLC-1.14 landed.**  The §6.6 `numeric ∩ enum` exception is **removed** — the filtered-enum meet was broader than either source (numeric `{min:2,max:4}` ∩ enum `{1,3,5}` filtered to `enum{3}`, which accepts the array `[3]` while the numeric source fail-closes it at §6.5 layer 9), so every cross-family numeric × enum meet now refuses with `invalid_params_binding` in either order, agreeing with §6.5's mixed-family rejection and §13.4.3's added-family refusal.  §6.5 layer 8 gains the missing definition of enum `equal`: **JSON type-sensitive equality** (`true ≠ 1`, `"1" ≠ 1`; numbers compare after §6.2 canonicalization, so `1 = 1.0`), fixing the implementation divergence where Python's `True == 1` allowed what Go/TypeScript denied.  §6.6's step-grid rationale is corrected: incommensurable steps (5, 7) *do* share a common grid (multiples of 35) — the meet fails closed not because no grid exists but because the meet's `step` must be one of the two declared steps and the language does not synthesize an undeclared grid (behavior unchanged).  §7.1 pins `ConstraintUnion`'s ordering to **UTF-8 byte order** (UTF-16 code-unit order placed an emoji before U+E000–U+FFFF characters).  `delegation_mode_not_narrower` is attributed to the **binding-profile pre-check** (§13.4.5) and removed from the core's reason commitments (§12, §13.5, §13.6, §13.11, IANA) — the relation never took a mode argument.  §13.3 states `Contains` antisymmetry on **semantic equivalence classes**, and §13.11 adds the caller's complete-authenticated-root-first-chain obligation (no decision rule changes).  §12.1 records the honest verdict-stability scope of the CLC-1.10→1.14 `param_bounds`-meet change (deny→allow on that subset) and of this revision (allow→deny for the cross-family sub-case).  No input without `param_bounds` changes verdict; on the §6.6 meet subset the cross-family direction reverses CLC-1.14.  Corpus: adds `bm-026`/`bm-027` (cross-family refusal, both orders), `param-bounds-equality-vectors.json` (type-sensitive equality), `constraint-union-collation-vectors.json` (UTF-8 order), and `param-bounds-meet-property-cases.json` (the meet invariant: every successful meet authorizes only what **every** source authorizes), and `intersect-011/-012/-013` in `vectors.json` (the 2026-09-25 cross-type audit of §7 rule 6: string × number merge refusal, type-sensitive enum-member equality, `1.0` ≡ `1` — corpus 120 → 123 vectors).  **Review follow-up (same date):** the scalar ∩ `nested` pair (numeric or enum vs. object, either order) is adjudicated from the CLC-1.14 empty-meet reading to the cross-family refusal `invalid_params_binding` — design-notes D12, so the empty-meet code stays reserved for genuinely empty meets *within one value family* (§6.6, §7, Appendix B.12); `bm-012`/`bm-013` (numeric × enum, with and without an in-range member) are re-adjudicated to a single refusal reason for every cross-family pair (a baseline-impacting change: allow→deny on that subset, recorded in §12.1); and the §8.4 residual-obligation collation is pinned to the §7.1 UTF-8 byte order (the TS implementation sorted by default UTF-16 code-unit order, silently diverging from Go and Python) — the corpus runners now assert the exact manifest order instead of pre-sorting both sides. |
-| CLC-1.16 | 2026-09-28 | §6.2, §6.5, §8.1, §12, §12.1, §13.4.2, §13.4.3, Appendix B, References | **Corrective: the cross-port cross-check landed.**  §6.2 step 3 gains the **I-JSON integer bound** — an integer-valued numeric param whose magnitude exceeds 2^53 − 1 is refused (`invalid_params_number`, [RFC7493] §6) instead of being rounded to binary64 (**verdict change** on that subset: a comparison over a rounded value becomes a refusal; recorded in §12.1).  New step 8 refuses a **leading UTF-8 BOM** on the raw path ([RFC8259] §8.1 permits ignoring it, CLC MUST NOT; closes the ECMAScript-`trim()` U+FEFF divergence; **allow → deny** for implementations that trimmed).  New step 9 requires **host numeric-carrier normalization**: every numeric carrier (`int` vs `float64`, `BigInteger`, `decimal`) compares under JSON number semantics and MUST NOT fall into a string-shaped fallback (fixes the reference-engine grant-carrier bug where `{"n":50}` against `{"n":"50"}` was allowed by a text comparison).  §6.2 step 7's decoded entry hardens from advice into obligation: the raw-text entry is the **sole conformance entry point**, and a decoder that repairs malformed Unicode (U+FFFD substitution, e.g. Go's `encoding/json`) MUST NOT feed an entry used for a conformance claim — closing the Go-vs-Python/TypeScript lone-surrogate divergence at the decoded entry.  §8.1 states the **`max_rows` × key-closure reconciliation**: the constraint's operand is not exempt from layer-7 closure, a bounded grant carrying a `max_rows` constraint declares `max_rows` in **both** places at once, and an over-bound constraint integer is `invalid_constraint` (codification plus the bound extension).  §13.4.2 states that **`:`-segments are not a hierarchy** (`Contains(std/database-v1:query, std/database-v1:query:SELECT)` → `child_exceeds_parent` in both directions), and §13.4.3 reduces params narrowing to a **normative five-row decision table** (the child's key set EQUALS the parent's; both the "fewer keys is narrower" and the "more keys is narrower" readings are refused) — codifications, no verdict change.  Corpus: 123 → 146 vectors.  `params-040`–`params-052` (kind=decide, the layer-8 type-sensitivity backfill over the §6.2 params algebra, tagged CLC-1.15; decide 50 → 63), then `params-053`–`params-062` — the corpus pins for the I-JSON integer bound and the leading-BOM refusal, kind=entail, tagged CLC-1.16, covering both sides of each bound, the spellings that must not launder an over-bound integer (exponent and trailing-`.0` forms), the non-integer case the bound must not reach, and the BOM × size precedence.  [RFC8259] added to the normative references. |
+| CLC-1.16 | 2026-09-28 | §6.2, §6.5, §8.1, §12, §12.1, §13.4.2, §13.4.3, Appendix B, References | **Corrective: the cross-port cross-check landed.**  §6.2 step 3 gains the **I-JSON integer bound** — an integer-valued numeric param whose magnitude exceeds 2^53 − 1 is refused (`invalid_params_number`, [RFC7493] §2.2) instead of being rounded to binary64 (**verdict change** on that subset: a comparison over a rounded value becomes a refusal; recorded in §12.1).  New step 8 refuses a **leading UTF-8 BOM** on the raw path ([RFC8259] §8.1 permits ignoring it, CLC MUST NOT; closes the ECMAScript-`trim()` U+FEFF divergence; **allow → deny** for implementations that trimmed).  New step 9 requires **host numeric-carrier normalization**: every numeric carrier (`int` vs `float64`, `BigInteger`, `decimal`) compares under JSON number semantics and MUST NOT fall into a string-shaped fallback (fixes the reference-engine grant-carrier bug where `{"n":50}` against `{"n":"50"}` was allowed by a text comparison).  §6.2 step 7's decoded entry hardens from advice into obligation: the raw-text entry is the **sole conformance entry point**, and a decoder that repairs malformed Unicode (U+FFFD substitution, e.g. Go's `encoding/json`) MUST NOT feed an entry used for a conformance claim — closing the Go-vs-Python/TypeScript lone-surrogate divergence at the decoded entry.  §8.1 states the **`max_rows` × key-closure reconciliation**: the constraint's operand is not exempt from layer-7 closure, a bounded grant carrying a `max_rows` constraint declares `max_rows` in **both** places at once, and an over-bound constraint integer is `invalid_constraint` (codification plus the bound extension).  §13.4.2 states that **`:`-segments are not a hierarchy** (`Contains(std/database-v1:query, std/database-v1:query:SELECT)` → `child_exceeds_parent` in both directions), and §13.4.3 reduces params narrowing to a **normative five-row decision table** (the child's key set EQUALS the parent's; both the "fewer keys is narrower" and the "more keys is narrower" readings are refused) — codifications, no verdict change.  Corpus: 123 → 146 vectors.  `params-040`–`params-052` (kind=decide, the layer-8 type-sensitivity backfill over the §6.2 params algebra, tagged CLC-1.15; decide 50 → 63), then `params-053`–`params-062` — the corpus pins for the I-JSON integer bound and the leading-BOM refusal, kind=entail, tagged CLC-1.16, covering both sides of each bound, the spellings that must not launder an over-bound integer (exponent and trailing-`.0` forms), the non-integer case the bound must not reach, and the BOM × size precedence.  [RFC8259] added to the normative references. |
+| CLC-1.17 | 2026-10-13 | §6.2, §12.1, Appendix B | **Corrective: numeric-corner closeout.**  §6.2 step 3 is restated so the **I-JSON integer bound is judged on the mathematical value of the received token** — an integer-valued number outside `[−(2^53 − 1), 2^53 − 1]` is refused whether or not binary64 represents it exactly (`1e100` and `9007199254740992` are refused), correcting the CLC-1.16 justification that such a number "has no exact IEEE-754 binary64 representation".  Step 3 also states that **number identity is the JSON number, not its spelling** (`-0` ≡ `0`, `1e3` ≡ `1000`, `1.5e-3` ≡ `0.0015`), and that a non-integer-valued token of at most 17 significant digits is carried as its IEEE-754 binary64 value (round-to-nearest, ties to even) — a decimal/arbitrary-precision carrier MUST use that same value.  **No verdict change**: every clause restates CLC-1.16 behavior.  Corpus: 146 → 154 vectors (`params-063`–`params-070`, kind=entail, tagged CLC-1.17: the zero-sign, exponent-spelling, exactly-representable-over-bound, max-finite and subnormal pins) and `param-bounds-vectors.json` 43 → 49 (`pb-044`–`pb-049`: negative-axis, zero-sign and `step` binary64-arithmetic corners).  The [RFC7493] citation is corrected from §6 to §2.2. |
 
 ---
 
@@ -372,18 +373,35 @@ layer runs, the `params` object is normalized at the input boundary:
    so float64 and decimal/bignum implementations MUST NOT diverge: the judged
    input is always the raw token text (`params-*` number probes in the corpus;
    near-limit forms such as `1.0000000000000001` extend the probes without
-   changing the rule).  **Integer bound (I-JSON).**  An integer-valued number
-   whose magnitude exceeds 2^53 − 1 (`9007199254740991`) has no exact IEEE-754
-   binary64 representation and its value is not preserved across
-   implementations ([RFC7493] §6): it is refused with the same code —
-   fail-closed, never rounded.  The bound is judged on the mathematical value
-   of the received token, not on its digit count (`9007199254740993` has 16
-   digits, so the over-precision rule above does not catch it).  Non-integer
-   numbers are unaffected: they arrive as binary64 through step 1, whose
-   rounding is deterministic across implementations.  `param_bounds` numerics
-   inherit the bound through §6.5's input-normalization clause.  Malformed
-   params text that cannot be parsed as an object is refused with the same code
-   (see step 7).
+   changing the rule).  **Number identity is the JSON number, not its
+   spelling.**  Two tokens that denote the same JSON number are one value to
+   the layers: `-0` and `0` (JCS renders both as `0`), `1e3` and `1000`,
+   `1.5e-3` and `0.0015`, `1.0` and `1e0`.  The layers compare the
+   canonicalized number, never the received token text.  **Integer bound
+   (I-JSON).**  An integer-valued number whose magnitude exceeds 2^53 − 1
+   (`9007199254740991`) is refused with the same code — fail-closed, never
+   rounded.  2^53 − 1 is the top of the I-JSON interoperability range
+   ([RFC7493] §2.2): it is the largest integer that both has an exact IEEE-754
+   binary64 representation and is guaranteed to round-trip, whereas a larger
+   integer-valued number may be silently rounded to a neighbour
+   (`9007199254740993` → `9007199254740992`).  The bound is judged on the
+   **mathematical value** of the received token, independent of its spelling
+   and of whether the port's carrier could hold it exactly — so `1e100` and
+   `9007199254740992` are refused even though binary64 represents them
+   exactly: an acceptance rule that turned on binary64 representability would
+   let the numeric carrier a port happens to use change the verdict.  It is
+   not judged on digit count (`9007199254740993` has 16 digits, so the
+   over-precision rule above does not catch it).  `param_bounds` numerics
+   inherit the bound through §6.5's input-normalization clause.  **Non-integer
+   numbers.**  A non-integer-valued token of at most 17 significant digits is
+   not reached by the integer bound; it arrives as binary64 through step 1
+   (IEEE-754 round-to-nearest, ties to even), whose result is deterministic
+   across implementations.  A port whose carrier holds more precision than
+   binary64 (a decimal or arbitrary-precision type) MUST compare the value by
+   that same binary64 value and MUST NOT retain precision binary64 cannot hold
+   — otherwise the carrier, not the language, would decide.  Malformed params
+   text that cannot be parsed as an object is refused with the same code (see
+   step 7).
 4. **Size and depth.** Params whose canonical length exceeds 512 **UTF-8
    octets** — measured in octets, never in code points or UTF-16 code units
    (rev CLC-1.4) — or whose nesting depth exceeds 32, are rejected:
@@ -1528,7 +1546,7 @@ tree pinned as [CLC-CORPUS]; repository paths written as `capability/...`
 throughout this document are relative to that pinned tree, so the exact
 vectors named here are retrievable.  CLC-A conformance is exercised by two
 machine-readable reference suites at
-`capability/data/_vectors/clc-v1/`: `vectors.json` — 146 vectors mapped
+`capability/data/_vectors/clc-v1/`: `vectors.json` — 154 vectors mapped
 to Appendix B — and `property-cases.json` — 1184 cases pinning the §7
 meet-law, identifier narrowing and source-order independence.  Their
 syntax is defined by `vectors.schema.json`; `offline-vectors.json` is a
@@ -1596,7 +1614,7 @@ provisioning and carries its own EXPERIMENTAL banner.
 ### 12.1 Language Revision
 
 Every implementation declares a language revision `CLC-<major>.<minor>` —
-this document declares **`CLC-1.16`**.  A capability input (grant,
+this document declares **`CLC-1.17`**.  A capability input (grant,
 operation, or OCM) SHOULD carry the revision it was authored against; an
 input without a declared revision is treated as `CLC-1.0`.
 
@@ -1726,10 +1744,28 @@ input without a declared revision is treated as `CLC-1.0`.
   revision MUST declare CLC-1.15 or earlier and let the minor gate resolve an
   input that relies on the corrected boundaries.
 
+- **CLC-1.17 is a corrective revision** (numeric-corner closeout; see the
+  Revision History): §6.2 step 3 is restated so the **I-JSON integer bound is
+  judged on the mathematical value** of the received token — an integer-valued
+  number outside `[−(2^53 − 1), 2^53 − 1]` is refused whether or not binary64
+  represents it exactly (`1e100` and `9007199254740992` are refused), correcting
+  a CLC-1.16 justification that had said such a number "has no exact IEEE-754
+  binary64 representation".  Step 3 additionally states that **number identity
+  is the JSON number, not its spelling** (`-0` ≡ `0`, `1e3` ≡ `1000`,
+  `1.5e-3` ≡ `0.0015`) and pins a non-integer token of ≤ 17 significant digits
+  to its IEEE-754 binary64 value.  **Honest scope: no verdict changes.**  Every
+  clause restates behavior CLC-1.16 already introduced (§6.2 steps 1 and 3), so
+  no verdict, reason code or vector moves for any input a CLC-1.16
+  implementation evaluates; the revision exists because the restatement is
+  normative text and the corpus gains the corner pins.  Corpus: 146 → 154
+  vectors (`params-063`–`params-070`, kind=entail, tagged CLC-1.17) and
+  `param-bounds-vectors.json` 43 → 49 (`pb-044`–`pb-049`).  The [RFC7493]
+  citation is corrected to §2.2.
+
 - **CLC-A conformance and the minor gate are the two sides of one rule.**
   Claiming CLC-A (this section) means implementing the CLC-A-relevant
   semantics of the revision claimed — so an implementation that advertises
-  `CLC-1.16` MUST implement `param_bounds` (grammar and the §6.6 meet), `Resolve`, `ConstraintUnion` and
+  `CLC-1.17` MUST implement `param_bounds` (grammar and the §6.6 meet), `Resolve`, `ConstraintUnion` and
   the §6.2 canonicalization, not merely tolerate their inputs.  The minor gate
   is the complement for an implementation that **lags**: it declares an older
   revision and refuses any input that uses a field or function introduced
@@ -2527,8 +2563,8 @@ evaluation language for the capabilities they declare.
 **Grouping vs `kind` mapping**: The appendix groups vectors by semantic
 category (B.1–B.6).  The machine-readable `vectors.json` uses a `kind`
 field that collates these groups differently:
-`kind=entail (47)` covers B.2 (8), the 35 params vectors that sit under
-`kind=entail` (B.3's 52 rows minus `params-028/-029/-034/-036` and the
+`kind=entail (65)` covers B.2 (8), the 53 params vectors that sit under
+`kind=entail` (B.3's 70 rows minus `params-028/-029/-034/-036` and the
 thirteen type-sensitivity backfill rows `params-040`–`params-052`, all
 seventeen being `kind=decide`), and the four scheme stress-test entail vectors
 (`clinical-001/-002`, `payments-001`, `data-002`); `kind=decide (63)`
@@ -2572,7 +2608,7 @@ machine-checkable rather than maintained by hand.
 | E7 | `std/database-v1:*` | `std/database-v1:query:SELECT` | deny | class-position (product-segment) wildcard is v1-forbidden: only a trailing action segment may be `*` (§3; §9.1 layer 3) |
 | E8 | `std/database-v1:*` | `std/database-v1:admin:DDL` | deny | same class-position wildcard; the v1-forbidden shape denies regardless of the action it faces (§3; §9.1 layer 3) |
 
-### B.3 Params (52 vectors)
+### B.3 Params (70 vectors)
 
 | # | Grant | Operation | Expected | Derivation |
 |---|-------|-----------|----------|------------|
@@ -2628,6 +2664,24 @@ machine-checkable rather than maintained by hand.
 | P50 | `{"cfg":{"limit":"10"}}` | `{"cfg":{"limit":10}}` | deny(`params_exceed_grant`) | nested objects recurse with the same type sensitivity (mirrors `nested-003`) (`params-050`) |
 | P51 | `{"ids":[1,2]}` | `{"ids":[1,"2"]}` | deny(`not_in_enum`) | enum membership is type-sensitive: the member `2` is not the string `"2"` (`params-051`) |
 | P52 | `{"ids":[1,2]}` | `{"ids":[1.0]}` | allow | `1.0` is the member `1` after canonicalization (§6.5 layer 8) (`params-052`) |
+| P53 | `{"n":9007199254740991}` | raw `{"n":9007199254740991}` | allow | top of the I-JSON integer range: 2^53 − 1 is the largest integer-valued magnitude accepted (`params-053`, rev CLC-1.16) |
+| P54 | `{"n":9007199254740992}` | raw `{"n":9007199254740992}` | deny(`invalid_params_number`) | the first refused integer-valued magnitude above the bound (`params-054`) |
+| P55 | `{"n":9007199254740993}` | raw `{"n":9007199254740993}` | deny(`invalid_params_number`) | 2^53 + 1 rounds up to 2^53 in binary64; refused, never rounded (`params-055`) |
+| P56 | `{"n":9007199254740993}` | raw `{"n":9.007199254740993e15}` | deny(`invalid_params_number`) | the bound is on the mathematical value: the exponent spelling cannot launder an over-bound integer (`params-056`) |
+| P57 | `{"n":9007199254740993}` | raw `{"n":9007199254740993.0}` | deny(`invalid_params_number`) | a trailing `.0` does not make it a fraction (`params-057`) |
+| P58 | `{"n":-9007199254740993}` | raw `{"n":-9007199254740993}` | deny(`invalid_params_number`) | the rule is on magnitude: the negative side is refused like the positive (`params-058`) |
+| P59 | `{"n":4503599627370495.5}` | raw `{"n":4503599627370495.5}` | allow | a non-integer near the top is unaffected: step 1 already fixed its rounding (`params-059`) |
+| P60 | `{"n":<30-digit>}` | raw | deny(`invalid_params_number`) | far over the bound and over-precision; both clauses resolve to one stable code (`params-060`) |
+| P61 | `{"n":1}` | raw with a leading UTF-8 BOM | deny(`invalid_params_number`) | a leading BOM is not part of a JSON text — refused before parsing (§6.2 step 8; `params-061`) |
+| P62 | `{}` | raw: BOM-prefixed **and** over the size cap | deny(`invalid_params_number`) | the BOM refusal outranks the step-4 size cap (`params-062`) |
+| P63 | `{"n":0}` | raw `{"n":-0}` | allow | `-0` and `0` are one JSON number; JCS renders both as `0` (`params-063`, rev CLC-1.17) |
+| P64 | `{"n":1000}` | raw `{"n":1e3}` | allow | `1e3` ≡ `1000`: number identity is the value, not the spelling (`params-064`) |
+| P65 | `{"n":0.0015}` | raw `{"n":1.5e-3}` | allow | `1.5e-3` ≡ `0.0015` (`params-065`) |
+| P66 | `{"n":1e100}` | raw `{"n":1e100}` | deny(`invalid_params_number`) | binary64 holds `1e100` exactly, yet the mathematical-value bound refuses it — acceptance must not turn on the carrier (`params-066`) |
+| P67 | `{"n":1.7976931348623157e308}` | raw | deny(`invalid_params_number`) | the largest finite binary64 is integer-valued and over the bound → refused (`params-067`) |
+| P68 | `{"n":5e-324}` | `{"n":0}` | allow | a subnormal is finite and in range: 0 ≤ 5e-324 (`params-068`) |
+| P69 | `{"n":0}` | `{"n":5e-324}` | deny(`params_exceed_grant`) | the inverse bound direction: 5e-324 > 0 (`params-069`) |
+| P70 | `{"n":-0}` | `{"n":0}` (decoded) | allow | decoded `-0` is the same number as `0` (`params-070`) |
 
 ### B.4 Intersection (10 vectors)
 
@@ -2701,7 +2755,7 @@ Shorthand: params shown compact; constraints use colon notation.
 | C10 | malformed id in operation | deny("invalid_capability_id") | D4 |
 | C11 | delegation chain, intermediate hop declares empty bound | deny | deny-when-declared propagates |
 
-**Total: 146 vectors**
+**Total: 154 vectors**
 
 > Decisions D17–D28 are the corpus pin for the
 > residual-obligation channel `unresolved` / `allow_unresolved`, the §8.1
@@ -2731,10 +2785,10 @@ Shorthand: params shown compact; constraints use colon notation.
 > sources, order independence, and a params-free identifier comparison;
 > `intersect-011/-012/-013` (rev CLC-1.15) are the cross-type audit pins of
 > §7 rule 6 (string × number merge refusal, type-sensitive enum-member
-> equality, `1.0` ≡ `1`) and sit outside the B.1–B.6 tables, taking the
-> corpus total to 123; likewise `params-053`–`params-062` (rev CLC-1.16,
-> §6.2 input boundary: the I-JSON integer bound and the leading-BOM refusal)
-> sit outside B.1–B.6, taking the total to 146.  B.5 row labels `Dn` are semantic row numbers, not
+> equality, `1.0` ≡ `1`) and sit outside the B.1–B.6 tables.  The CLC-1.16
+> input-boundary pins (`params-053`–`params-062`) and the CLC-1.17
+> numeric-corner pins (`params-063`–`params-070`) are tabulated in B.3 (P53–P70
+> above), so the corpus total is 154.  B.5 row labels `Dn` are semantic row numbers, not
 > corpus ids (D15/D16 ↔ `decide-016/-017`, D29 ↔ `decide-035`); D10
 > (absent/empty grant, operation present) has no dedicated vector — the
 > pre-check path is pinned by `decide-016` (D15).
@@ -2753,7 +2807,7 @@ date.
 ### B.8 Extended parameter bounds (external corpus)
 
 The §6.5 `param_bounds` grammar is pinned by
-`capability/data/_vectors/clc-v1/param-bounds-vectors.json` (43 vectors,
+`capability/data/_vectors/clc-v1/param-bounds-vectors.json` (49 vectors,
 groups: numeric interval/step, enum cardinality, optional keys, nested
 recursion, the binding rule, malformed bounds, scheme defaults), with
 `param-bounds-vectors.schema.json`.  It is not re-tabulated here.  These

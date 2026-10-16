@@ -12,8 +12,8 @@ CLC-v1 定义了**三个一致性类别**。**CLC-A**（授权侧）是基线；
 
 | 类别 | 包含内容 | 状态 |
 |-------|------------------|--------|
-| **CLC-A** | §3 文法、§6.1 entailment、§7 intersection、§9 decision、`unknown_constraint`/`invalid_constraint`、`allow_unresolved` + 增量式 `unresolved` 通道（§8.4）、多授权聚合（§9.1）、稳定原因代码（§9.2）；必须通过 `vectors.json`（146）和 `property-cases.json`（1184） | **已声明 — v1 基线** |
-| **CLC-D** | 带有序各层的 `Contains(parent, child)`、两个稳定关系代码（`child_exceeds_parent`、`params_not_narrower`）、配置契约（§13.8.1）、`AuthorizeWithChain`（修订 CLC-1.13）；必须通过 `containment-vectors.json`（64）和 `authorize-chain-vectors.json`（15）。第三个代码 `delegation_mode_not_narrower` 属于绑定配置预检，绝不属于 `Contains` | **已声明** |
+| **CLC-A** | §3 文法、§6.1 entailment、§7 intersection、§9 decision、`unknown_constraint`/`invalid_constraint`、`allow_unresolved` + 增量式 `unresolved` 通道（§8.4）、多授权聚合（§9.1）、稳定原因代码（§9.2）；必须通过 `vectors.json`（154）和 `property-cases.json`（1184） | **已声明 — v1 基线** |
+| **CLC-D** | 带有序各层的 `Contains(parent, child)`、两个稳定关系代码（`child_exceeds_parent`、`params_not_narrower`）、配置契约（§13.8.1）、`AuthorizeWithChain`（修订 CLC-1.13）；必须通过 `containment-vectors.json`（64）和 `authorize-chain-vectors.json`（15）。第三个代码 `delegation_mode_not_narrower` 属于绑定配置预检，绝不属于 `Contains`；它有一个 profile 持有的语料（`profile-owned/aic-jwt-da-mode-lattice-vectors.json`，5 条） | **已声明** |
 | **CLC-E** | §6.4 match、§10 satisfaction、证据侧约束文法、`evidence-vectors.json`（32） | **已实现，未声明** |
 
 **为何暂不声明 CLC-E**（§12）：不是材料不足，而是出于**原则**——一致是最低门槛，而门槛是两个*独立*实现（P12）。同一作者实现的一致性达不到门槛；证据侧语义还在与 EMILIA 联合审查，因此审查完成前不作声明。未来如要声明，所需义务已在 §12 中逐项列出：采用三值求值，`unknown` 绝不能视为满足；资格只能来自完整性受保护的原生结果；`ActionId` 是所声明材料投影的摘要；采用封闭的 `CLC-REQUIREMENT-v1`；根据依赖方配置生成要求；通过 `evidence-vectors.json`。
@@ -24,12 +24,12 @@ CLC-v1 定义了**三个一致性类别**。**CLC-A**（授权侧）是基线；
 
 位于 `capability/data/_vectors/clc-v1/` 的两个机器可读测试套件用于检验 CLC-A：
 
-- **`vectors.json`** — 146 个向量，对应附录 B（机器可读的 `kind` 分组不同于附录的语义 B.1–B.6 分组；两种计数都可从语料库复现）：`kind=entail`（57）、`kind=decide`（63）、`kind=intersect`（17）、`kind=syntax`（9）。CLC-1.15 的三个跨型审计向量（`intersect-011/-012/-013`）是 B.4 表之外对 intersect 组的增量；CLC-1.16 的输入边界固定向量（`params-053`–`params-062`，kind=entail）固定 I-JSON 整数界与前导 BOM 拒绕（§6.2），同样位于 B.1–B.6 之外。
+- **`vectors.json`** — 154 个向量，对应附录 B（机器可读的 `kind` 分组不同于附录的语义 B.1–B.6 分组；两种计数都可从语料库复现）：`kind=entail`（65）、`kind=decide`（63）、`kind=intersect`（17）、`kind=syntax`（9）。CLC-1.15 的三个跨型审计向量（`intersect-011/-012/-013`）是 B.4 表之外对 intersect 组的增量；CLC-1.16 的输入边界固定向量（`params-053`–`params-062`）与 CLC-1.17 的数值角点固定向量（`params-063`–`params-070`，均为 kind=entail）固定 §6.2 的数值同一性与 I-JSON 整数界规则——CLC-1.17 已把 B.3 扩展到覆盖它们（P53–P70），因此它们不再位于 B.1–B.6 之外。
 - **`property-cases.json`** — 1184 个用例，锁定 §7 meet 定律、标识符收窄和来源顺序无关性。
 
-CLC-D 增加 `capability/data/_vectors/clc-d/containment-vectors.json`（64）、`containment-property-cases.json`（784 个用例 × 39 个共享操作，前向闭包：`Contains(P,C) ∧ Entails(C,o) ⟹ Entails(P,o)`）、`containment-crosswalk-vectors.json`（44）和 `authorize-chain-vectors.json`（15）。证据侧提供 `evidence-vectors.json`（32）。
+CLC-D 增加 `capability/data/_vectors/clc-d/containment-vectors.json`（64）、`containment-property-cases.json`（784 个用例 × 39 个共享操作，前向闭包：`Contains(P,C) ∧ Entails(C,o) ⟹ Entails(P,o)`，并承载 §13.3 反对称断言）、`containment-crosswalk-vectors.json`（44，含 §13.8.1 义务三的 `out_of_scope` 声明）、`authorize-chain-vectors.json`（15）、`reason-collapse-vectors.json`（3，§13.5 折叠策略）以及 profile 持有的 `profile-owned/aic-jwt-da-mode-lattice-vectors.json`（5，§13.4.5 模式预检）。证据侧提供 `evidence-vectors.json`（32）。
 
-其他生成并锁定的语料库：`param-bounds-vectors.json`（43）、`param-bounds-meet-vectors.json`、`constraint-union-vectors.json`（12）、`constraint-union-collation-vectors.json`（2）、`resolve-vectors.json`（26）、`crosswalk-vectors.json`（13，双向：AEB crossing 成员及 OAuth RAR、AIC-JWT DA、AEG、UCAN、delegation chain → CLC grants 五种外部表示）。
+其他生成并锁定的语料库：`param-bounds-vectors.json`（49）、`param-bounds-meet-vectors.json`、`constraint-union-vectors.json`（12）、`constraint-union-collation-vectors.json`（2）、`resolve-vectors.json`（26）、`crosswalk-vectors.json`（13，双向：AEB crossing 成员及 OAuth RAR、AIC-JWT DA、AEG、UCAN、delegation chain → CLC grants 五种外部表示）。
 
 **通用性经过检验，而非仅作声明**（§12）：配置只是外部格式所有者编写的少量映射代码；核心不为其中任何一种而修改。实现不得重新定义语义、接受 v1 禁止的通配符，或在规范化过程中放宽边界。
 
@@ -65,7 +65,7 @@ CLC-D 增加 `capability/data/_vectors/clc-d/containment-vectors.json`（64）�
 
 ## 总结：一致性审查检查什么
 
-- [ ] CLC-A：`vectors.json`（146）+ `property-cases.json`（1184）通过；不得丢弃 §8.4 的 `allow_unresolved`/`unresolved`。
+- [ ] CLC-A：`vectors.json`（154）+ `property-cases.json`（1184）通过；不得丢弃 §8.4 的 `allow_unresolved`/`unresolved`。
 - [ ] CLC-D：`containment-vectors.json`（64）+ `authorize-chain-vectors.json`（15）通过；`Contains` 始终只比较声明集合。
 - [ ] CLC-E：未声明（未达到独立性门槛，等待 EMILIA 审查）。
 - [ ] minor 门禁：不静默降级；输入不兼容时，在任何层之前报告 `unsupported_language_revision`。
@@ -73,7 +73,7 @@ CLC-D 增加 `capability/data/_vectors/clc-d/containment-vectors.json`（64）�
 
 ## 常见误区
 
-- **沿用 1.15 之前的旧计数**——CLC-1.15 跨型审计之前的文本写 120 个向量 / `kind=intersect`（14）；审计新增 `intersect-011/-012/-013` 后为 123 /（17）；CLC-1.16 收官再增 `params-053`–`params-062`（kind=entail），当前计数为 146 / entail（57）、decide（63）、intersect（17）、syntax（9）。修订历史 CLC-1.8 行的"114 to 120"是当时事实，保留不改。
+- **沿用 1.15 之前的旧计数**——CLC-1.15 跨型审计之前的文本写 120 个向量 / `kind=intersect`（14）；审计新增 `intersect-011/-012/-013` 后为 123 /（17）；CLC-1.16 收官再增 `params-053`–`params-062`（kind=entail），CLC-1.17 数值角点收官又增 `params-063`–`params-070`（kind=entail）与 `pb-044`–`pb-049`，当前计数为 154 / entail（65）、decide（63）、intersect（17）、syntax（9），`param-bounds-vectors.json` 为 49。修订历史 CLC-1.8 行的"114 to 120"是当时事实，保留不改。
 - **声明 CLC-E**——语料库已经存在，但该类别出于原则暂不声明（§12、P12）。
 - **假设各 minor 的 `param_bounds` meet 输入判定稳定**——规范明确不保证（§12.1）。
 

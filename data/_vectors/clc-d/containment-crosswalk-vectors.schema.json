@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.com/schemas/clc-d/containment-crosswalk-vectors.schema.json",
+  "title": "CLC-D containment cross-walk vectors (capability-language-core-v1 §13.8)",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "kind",
+      "spec_clause",
+      "profile",
+      "parent_source",
+      "child_source",
+      "expect",
+      "derivation"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^ccx-[0-9]{3}$",
+        "description": "Unique cross-walk vector identifier (e.g. ccx-001)"
+      },
+      "kind": {
+        "type": "string",
+        "const": "contain-crosswalk",
+        "description": "All CLC-D cross-walk vectors assert Contains over a mapped carrier pair."
+      },
+      "spec_clause": {
+        "type": "string",
+        "description": "capability-language-core-v1 §13.8 / Appendix C reference"
+      },
+      "profile": {
+        "type": "string",
+        "pattern": "->clc-v1$",
+        "description": "Pinned cross-walk profile mapping parent and child native representations to CLC grants."
+      },
+      "parent_source": {
+        "type": "object",
+        "description": "Carrier-native parent boundary representation, mapped by the profile."
+      },
+      "child_source": {
+        "type": "object",
+        "description": "Carrier-native child (requested) representation, mapped by the profile."
+      },
+      "out_of_scope": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "Carrier identity/policy dimensions the profile does not map into a CLC field and therefore declares out of scope (core §13.8.1 obligation 3). The runner MUST fail if any declared dimension still reaches a mapped grant — a dimension the relation cannot see must not be silently dropped, and a profile must not report containment for it."
+      },
+      "expect": {
+        "type": "object",
+        "required": ["contains"],
+        "properties": {
+          "contains": {"type": "boolean"},
+          "reason": {
+            "type": ["string", "null"],
+            "description": "Expected reason on a false result (child_exceeds_parent / params_not_narrower / different_namespace)."
+          }
+        }
+      },
+      "derivation": {
+        "type": "string",
+        "description": "One-line derivation for human review"
+      }
+    },
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,13 @@
+CLC_REVISION = CLC-1.17
+A0 base: inside grant                      -> {"verdict":"allow"}
+A1 widened destination                     -> {"verdict":"deny","reason":"not_in_enum"}
+A2 unit ambiguity (USD)                    -> {"verdict":"deny","reason":"not_in_enum"}
+A2b unit case (cny)                        -> {"verdict":"deny","reason":"not_in_enum"}
+A2c amount above bound                     -> {"verdict":"deny","reason":"params_exceed_grant"}
+A3 unknown required constraint             -> {"verdict":"deny","reason":"unknown_constraint"}
+A4 recognized-not-evaluated (time)         -> {"verdict":"allow_unresolved","unresolved":["varwof/constraint-v1:time:window:[{\"start\":\"09:00\",\"end\":\"17:00\"}]"]}
+A5 retry to another provider (same verdict) -> {"verdict":"allow"}
+C0 child narrows amount                    -> {"contains":true,"reason":""}
+C0b child narrows counterparty set         -> {"contains":true,"reason":""}
+C1 child widens destination set            -> {"contains":false,"reason":"params_not_narrower"}
+C2 child changes currency                  -> {"contains":false,"reason":"params_not_narrower"}

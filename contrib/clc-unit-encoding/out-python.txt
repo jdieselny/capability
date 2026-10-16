@@ -1,0 +1,16 @@
+CLC_REVISION = CLC-1.17
+authorize 30<=50 CNY                   -> {"verdict":"allow"}
+authorize 60<=50 CNY                   -> {"verdict":"deny","reason":"params_exceed_grant"}
+authorize 30 CNY vs USD                -> {"verdict":"deny","reason":"params_exceed_grant"}
+authorize 50.0 vs 50                   -> {"verdict":"allow"}
+authorize cny vs CNY (lowercase)       -> {"verdict":"deny","reason":"params_exceed_grant"}
+entails 30<=50                         -> {"entails":true}
+contains child 30<=50                  -> {"contains":true,"reason":""}
+contains child 60>50                   -> {"contains":false,"reason":"params_not_narrower"}
+contains child USD                     -> {"contains":false,"reason":"params_not_narrower"}
+contains child adds key                -> {"contains":false,"reason":"params_not_narrower"}
+param_bounds value 3000 CNY            -> {"verdict":"allow"}
+param_bounds value 6000 CNY            -> {"verdict":"deny","reason":"params_out_of_range"}
+param_bounds value 3000 EUR            -> {"verdict":"deny","reason":"not_in_enum"}
+param_bounds contains narrow           -> {"contains":true,"reason":""}
+param_bounds contains EUR              -> {"contains":false,"reason":"params_not_narrower"}

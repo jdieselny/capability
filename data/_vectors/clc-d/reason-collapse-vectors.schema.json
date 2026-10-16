@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.com/schemas/clc-d/reason-collapse-vectors.schema.json",
+  "title": "CLC-D reason-code collapse policy vectors (capability-language-core-v1 §13.5)",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "kind",
+      "spec_clause",
+      "code",
+      "collapsible",
+      "origin",
+      "derivation"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^rc-[0-9]{3}$",
+        "description": "Unique reason-collapse vector identifier (e.g. rc-001)"
+      },
+      "kind": {
+        "type": "string",
+        "const": "reason-collapse",
+        "description": "All vectors pin the §13.5 collapse policy for one CLC-D child reason code."
+      },
+      "spec_clause": {
+        "type": "string",
+        "const": "CLC §13.5",
+        "description": "The collapse rule lives in §13.5."
+      },
+      "code": {
+        "type": "string",
+        "enum": ["child_exceeds_parent", "params_not_narrower", "delegation_mode_not_narrower"],
+        "description": "The CLC-D child reason code the vector governs."
+      },
+      "collapsible": {
+        "type": "boolean",
+        "description": "true = an implementation MAY collapse this code into capability_not_authorized at a non-revealing boundary (§13.5); false = the code MUST stay distinguishable."
+      },
+      "collapsible_to": {
+        "type": ["string", "null"],
+        "description": "The single code a collapsible reason may reduce to (capability_not_authorized); null when the code is not collapsible."
+      },
+      "origin": {
+        "type": "string",
+        "enum": ["Contains: layer 2", "Contains: layer 3", "binding-profile pre-check"],
+        "description": "Where the code is produced (§13.5): two relation layers and the §13.4.5 profile pre-check."
+      },
+      "derivation": {
+        "type": "string",
+        "description": "One-line derivation for human review"
+      }
+    },
+    "additionalProperties": false
+  }
+}

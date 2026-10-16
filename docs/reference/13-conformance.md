@@ -12,8 +12,8 @@ CLC-v1 defines **three conformance classes**. **CLC-A** (authorization side) is 
 
 | Class | What it includes | Status |
 |-------|------------------|--------|
-| **CLC-A** | §3 grammar, §6.1 entailment, §7 intersection, §9 decision, `unknown_constraint`/`invalid_constraint`, the `allow_unresolved` + additive `unresolved` channel (§8.4), multi-grant aggregation (§9.1), stable reason codes (§9.2); MUST pass `vectors.json` (146) and `property-cases.json` (1184) | **claimed — the v1 baseline** |
-| **CLC-D** | `Contains(parent, child)` with its ordered layers, two stable relation codes (`child_exceeds_parent`, `params_not_narrower`), the profile contract (§13.8.1), `AuthorizeWithChain` (rev CLC-1.13); MUST pass `containment-vectors.json` (64) + `authorize-chain-vectors.json` (15). The third code `delegation_mode_not_narrower` belongs to the binding-profile pre-check, never `Contains` | **claimed** |
+| **CLC-A** | §3 grammar, §6.1 entailment, §7 intersection, §9 decision, `unknown_constraint`/`invalid_constraint`, the `allow_unresolved` + additive `unresolved` channel (§8.4), multi-grant aggregation (§9.1), stable reason codes (§9.2); MUST pass `vectors.json` (154) and `property-cases.json` (1184) | **claimed — the v1 baseline** |
+| **CLC-D** | `Contains(parent, child)` with its ordered layers, two stable relation codes (`child_exceeds_parent`, `params_not_narrower`), the profile contract (§13.8.1), `AuthorizeWithChain` (rev CLC-1.13); MUST pass `containment-vectors.json` (64) + `authorize-chain-vectors.json` (15). The third code `delegation_mode_not_narrower` belongs to the binding-profile pre-check, never `Contains`; it has a profile-owned corpus (`profile-owned/aic-jwt-da-mode-lattice-vectors.json`, 5) | **claimed** |
 | **CLC-E** | §6.4 match, §10 satisfaction, the evidence-side constraint grammar, `evidence-vectors.json` (32) | **implemented, NOT claimed** |
 
 **Why CLC-E is withheld** (§12): not for lack of material, but on **principle** — agreement is the bar, and the bar is two *independent* implementations (P12). Same-author parity does not meet it; and the evidence-side semantics are under joint review with EMILIA, so no claim is made ahead of that review. The obligations a future claim would carry are enumerated in §12 (verbatim there): three-valued evaluation where `unknown` is never read as satisfied; eligibility from integrity-protected native results only; `ActionId` as the digest of the declared material projection; a closed `CLC-REQUIREMENT-v1`; requirement from relying-party configuration; passing `evidence-vectors.json`.
@@ -24,12 +24,12 @@ An implementation that implements only CLC-A MUST NOT claim CLC-E.
 
 CLC-A conformance is exercised by two machine-readable suites in `capability/data/_vectors/clc-v1/`:
 
-- **`vectors.json`** — 146 vectors mapped to Appendix B (the machine-readable `kind` grouping differs from the appendix's semantic B.1–B.6 grouping; both counts are reproducible from the corpus): `kind=entail` (57), `kind=decide` (63), `kind=intersect` (17), `kind=syntax` (9). The CLC-1.15 cross-type audit vectors (`intersect-011/-012/-013`) extend the intersect group beyond the B.4 table; the CLC-1.16 input-boundary pins (`params-053`–`params-062`, kind=entail) pin the I-JSON integer bound and the leading-BOM refusal (§6.2) and likewise sit outside B.1–B.6.
+- **`vectors.json`** — 154 vectors mapped to Appendix B (the machine-readable `kind` grouping differs from the appendix's semantic B.1–B.6 grouping; both counts are reproducible from the corpus): `kind=entail` (65), `kind=decide` (63), `kind=intersect` (17), `kind=syntax` (9). The CLC-1.15 cross-type audit vectors (`intersect-011/-012/-013`) extend the intersect group beyond the B.4 table; the CLC-1.16 input-boundary pins (`params-053`–`params-062`) and the CLC-1.17 numeric-corner pins (`params-063`–`params-070`), all kind=entail, pin the §6.2 number identity and I-JSON integer-bound rules — in CLC-1.17 B.3 is extended to cover them (P53–P70), so they no longer sit outside B.1–B.6.
 - **`property-cases.json`** — 1184 cases pinning the §7 meet-law, identifier narrowing, and source-order independence.
 
-CLC-D adds `capability/data/_vectors/clc-d/containment-vectors.json` (64), `containment-property-cases.json` (784 cases × 39 shared operations, forward-closure: `Contains(P,C) ∧ Entails(C,o) ⟹ Entails(P,o)`), `containment-crosswalk-vectors.json` (44), and `authorize-chain-vectors.json` (15). The evidence side ships `evidence-vectors.json` (32).
+CLC-D adds `capability/data/_vectors/clc-d/containment-vectors.json` (64), `containment-property-cases.json` (784 cases × 39 shared operations, forward-closure: `Contains(P,C) ∧ Entails(C,o) ⟹ Entails(P,o)`, plus the §13.3 antisymmetry assertion), `containment-crosswalk-vectors.json` (44, with §13.8.1 obligation-3 `out_of_scope` declarations), `authorize-chain-vectors.json` (15), `reason-collapse-vectors.json` (3, the §13.5 collapse policy), and the profile-owned `profile-owned/aic-jwt-da-mode-lattice-vectors.json` (5, the §13.4.5 mode pre-check). The evidence side ships `evidence-vectors.json` (32).
 
-Additional generated/pinned corpora: `param-bounds-vectors.json` (43), `param-bounds-meet-vectors.json`, `constraint-union-vectors.json` (12), `constraint-union-collation-vectors.json` (2), `resolve-vectors.json` (26), `crosswalk-vectors.json` (13, both directions: AEB crossing members + five foreign representations incl. OAuth RAR, AIC-JWT DA, AEG, UCAN, delegation chain → CLC grants).
+Additional generated/pinned corpora: `param-bounds-vectors.json` (49), `param-bounds-meet-vectors.json`, `constraint-union-vectors.json` (12), `constraint-union-collation-vectors.json` (2), `resolve-vectors.json` (26), `crosswalk-vectors.json` (13, both directions: AEB crossing members + five foreign representations incl. OAuth RAR, AIC-JWT DA, AEG, UCAN, delegation chain → CLC grants).
 
 **Genericity is exercised, not asserted** (§12): a profile is a few lines of mapping written by the foreign-format owner; the core is not modified for any of them. Implementations MUST NOT redefine semantics, accept v1-forbidden wildcards, or broaden bounds during canonicalization.
 
@@ -65,7 +65,7 @@ Every implementation declares a language revision `CLC-<major>.<minor>`; **this 
 
 ## Summary: what a conformance review checks
 
-- [ ] CLC-A: `vectors.json` (146) + `property-cases.json` (1184) pass; §8.4 `allow_unresolved`/`unresolved` not dropped.
+- [ ] CLC-A: `vectors.json` (154) + `property-cases.json` (1184) pass; §8.4 `allow_unresolved`/`unresolved` not dropped.
 - [ ] CLC-D: `containment-vectors.json` (64) + `authorize-chain-vectors.json` (15) pass; `Contains` stays declared-set-only.
 - [ ] CLC-E: NOT claimed (independence bar unmet, EMILIA review pending).
 - [ ] Minor gate: no silent downgrade; `unsupported_language_revision` before any layer on incompatible input.
@@ -73,7 +73,7 @@ Every implementation declares a language revision `CLC-<major>.<minor>`; **this 
 
 ## Common pitfalls
 
-- **Trusting pre-1.15 printed counts** — text predating the CLC-1.15 cross-type audit says 120 vectors / `kind=intersect` (14); the audit added `intersect-011/-012/-013`, making 123 / (17) — and the CLC-1.16 closeout added `params-053`–`params-062` (kind=entail), so the current counts are 146 / entail (57), decide (63), intersect (17), syntax (9). The CLC-1.8 history row's "114 to 120" is correct for its time and stays.
+- **Trusting pre-1.15 printed counts** — text predating the CLC-1.15 cross-type audit says 120 vectors / `kind=intersect` (14); the audit added `intersect-011/-012/-013`, making 123 / (17) — the CLC-1.16 closeout added `params-053`–`params-062` (kind=entail), and the CLC-1.17 numeric-corner closeout added `params-063`–`params-070` (kind=entail) and `pb-044`–`pb-049`, so the current counts are 154 / entail (65), decide (63), intersect (17), syntax (9), with `param-bounds-vectors.json` at 49. The CLC-1.8 history row's "114 to 120" is correct for its time and stays.
 - **Claiming CLC-E** — the corpus exists, but the class is withheld on principle (§12, P12).
 - **Assuming verdict stability on `param_bounds`-meet inputs across minors** — explicitly not guaranteed (§12.1).
 

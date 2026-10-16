@@ -1,0 +1,32 @@
+[
+ {
+  "id": "rc-001",
+  "kind": "reason-collapse",
+  "spec_clause": "CLC §13.5",
+  "code": "child_exceeds_parent",
+  "collapsible": true,
+  "collapsible_to": "capability_not_authorized",
+  "origin": "Contains: layer 2",
+  "derivation": "Identifier failures may collapse to capability_not_authorized at a boundary that must not leak policy shape (§11), but MUST stay distinguishable at the relation layer"
+ },
+ {
+  "id": "rc-002",
+  "kind": "reason-collapse",
+  "spec_clause": "CLC §13.5",
+  "code": "params_not_narrower",
+  "collapsible": false,
+  "collapsible_to": null,
+  "origin": "Contains: layer 3",
+  "derivation": "MUST NOT be collapsed: it carries the parameter-narrowing refusal (§13.4.3) and stays distinguishable even at a boundary"
+ },
+ {
+  "id": "rc-003",
+  "kind": "reason-collapse",
+  "spec_clause": "CLC §13.5",
+  "code": "delegation_mode_not_narrower",
+  "collapsible": false,
+  "collapsible_to": null,
+  "origin": "binding-profile pre-check",
+  "derivation": "A profile that maps a mode-carrying carrier MUST NOT collapse it (§13.4.5 / §13.5)"
+ }
+]

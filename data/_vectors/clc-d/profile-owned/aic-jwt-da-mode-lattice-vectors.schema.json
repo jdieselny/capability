@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.com/schemas/clc-d/aic-jwt-da-mode-lattice-vectors.schema.json",
+  "title": "AIC-JWT DA delegation-mode lattice vectors (capability-language-core-v1 §13.4.5)",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "kind",
+      "spec_clause",
+      "profile",
+      "parent_mode",
+      "child_mode",
+      "expect",
+      "derivation"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^aij-ml-[0-9]{3}$",
+        "description": "Unique AIC-JWT DA mode-lattice vector identifier (e.g. aij-ml-001)"
+      },
+      "kind": {
+        "type": "string",
+        "const": "mode-lattice",
+        "description": "All vectors assert the binding-profile delegation-mode pre-check."
+      },
+      "spec_clause": {
+        "type": "string",
+        "const": "CLC §13.4.5",
+        "description": "The delegation-mode lattice is a binding-profile pre-check, never a Contains argument."
+      },
+      "profile": {
+        "type": "string",
+        "const": "aic-jwt-da->clc-v1",
+        "description": "The carrier whose lattice order is pinned here.  The AIC-JWT order is authorized < representative."
+      },
+      "parent_mode": {
+        "type": ["string", "null"],
+        "enum": ["authorized", "representative", null],
+        "description": "Delegation mode of the parent boundary grant, or null when the carrier is used without a mode."
+      },
+      "child_mode": {
+        "type": ["string", "null"],
+        "enum": ["authorized", "representative", null],
+        "description": "Delegation mode of the child (requested) grant, or null when not bound."
+      },
+      "expect": {
+        "type": "object",
+        "required": ["pre_check"],
+        "properties": {
+          "pre_check": {
+            "type": "string",
+            "enum": ["narrows", "delegation_mode_not_narrower"],
+            "description": "Expected outcome of the mode pre-check: 'narrows' when the child mode does not widen the parent's; 'delegation_mode_not_narrower' when it does."
+          }
+        }
+      },
+      "derivation": {
+        "type": "string",
+        "description": "One-line derivation for human review"
+      }
+    },
+    "additionalProperties": false
+  }
+}

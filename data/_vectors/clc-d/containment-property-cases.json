@@ -2,7 +2,7 @@
  "_meta": {
   "count": 784,
   "generator": "capability/scripts/gen-contain-property-cases.py",
-  "property": "CLC-D forward closure: Contains(P,C) never raises; and when Contains(P,C) is true and Entails(C,o) is true, Entails(P,o) is true, for every o in `ops`",
+  "property": "CLC-D forward closure: Contains(P,C) never raises; and when Contains(P,C) is true and Entails(C,o) is true, Entails(P,o) is true, for every o in `ops`.  Antisymmetry on semantic equivalence classes (core \u00a713.3, CL 13.10.8): mutual containment is reported only between members of the same semantic class (`params:{}` \u2261 absent).",
   "spec_clause": "CLC \u00a713.4 (layers 2-4) and \u00a713.3 antisymmetry; CLC-v1 \u00a75 Entails side",
   "status": "reference",
   "title": "CLC-D containment forward-closure property cases",
