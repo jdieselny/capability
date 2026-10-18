@@ -19,6 +19,52 @@ jobs:
       - name: Install jsonschema
         run: pip install --quiet jsonschema
 
+      - name: Bilingual reference docs are in step (audit C-1)
+        run: python3 scripts/check-bilingual.py
+
+      - name: "New corpora: counts, shapes and declaration schema (audit C-2)"
+        run: |
+          python3 - <<'PY'
+          import json, jsonschema, sys
+          base = 'data/_vectors/clc-v1/'
+          problems = []
+          def load(name):
+              with open(base + name, encoding='utf-8') as f:
+                  return json.load(f)
+          def check_list(name, want, required):
+              data = load(name)
+              if len(data) != want:
+                  problems.append(f'{name}: {len(data)} entries, expected {want}')
+              for e in data:
+                  for k in required:
+                      if k not in e:
+                          problems.append(f'{name}: {e.get("id", "?")} lacks {k}')
+              return data
+          check_list('symmetry-vectors.json', 50, ['id', 'kind', 'expect'])
+          check_list('quantity-vectors.json', 8, ['id', 'kind', 'capability', 'expect'])
+          check_list('string-domain-vectors.json', 24, ['id', 'domain', 'param', 'grant', 'op', 'expect'])
+          sdecl = check_list('scheme-declaration-vectors.json', 9, ['id', 'expect', 'declaration'])
+          pd = load('profile-declarations.json')
+          if pd.get('schema') != 'clc-profile-declarations-v1':
+              problems.append('profile-declarations.json: schema mismatch')
+          if len(pd.get('declarations', [])) != 11:
+              problems.append('profile-declarations.json: not 11 declarations')
+          schema = load('scheme-declaration.schema.json')
+          schema['required'] = [r for r in schema.get('required', []) if r != 'digest']
+          for c in sdecl:
+              if c['expect'] == 'accept':
+                  try:
+                      jsonschema.validate(c['declaration'], schema)
+                  except jsonschema.ValidationError as e:
+                      problems.append(f"{c['id']}: {e.message[:60]}")
+          if problems:
+              print('new corpora check FAILED')
+              for p in problems:
+                  print('  ' + p)
+              sys.exit(1)
+          print('new corpora check OK: 50/8/24/9 + 11 declarations')
+          PY
+
       - name: Validate vectors against schema, and against the documented count
         run: |
           python3 - <<'PY'

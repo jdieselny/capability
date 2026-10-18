@@ -1,0 +1,17 @@
+OAuth RAR authorization_details → CLC grants
+Members: RFC 9396 §2/§3 (checked 2026-10-17)
+
+1. Mapping
+   oauth-rar/rar-v1:payment:transfer    params=map[amount:5000 currency:[CNY] identifier:[acct-1234]]
+   oauth-rar/rar-v1:payment:refund      params=map[amount:5000 currency:[CNY] identifier:[acct-1234]]
+   residual: locations [https://api.bank.example]: a where-it-may-be-used constraint has no CLC slot
+
+2. Operations
+   transfer 3000 CNY                    want allow  got allow                        PASS
+   transfer 6000 CNY (above bound)      want deny   got deny/params_exceed_grant     PASS
+   transfer 3000 USD (not the enum)     want deny   got deny/not_in_enum             PASS
+   refund 1000 CNY (second action)      want allow  got allow                        PASS
+
+Reading: actions multiply into grants, type-specific fields become params,
+and `locations` has no CLC slot.  A binding profile must state both the
+type→scheme naming rule and what happens to locations (carrier-enforced).

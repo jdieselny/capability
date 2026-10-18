@@ -1,12 +1,12 @@
 # 07 · 参数、参数边界与 BoundMeet
 
-> **规范来源：** [`capability-language-core-v1.md`](../../capability-language-core-v1.md) §6.2（Parameters）、§6.5（Extended parameter bounds）、§6.6（Intersection of bounds）
+> **规范来源：** [`capability-language-core-v1.md`](../../capability-language-core-v1.md) §6.2（Parameters）、§6.5（Extended parameter bounds）、§6.6（Intersection of bounds）、§6.7（Scheme Declaration）
 > 本页是便于阅读的指南。若出现冲突，以规范为准。
 > 状态：预览版——不用于生产环境。
 
 ## 速览
 
-参数约束来自两个**绝不混用**的字段：`params`（v1.1 值规则）和 `param_bounds`（CLC-1.10：有符号边界、枚举基数、嵌套、可选键）。现有 `params` 输入保持原义。§6.6 边界 meet 使用独立封闭代数；不能表示为单一值族就拒绝。
+参数约束来自两个**绝不混用**的字段：`params`（v1.1 值规则）和 `param_bounds`（CLC-1.10：有符号边界、枚举基数、嵌套、可选键）。现有 `params` 输入保持原义。**§6.7 scheme declaration**（`CLC-SCHEME-v1`）允许按参数声明其 domain（`quantity`、`decimal-string`、`subdomain`、`path-prefix`），而不必仅依赖形状推断；未声明的参数仍沿用推断出的 domain。§6.6 边界 meet 使用独立封闭代数；不能表示为单一值族就拒绝。
 
 ## 1. `params`：值规则（§6.2）
 
@@ -61,6 +61,21 @@ Bound = {   // at most one value family + the orthogonal "optional"
 - **数值值族（layer 9）：** `min ≤ v ≤ max`（含端点）→ `params_out_of_range`（[`pb-004`](../../../data/_vectors/clc-v1/param-bounds-vectors.json)：`limit:9` 对 `min:10`）。`step`：`q = v/step; q==floor(q) && q*step==v`（binary64）→ `params_not_multiple`（[`pb-011`](../../../data/_vectors/clc-v1/param-bounds-vectors.json)：`step:0.5` 配 `1.3`）。数值边界应用于**非数字**请求值 → fail-closed 为 `params_exceed_grant`（[`pb-037`](../../../data/_vectors/clc-v1/param-bounds-vectors.json)：`limit:"x"`）。
 - **嵌套值族：** 对对象值键递归应用同一规则；各层键闭合并对称，optional 逐层适用。将 `nested` 边界应用到**非对象** → fail-closed 为 `params_exceed_grant`（[`pb-030`](../../../data/_vectors/clc-v1/param-bounds-vectors.json)：`columns:5`）。
 - **Scheme 默认值（`param_defaults`）：** 第 4 步前物化到 `O`；优先级为 **显式 operation 值 > scheme 默认值 > 缺失**（[`pb-042`](../../../data/_vectors/clc-v1/param-bounds-vectors.json)：显式 `50` 胜过默认值 `10` → `allow`）。默认值不添加未声明键；`optional:true` 键不设默认值。
+
+
+## 2a. §6.7 scheme declaration（CLC-SCHEME-v1）
+
+scheme declaration 为每个能力 scheme 声明每个参数的 domain。它是求值输入（由载体或依赖方固定），CLC 不会自动获取。若存在声明，则按声明的 domain 判断；未声明的参数沿用形状推断的 domain。
+
+**新增的四个 domain（除 bound/enum/exact 外）：**
+| Domain | 值 | 比较方式 | 包含关系 |
+|---|---|---|---|
+| `quantity` | `{"value": number, "unit": string, "scale"?: integer}` | 单位必须等于声明的 unit（不转换）；按 `value × 10^-scale` 比较 | 同 unit，child ≤ parent |
+| `decimal-string` | 十进制字面量 | 值空间比较（`"500"` ≡ `"500.00"`、`"1e3"` ≡ `"1000"`、`"007"` ≡ `"7"`） | child ≤ parent |
+| `subdomain` | DNS 名称 | 整个标签的后缀匹配，不区分大小写 | child 是 parent 或位于其下 |
+| `path-prefix` | 路径 | 以段边界为前缀（`/a/b` 不覆盖 `/a/bc`） | child 是 parent 或位于其下 |
+
+**求值要点：** 授权按声明 domain 进行；声明 domain 的参数必须出现在 `params` 中，而不是 `param_bounds`（否则 `invalid_params_binding`）；`Contains` 在**父方**的 declared domain 下比较，若两方 domain 不同则拒绝为 `params_not_narrower`；`BoundMeet` 只对同 domain 值求交，跨 domain 则拒绝为 `invalid_params_binding`。声明校验在第 1 层之前进行（畸形/摘要不符/不支持的 domain → `unsupported_domain`）。
 
 ## 3. `BoundMeet`——边界求交（§6.6，CLC-1.14 新增/1.15 修订）
 

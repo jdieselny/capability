@@ -11,7 +11,7 @@ the file lengths, checked against the files on 2026-10-18.
 | CLC-D containment | 4 | 87 |
 | Carrier cross-walks | 3 | 57 (+11 profile declarations) |
 | Evidence side | 2 | 44 |
-| Symmetry and declared domains (new) | 3 | 80 |
+| Symmetry and declared domains (CLC-1.18/1.19) | 4 | 91 |
 | Property corpora (generate inputs, assert invariants) | 3 | — |
 
 ## CLC-A authorization core (`data/_vectors/clc-v1/`)
@@ -54,7 +54,8 @@ the file lengths, checked against the files on 2026-10-18.
 
 | File | Vectors | Kinds | What it pins |
 |---|---|---|---|
-| `symmetry-vectors.json` | 48 | symmetry 48 | authorization ⇄ evidence pairs, chain/multi-grant unions, relations |
+| `symmetry-vectors.json` | 50 | symmetry 50 | authorization ⇄ evidence pairs, chain/multi-grant unions, §11 relations and their derived facts |
+| `scheme-declaration-vectors.json` | 9 | (no kind field) | §6.7 `CLC-SCHEME-v1` declaration validation: digest match, member closure, `unsupported_domain`, `invalid_params_binding` |
 | `quantity-vectors.json` | 8 | authorize 5, contains 3 | `quantity` domain pilot |
 | `string-domain-vectors.json` | 24 | (no kind field) | `decimal-string`, `subdomain`, `path-prefix`, including the lexical refusals |
 
@@ -75,7 +76,7 @@ the file lengths, checked against the files on 2026-10-18.
 | cross-walks | `internal/crosswalkvectors` (+ profile declarations) | crosswalk runners / Java test-local copy |
 | evidence | `internal/evidencevectors` | — (Go only) |
 | symmetry | `internal/symmetryvectors` | — (Go only) |
-| quantity / declared domains | `internal/schemedecl` + `semantics` | `quantity-vectors-run.py` / `ts/quantity-vectors-run.ts` |
+| scheme declarations, quantity, declared domains | `internal/schemedecl` + `semantics` | `quantity-vectors-run.py` / `ts/quantity-vectors-run.ts` |
 
 ## Notes
 
@@ -84,3 +85,10 @@ the file lengths, checked against the files on 2026-10-18.
   case.  A `kind` field would make it uniform with the other corpora.
 - The three property corpora are not counted as vectors: they generate inputs
   and assert an invariant.
+- **OCMP (2026-10-18, structured, three ports):** every vector carries a
+  **structured `inputs` object** (the original prose is kept under
+  `description`).  Go (`register/ocmp`), Python (`aic-capability-demo/ocmp.py`)
+  and TypeScript (`aic-capability-demo/ts/ocmp.ts`) all read the corpus
+  directly and pass 12/12; the Python/TypeScript outputs are byte-identical
+  (`contrib/ocmp-parity/`).  The three ports share an author, so the profile
+  claim is still short of P12's independent-implementation bar.

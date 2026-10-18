@@ -1,6 +1,6 @@
 # 15 · Glossary
 
-> **Normative source:** [`capability-language-core-v1.md`](../capability-language-core-v1.md) §2, §13.2
+> **Normative source:** [`capability-language-core-v1.md`](../capability-language-core-v1.md) §2, §6.7, §9.2, §11, §13.2, §13.8.1, §13.9.7
 > This page is a readable guide. In case of conflict, the normative specification wins.
 > Status: Preview — not for production use.
 
@@ -30,6 +30,8 @@
 
 **CapabilityId** — Structured name identifying a class of actions within a scheme (per the §3 grammar) (§2/§3).
 
+**Carrier decision state** — A carrier's own refusal/deferral state (permanent or transient refusal, `not-evaluated`, established-negative / not-established / stale, undecided, local-only). §13.9.7 (informative, rev CLC-1.18) maps each onto the three CLC verdicts and the `Resolve` values; it is never a fourth verdict. See [12-containment](12-containment.md).
+
 **CLC-A / CLC-D / CLC-E** — Conformance classes: authorization baseline (claimed), delegation containment (claimed), evidence side (**implemented, not claimed**) (§12). See [13-conformance](13-conformance.md).
 
 **CLC-<major>.<minor>** — The language revision an implementation declares and each input is authored against; an input without a declaration is treated as CLC-1.0 (§12.1).
@@ -43,6 +45,8 @@
 ## D
 
 **Decision** — Authorization-side result: `{verdict: "allow"|"deny"|"allow_unresolved", reason, unresolved}` (§9).
+
+**Declared domain** — The domain a scheme declaration states for a parameter: the shape-inferred `bound` / `enum` / `exact`, or one of the four CLC-1.19 domains `quantity`, `decimal-string`, `subdomain`, `path-prefix`. A parameter with no declaration keeps the shape-inferred domain (§6.7). See [07-parameters](07-parameters.md).
 
 **Declared set** — The parameters a grant carries as constraints on operations (§6.2 value semantics), plus its declared key set (union of `params` and `param_bounds` keys) (§13.2/§13.4.3).
 
@@ -96,6 +100,8 @@
 
 **Reason code** — A stable identifier; canonical code = everything before the first `:`; `: <detail>` is a diagnostic suffix only (§9.2).
 
+**Relation between two artifacts (not expressible)** — CLC evaluates role expressions over facts and has no term for a relation that *connects* two artifacts; a carrier MUST normalize such a relation into a fact its own verifier establishes, or enforce it outside the projection, and the presence of the two endpoints is never the relation (§11, rev CLC-1.18).
+
 **Resolve** — Post-decision function consuming a Decision to discharge residual obligations (§8.5).
 
 **Residual obligation** — A recognized-but-unevaluated constraint carried on `unresolved` (§8.4).
@@ -104,7 +110,19 @@
 
 **Satisfaction** — Evidence-side verdict: `SATISFIED` or `UNSATISFIED` (binary; `unknown` is internal) (§10).
 
+**Scheme declaration** — A content-addressed `CLC-SCHEME-v1` artifact stating each parameter's domain for one scheme; pinned by the carrier or the relying party, never fetched by the core, its digest covering the JCS form without the `digest` member (§6.7, rev CLC-1.19). See [07-parameters](07-parameters.md).
+
+## T
+
+**Transitivity basis** — What a profile that checks a delegation chain MUST declare before claiming the check: definition-derived, mechanically-checkable (finite domain + deterministic procedure), or asserted. `Contains` is per-pair and claims no transitive closure (§13.8.1 obligation 6, rev CLC-1.18).
+
 ## U
+
+**Union axis** — A conjunctive carrier field along a chain (accumulated `constraints`, ATN `preconditions`, AAE `CONSTRAINTS`, a `requires` list): it composes by the §7.1 constraint union, and a profile MUST NOT report it as a containment result (§13.8.1 obligation 7, rev CLC-1.18).
+
+**unit_mismatch** — Reason code (§9.1 layer 9): a `quantity` value's unit differs from the unit fixed by the scheme declaration; units are never converted (§6.7, rev CLC-1.19).
+
+**unsupported_domain** — Fail-closed reason when a scheme declaration names a domain the implementation does not support, is malformed, or its digest does not match; declaration validation resolves before §9.1 layer 1 (§6.7, rev CLC-1.19).
 
 **unsupported_language_revision** — Fail-closed reason when an input's declared revision is incompatible (§12.1).
 

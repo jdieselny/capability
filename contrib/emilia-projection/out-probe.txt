@@ -1,0 +1,39 @@
+EMILIA → CLC evidence projection probe
+AEC requirement: draft-schrock-ep-authorization-evidence-chain-08 §4
+
+1. EP-AEC-REQUIREMENT-v1 → CLC-REQUIREMENT-v1
+{
+  "@version": "CLC-REQUIREMENT-v1",
+  "requirement_id": "treasury-wire-evidence@7",
+  "expression": "ep-quorum AND policy-permit",
+  "constraints": [
+    {
+      "role": "ep-quorum",
+      "constraint": "varwof/evidence-v1:freshness:sec:300"
+    },
+    {
+      "role": "policy-permit",
+      "constraint": "varwof/evidence-v1:freshness:sec:600"
+    },
+    {
+      "role": "ep-quorum",
+      "constraint": "varwof/evidence-v1:quorum:distinct:2"
+    }
+  ]
+}
+   residuals:
+   - quorum role mapped from component_type "ep-human-authorization", but the expression names "ep-quorum"
+   - subject_id_source=native-verifier: carrier-owned
+   - status_required[ep-quorum]: carrier-owned, no CLC constraint
+   - required_binding policy-permit -permits-> ep-quorum: a relation between facts is not expressible
+   - purpose: descriptive, dropped
+
+2. CLC evaluation over projected facts (§10)
+   1) two verified approvals + one permit                  want SATISFIED   got SATISFIED/  PASS
+   2) one approval unverified                              want UNSATISFIED got UNSATISFIED/quorum:distinct_subjects=1<threshold=2 PASS
+   3) approval older than 300s                             want UNSATISFIED got UNSATISFIED/freshness:stale PASS
+   4) facts typed ep-human-authorization (literal component_type) want UNSATISFIED got UNSATISFIED/requirement:expression_false PASS
+
+3. CAID action identity → CLC §4.2 projection
+   same tool+args, extra occurrence_id      want MATCH           got MATCH           PASS
+   args amount changed                      want NOT_EQUIVALENT  got NOT_EQUIVALENT  PASS

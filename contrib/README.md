@@ -5,6 +5,24 @@
 也不参与 `data/` 的 schema 校验；它们的门是
 `.github/workflows/clc-vectors.yml` 末尾的"两实现一致性"一步。
 
+## 状态（audit C-6）
+
+本目录内的一切均为 **informative / experimental**：可运行、可复核，但不构成
+规范性要求。规范文本只在 `docs/capability-language-core-v1.md`；语料与
+声明 schema 在 `data/_vectors/clc-v1/`。下表只说明各探针的性质，避免把实验
+结论误读为强制语义。
+
+| 目录 | 性质 | 说明 |
+|---|---|---|
+| `clc-unit-encoding/` | experimental | 单位编码的两种写法对比 |
+| `iicp-touchpoint/` | experimental | 固定 grant/operation 对与 12 条不利用例 |
+| `emilia-projection/` | informative | AEC requirement → CLC 的投影探针 |
+| `gilda-projection/` | informative | 审计记录 → CLC 结果的投影探针 |
+| `oasnt-projection/` | informative | 批准令牌 → Fact + 身份的投影探针 |
+| `asor-authorization-projection/` | informative | ASOR 链 → Grants 的投影探针 |
+| `rar-authorization-projection/` | informative | RAR details → Grants 的投影探针 |
+| `quantity-domain/` | informative | CLC-1.19 `quantity` 的三语言试点输出 |
+
 ## 内容
 
 ### `clc-unit-encoding/`

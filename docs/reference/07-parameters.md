@@ -1,12 +1,12 @@
 # 07 · Parameters, parameter bounds, and BoundMeet
 
-> **Normative source:** [`capability-language-core-v1.md`](../capability-language-core-v1.md) §6.2 (Parameters), §6.5 (Extended parameter bounds), §6.6 (Intersection of bounds)
+> **Normative source:** [`capability-language-core-v1.md`](../capability-language-core-v1.md) §6.2 (Parameters), §6.5 (Extended parameter bounds), §6.6 (Intersection of bounds), §6.7 (Scheme Declaration)
 > This page is a readable guide. In case of conflict, the normative specification wins.
 > Status: Preview — not for production use.
 
 ## TL;DR
 
-Parameter constraints come from two **never-mixed fields**: `params` (the v1.1 value rules) and `param_bounds` (CLC-1.10: signed bounds, enum cardinality, nested, optional keys). Existing `params` inputs keep their meaning. The §6.6 bounds-meet has its own closed algebra, refusing anything unrepresentable in one value family.
+Parameter constraints come from two **never-mixed fields**: `params` (the v1.1 value rules) and `param_bounds` (CLC-1.10: signed bounds, enum cardinality, nested, optional keys). Existing `params` inputs keep their meaning. **§6.7 scheme declaration** (`CLC-SCHEME-v1`) allows stating parameter domains (`quantity`, `decimal-string`, `subdomain`, `path-prefix`) instead of relying solely on shape inference; a parameter without a declaration keeps its inferred domain. The §6.6 bounds-meet has its own closed algebra, refusing anything unrepresentable in one value family.
 
 ## 1. `params`: the value rules (§6.2)
 
@@ -61,6 +61,21 @@ Every member is optional, the object is **closed** (unknown members rejected), a
 - **Numeric family (layer 9):** `min ≤ v ≤ max` (each bound inclusive) → `params_out_of_range` ([`pb-004`](../../data/_vectors/clc-v1/param-bounds-vectors.json): `limit:9` vs `min:10`). `step`: `q = v/step; q==floor(q) && q*step==v` (binary64) → `params_not_multiple` ([`pb-011`](../../data/_vectors/clc-v1/param-bounds-vectors.json): `1.3` with `step:0.5`). A numeric-family bound applied to a **non-number** request value → fail-closed `params_exceed_grant` ([`pb-037`](../../data/_vectors/clc-v1/param-bounds-vectors.json): `limit:"x"`).
 - **Nested family:** recursion on an object-valued key with the same rules, symmetric key closure and optional at every depth. A `nested` bound applied to a **non-object** → fail-closed `params_exceed_grant` ([`pb-030`](../../data/_vectors/clc-v1/param-bounds-vectors.json): `columns:5`).
 - **Scheme defaults (`param_defaults`):** materialize into `O` before step 4; precedence **explicit operation value > scheme default > absent** ([`pb-042`](../../data/_vectors/clc-v1/param-bounds-vectors.json): explicit `50` beats default `10` → `allow`). A default never adds an undeclared key; `optional:true` keys are never defaulted.
+
+
+## 2a. §6.7 scheme declaration (CLC-SCHEME-v1)
+
+A scheme declaration states, per capability scheme, the domain of each parameter. It is an input (pinned by carrier/relying party) and the core never fetches it. When present, a declared domain governs; parameters without a declaration keep the shape-inferred domain.
+
+**Domains (in addition to bound/enum/exact):**
+| Domain | Value | Comparison | Containment |
+|---|---|---|---|
+| `quantity` | `{"value": number, "unit": string, "scale"?: integer}` | unit equals the declared unit (no conversion); `value × 10^-scale` | same unit; child ≤ parent |
+| `decimal-string` | decimal literal | value-space comparison (`"500"` ≡ `"500.00"`, `"1e3"` ≡ `"1000"`, `"007"` ≡ `"7"`) | child ≤ parent |
+| `subdomain` | DNS name | whole-label suffix, case-insensitive | child is parent or below |
+| `path-prefix` | path | segment-boundary prefix (`/a/b` does not cover `/a/bc`) | child is parent or below |
+
+**Evaluation rules (summary):** authorization uses the declared domain; a declared-domain parameter MUST be in `params` (not `param_bounds`) — a `param_bounds` entry on a declared-domain key is `invalid_params_binding`; `Contains` compares under the **parent's** declared domain and refuses a domain mismatch with `params_not_narrower`; `BoundMeet` meets same-domain values and refuses cross-domain pairs with `invalid_params_binding`. Declaration validation occurs before layer 1 (malformed/mismatched digest/unsupported domain → `unsupported_domain`).
 
 ## 3. `BoundMeet` — intersecting bounds (§6.6, added CLC-1.14/revised 1.15)
 

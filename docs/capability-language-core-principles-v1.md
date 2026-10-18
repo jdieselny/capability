@@ -222,7 +222,7 @@ that tests it, and its state.  States are `ok`, `gap` (something is missing) or
 | P2 No control flow | §3 grammar, §6.3 | no such construct exists | ok |
 | P3 Immutable values | §6.3, §9 | both runners, 1184 property cases | ok |
 | P4 Domains | §6.2 | `params-001..027` | ok |
-| P5 Determinism incl. reason | §9.1 (pre-check + 11 layers), §9.2 (21 codes), §12.1 | 154 vectors assert the canonical reason (incl. §9.1 multi-grant aggregation, rev CLC-1.3) | ok — the 6 undocumented codes and the revision rule were added; the layer table now matches the numbering the corpus cites |
+| P5 Determinism incl. reason | §9.1 (pre-check + 11 layers), §9.2 (29 codes + `{type}:violated`), §12.1 | 154 vectors assert the canonical reason (incl. §9.1 multi-grant aggregation, rev CLC-1.3) | ok — the 6 undocumented codes and the revision rule were added; the layer table now matches the numbering the corpus cites; CLC-1.19 added `unit_mismatch` and `unsupported_domain` (resolved before §9.1 layer 1) |
 | P6 Fail-closed | §6.2.1, §6.3 step 4, §9.1 layers 5–7 | `params-*`, `undeclared-001/002`, closure probes in the property test | ok — closure applies to the effective grant (§7 rule 2), so an undeclared parameter is still denied |
 | P7 Define once | §11, Appendix A | `ruleexec` consumes `semantics.Entails` | **gap** — no carrier document cites CLC yet, and `aic-jwt/wit-wpt-interop` ships a second subset implementation whose wildcard surface (`**`, `{a,b}`, `[a-z]`) is v1-forbidden |
 | P8 Separation | Appendix A | Go, Python and TypeScript agree on 154 vectors **and** 1184 property cases | **gap** — all three implementations share one author; third-party parity is the unproven half |

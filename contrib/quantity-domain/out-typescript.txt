@@ -1,0 +1,39 @@
+CLC-1.19 quantity domain
+declaration: std/payments-v1@2026-10-17
+------------------------------------------------------------------------------------------------
+q-001   authorize  want allow                            got allow                            PASS
+q-002   authorize  want deny/params_exceed_grant         got deny/params_exceed_grant         PASS
+q-003   authorize  want deny/unit_mismatch               got deny/unit_mismatch               PASS
+q-004   authorize  want allow                            got allow                            PASS
+q-005   authorize  want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+q-006   contains   want contains=true                    got contains=true                    PASS
+q-007   contains   want contains=false/params_not_narrower got contains=false/params_not_narrower PASS
+q-008   contains   want contains=false/params_not_narrower got contains=false/params_not_narrower PASS
+u-001   domain     want deny/unsupported_domain          got deny/unsupported_domain          PASS
+p-001   domain     want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-001   decimal-string want allow                            got allow                            PASS
+s-002   decimal-string want allow                            got allow                            PASS
+s-003   decimal-string want allow                            got allow                            PASS
+s-004   decimal-string want deny/params_exceed_grant         got deny/params_exceed_grant         PASS
+s-005   subdomain  want allow                            got allow                            PASS
+s-006   subdomain  want allow                            got allow                            PASS
+s-007   subdomain  want deny/params_exceed_grant         got deny/params_exceed_grant         PASS
+s-008   path-prefix want allow                            got allow                            PASS
+s-009   path-prefix want deny/params_exceed_grant         got deny/params_exceed_grant         PASS
+s-010   path-prefix want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-011   subdomain  want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-012   decimal-string want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-013   decimal-string want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-014   decimal-string want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-015   decimal-string want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-016   decimal-string want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-017   decimal-string want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-018   decimal-string want allow                            got allow                            PASS
+s-019   subdomain  want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-020   subdomain  want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-021   subdomain  want allow                            got allow                            PASS
+s-022   path-prefix want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-023   subdomain  want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+s-024   subdomain  want deny/invalid_params_binding      got deny/invalid_params_binding      PASS
+------------------------------------------------------------------------------------------------
+Total: 34 | Pass: 34 | Fail: 0

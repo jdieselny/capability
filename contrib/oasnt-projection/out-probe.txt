@@ -1,0 +1,29 @@
+OASNT approval → CLC evidence projection
+Fields: draft-thallapelly-oasnt-02 §5.3/§6.2 (checked 2026-10-17)
+
+canonical action: payments.transfer|amount=3000&currency=CNY
+adg: 0MRb5YozGHPT71GiH-DSFLJm1s2G4ZDLfiBE_CD_UzE
+
+1. Action binding (adg) against the presented action
+   same action                  want MATCH           got MATCH           PASS
+   amount 3001                  want NOT_EQUIVALENT  got NOT_EQUIVALENT  PASS
+   extra parameter added        want NOT_EQUIVALENT  got NOT_EQUIVALENT  PASS
+
+2. Approval as a CLC fact (§10 requirement over one role)
+   int=clean, approved 30s ago      want SATISFIED   got SATISFIED   PASS
+   int=compromised (not eligible)   want UNSATISFIED got UNSATISFIED PASS
+   approved 301s ago                want UNSATISFIED got UNSATISFIED PASS
+
+3. Members with no CLC axis (residual, carrier or enforcement point)
+   - dsp: what the human read; CLC has no disclosure axis
+   - rqf: one concrete request; CLC identity is the action, not the request instance
+   - asl: assurance level; carrier-owned
+   - int: device integrity; only its effect on eligibility is expressible (verified)
+   - jti: single-use nonce; consumption is the enforcement point's (AEB/BCR)
+   - exp: validity deadline, not an age bound; CLC freshness is age-based
+   - nested parameters: the canonical action is flat; nested args need a mapping
+
+Reading: OASNT projects cleanly onto one Fact plus an action binding; the
+rest are carrier or enforcement members.  The relation-shaped gap does not
+appear here because OASNT binds approval to an action by identity, not by a
+relation between two evidence artifacts.

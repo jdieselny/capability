@@ -35,12 +35,14 @@ ContainmentResult = { "contains": <boolean>, "reason": <string> }
 |-------|--------|-------------------|
 | **1. 授权有效性**（§13.4.1） | 两侧的 §3 标识符均有效；子项 `params` 符合授权侧的 §6.2 文法。无效的*父项*也会失败——无法评估的边界不得授权子项 | 复用 CLC-A 语法代码（`invalid_capability_id`、`missing_capability_id`、`invalid_params_<n>`）——[`contain-011`](../../../data/_vectors/clc-d/containment-vectors.json)：父项 id 为空 |
 | **2. 标识符覆盖**（§13.4.2） | 完全采用 CLC-v1 路径覆盖关系（Entails 的标识符规则，不含 params）：命名空间相同；随后字面深度相同，或父项末尾 `*` 覆盖子项末尾段（`*` 匹配一个或多个，绝不匹配零个）。标识符中间使用通配符仍是 `unsupported_wildcard` | `different_namespace`（命名空间不同——[`contain-004`](../../../data/_vectors/clc-d/containment-vectors.json)）；`child_exceeds_parent`（存在覆盖缺口） |
-| **3. 参数收窄**（§13.4.3） | 子项声明的每个参数都位于父项声明的边界内（数字 ≤、字符串/布尔值完全相等、数组 ⊆ enum、对象递归），且键集**完全相同**（对称闭包，取 `params` + `param_bounds` 键的并集）。对于 `param_bounds` Bounds：子项 `min` 提高或相等，`max` 降低或相等，`step` 是整数倍，enum ⊆ 子集，并递归处理嵌套；父项必填键会强制子项同键必填。父项 `{}`（或未声明）不受约束，可包含任何子项；有*边界*的父项下，子项 `{}` 失败 | `params_not_narrower`（子项任一值或键集检查失败）——[`contain-041`](../../../data/_vectors/clc-d/containment-vectors.json) |
+| **3. 参数收窄**（§13.4.3） | 子项声明的每个参数都位于父项声明的边界内（数字 ≤、字符串/布尔值完全相等、数组 ⊆ enum、对象递归），且键集**完全相同**（对称闭包，取 `params` + `param_bounds` 键的并集）。对于 `param_bounds` Bounds：子项 `min` 提高或相等，`max` 降低或相等，`step` 是整数倍，enum ⊆ 子集，并递归处理嵌套；父项必填键会强制子项同键必填。若存在 **scheme declaration**（§6.7）为参数声明 domain，则按**父方**声明的 domain 比较；若两方 domain 不同则返回 `params_not_narrower`。父项 `{}`（或未声明）不受约束，可包含任何子项；有*边界*的父项下，子项 `{}` 失败 | `params_not_narrower`（子项任一值或键集检查失败）——[`contain-041`](../../../data/_vectors/clc-d/containment-vectors.json) |
 | **4. 委派模式格**（§13.4.5） | **这是绑定配置预检，不是关系层**：Grant 值不携带模式，`Contains` 也不接收模式参数。携带模式的载体必须自行执行格检查；当子项放宽父项时，由配置报告 `delegation_mode_not_narrower`（AIC-JWT 顺序：`authorized < representative`） | `delegation_mode_not_narrower`（由配置负责；`Contains` 绝不报告） |
 
 **约束不在此关系内**（§13.4.4）：`Contains` 不读取、比较或验证 `constraints` 字段——约束差异绝不会改变判定。约束沿链通过 **union** 组合（§7，合取），所以子项无须重新声明父项约束，添加约束只会收窄。如果使用者仅以 `Contains` 作为*唯一*门禁，就必须组合链的交集，让父项约束继续生效。
 
 第 3 层的深入示例：父项 `{limit:100}`、子项 `{limit:50}` → 被包含（[`contain-040`](../../../data/_vectors/clc-d/containment-vectors.json)）；反向关系（[`contain-041`](../../../data/_vectors/clc-d/containment-vectors.json)）→ `params_not_narrower`。注意声明值的含义：父项 `{limit:100}` 的上限内包含子项 `{limit:-5}`（只取子集，不使用下界语义）——[`contain-042`](../../../data/_vectors/clc-d/containment-vectors.json)。
+
+**第 3 层的声明域（§6.7，修订 CLC-1.19）。** 当 scheme declaration 为某个键声明了 domain 时，逐键比较在**父方**声明的 domain 下进行：`quantity` 比较同一 unit 下的归一化值（单位从不转换），`decimal-string` 比较值空间，`subdomain` 比较不区分大小写的完整标签后缀，`path-prefix` 按段边界比较。如果同一键在两方声明了**不同的** domain，该对不可比较，第 3 层失败关闭并返回 `params_not_narrower`——仅仅因为子项声明了不同的 domain，绝不会使其更窄。未声明的参数沿用形状推断的比较，因此现有的包含关系输入含义不变。
 
 ## 4. `AuthorizeWithChain` — 融合式链检查（§13.11）
 
@@ -59,7 +61,7 @@ AuthorizeWithChain(chain, op) → Decision   // chain = ordered Grant[], root fi
 
 CLC-D 实现必须实现：有序各层的 `Contains`、该关系的两个 §13.5 代码（`child_exceeds_parent`、`params_not_narrower`）、配置契约、`AuthorizeWithChain`（修订 CLC-1.13）及其语料库，并且必须通过 `containment-vectors.json`。它不得改变任何 CLC-A 判定或代码。仅声明 CLC-A **并不表示**声明 CLC-D；也不得用交集代替包含关系。
 
-**绑定配置**把载体的原生结构映射为 `Contains` 所比较的授权。其义务（§13.8.1）如下：(1) 映射前先解析载体的继承和默认值；(2) 保留身份维度（ATN `schema.digest` → 末尾 id 段，使不匹配时失败关闭）；(3) 对关系不可见的维度进行残差化——绝不能把未检查的维度也说成已检查；(4) 不得臆造载体语义（裸 AEGIS domain 不是命名空间通配符）；(5) 记录非目标：权限来源的并集、链级验证、跨载体身份都不在此关系内。
+**绑定配置**把载体的原生结构映射为 `Contains` 所比较的授权。其义务（§13.8.1）如下：(1) 映射前先解析载体的继承和默认值；(2) 保留身份维度（ATN `schema.digest` → 末尾 id 段，使不匹配时失败关闭）；(3) 对关系不可见的维度进行残差化——绝不能把未检查的维度也说成已检查；(4) 不得臆造载体语义（裸 AEGIS domain 不是命名空间通配符）；(5) 记录非目标：权限来源的并集、链级验证、跨载体身份都不在此关系内；(6) **宣称链检查前先声明传递性依据**（修订 CLC-1.18）——`Contains` 是逐对判定，不声称传递闭包，因此逐跳迭代它的 profile 必须把依据声明为*定义推导*、*可机械检验*（给出有限域与确定性过程）或*仅作断言*；在没有该依据时，使用者不得把 `Contains(h1,h2)` + `Contains(h2,h3)` 当作蕴含 `Contains(h1,h3)`——而只需逐对判定的部署不应声明任何依据；(7) **绝不把 union 轴报告为包含结果**（修订 CLC-1.18）——链上合取性的载体字段（累积的 `constraints`、ATN 的 `preconditions`、AAE 的 `CONSTRAINTS`、`requires` 列表）按 §7.1 约束并集组合，因此 profile 必须把它路由到并集函数或在关系之外执行，绝不能把它报告为被包含、已收窄或已由 `Contains` 检查。义务 6 和 7 约束的是 profile，而不是关系本身：CLC-A 或 CLC-D 的判定、reason code 和向量都不发生变化，未发布 profile 的实现不受影响。它们由 [`profile-declarations.json`](../../../data/_vectors/clc-v1/profile-declarations.json)（11 份 profile 声明，由 Go 运行器及其 Java 对应件校验）固定。
 
 ## 防混用清单
 

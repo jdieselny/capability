@@ -40,6 +40,7 @@
 | `params_out_of_range` | 请求值超出 `param_bounds` 的包含端点 `min`/`max`（§6.5） |
 | `params_not_multiple` | 按 IEEE-754 规则，请求值不是 `step` 的整数倍（§6.5） |
 | `params_exceed_grant` | 请求参数超出授权边界 |
+| `unit_mismatch` | `quantity` 值的 unit 与 scheme declaration 中固定的 unit 不符（§6.7）；单位从不转换。 |
 | **第 10 层 — 覆盖为空** | |
 | `capability_not_authorized` | 有效集合中没有授权覆盖该操作 |
 | `no_overlap` | 多个来源的交集为空 |
@@ -50,6 +51,7 @@
 | `{type}:violated` | 违反已知约束（如 `max_rows:violated`）；对于 `Resolve` 判定为已履行但违反的义务，也会报告此代码（§8.5） |
 | **跨层** | |
 | `unsupported_language_revision` | 声明的 CLC 修订与实现不兼容（§12.1；失败关闭，不降级） |
+| `unsupported_domain` | scheme declaration 声明了不支持的 domain，或其格式错误/摘要不匹配（§6.7，在 §9.1 第 1 层之前解析） |
 | `invalid_resolution` | `Resolve` 的 resolution 条目格式错误（`status` 未知，或 `constraint` 非字符串/为空）（§8.5） |
 | `invalid_timestamp` | `Resolve` 的 `now` 参数不是有效的 UTC 时刻（§8.5） |
 

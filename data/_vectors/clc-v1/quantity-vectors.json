@@ -1,0 +1,41 @@
+[
+  {"id":"q-001","kind":"authorize","capability":"transfer",
+   "grants":[{"id":"std/payments-v1:transfer","params":{"amount":{"value":5000,"unit":"CNY","scale":2}}}],
+   "operation":{"id":"std/payments-v1:transfer","params":{"amount":{"value":3000,"unit":"CNY","scale":2}}},
+   "expect":{"verdict":"allow"}},
+
+  {"id":"q-002","kind":"authorize","capability":"transfer",
+   "grants":[{"id":"std/payments-v1:transfer","params":{"amount":{"value":5000,"unit":"CNY","scale":2}}}],
+   "operation":{"id":"std/payments-v1:transfer","params":{"amount":{"value":5001,"unit":"CNY","scale":2}}},
+   "expect":{"verdict":"deny","reason":"params_exceed_grant"}},
+
+  {"id":"q-003","kind":"authorize","capability":"transfer",
+   "grants":[{"id":"std/payments-v1:transfer","params":{"amount":{"value":5000,"unit":"CNY","scale":2}}}],
+   "operation":{"id":"std/payments-v1:transfer","params":{"amount":{"value":3000,"unit":"USD","scale":2}}},
+   "expect":{"verdict":"deny","reason":"unit_mismatch"}},
+
+  {"id":"q-004","kind":"authorize","capability":"transfer",
+   "grants":[{"id":"std/payments-v1:transfer","params":{"amount":{"value":50,"unit":"CNY"}}}],
+   "operation":{"id":"std/payments-v1:transfer","params":{"amount":{"value":5000,"unit":"CNY","scale":2}}},
+   "expect":{"verdict":"allow"}},
+
+  {"id":"q-005","kind":"authorize","capability":"transfer",
+   "grants":[{"id":"std/payments-v1:transfer","params":{"amount":3000}}],
+   "operation":{"id":"std/payments-v1:transfer","params":{"amount":{"value":30,"unit":"CNY"}}},
+   "expect":{"verdict":"deny","reason":"invalid_params_binding"}},
+
+  {"id":"q-006","kind":"contains","capability":"transfer",
+   "parent":{"id":"std/payments-v1:transfer","params":{"amount":{"value":5000,"unit":"CNY","scale":2}}},
+   "child":{"id":"std/payments-v1:transfer","params":{"amount":{"value":3000,"unit":"CNY","scale":2}}},
+   "expect":{"contains":true}},
+
+  {"id":"q-007","kind":"contains","capability":"transfer",
+   "parent":{"id":"std/payments-v1:transfer","params":{"amount":{"value":5000,"unit":"CNY","scale":2}}},
+   "child":{"id":"std/payments-v1:transfer","params":{"amount":{"value":6000,"unit":"CNY","scale":2}}},
+   "expect":{"contains":false,"reason":"params_not_narrower"}},
+
+  {"id":"q-008","kind":"contains","capability":"transfer",
+   "parent":{"id":"std/payments-v1:transfer","params":{"amount":{"value":5000,"unit":"CNY","scale":2}}},
+   "child":{"id":"std/payments-v1:transfer","params":{"amount":{"value":3000,"unit":"USD","scale":2}}},
+   "expect":{"contains":false,"reason":"params_not_narrower"}}
+]

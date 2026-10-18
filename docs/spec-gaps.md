@@ -135,8 +135,9 @@ unstated.
 
 ### B1. The corpus is a set of files, and the decision vectors are one of them
 
-[`../data/_vectors/clc-v1/`](../data/_vectors/clc-v1/) holds 10 vector corpora
-and 2 property-case files:
+[`../data/_vectors/clc-v1/`](../data/_vectors/clc-v1/) holds 14 vector corpora,
+the 11 profile declarations of `profile-declarations.json`, and 2 property-case
+files:
 
 | file | cases | declared revision |
 |---|---|---|
@@ -150,6 +151,11 @@ and 2 property-case files:
 | `crosswalk-vectors.json` | 13 | — |
 | `evidence-vectors.json` | 32 | — |
 | `offline-vectors.json` | 12 | — |
+| `symmetry-vectors.json` | 50 | CLC-1.18, CLC-1.19 |
+| `scheme-declaration-vectors.json` | 9 | CLC-1.19 |
+| `quantity-vectors.json` | 8 | CLC-1.19 |
+| `string-domain-vectors.json` | 24 | CLC-1.19 |
+| `profile-declarations.json` | 11 declarations | CLC-1.18 |
 | `property-cases.json`, `param-bounds-meet-property-cases.json` | property corpora | — |
 
 `vectors.json` is the corpus every test entry point loads: the Go

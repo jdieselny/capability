@@ -19,7 +19,7 @@
 | 04 | [`04-actions.md`](04-actions.md) | Operation、ObservedAction、Identity 与 ActionId 投影 | §4 |
 | 05 | [`05-grants.md`](05-grants.md) | 逐字段讲解 Grant 对象 | §5 |
 | 06 | [`06-entailment.md`](06-entailment.md) | 授权绑定：entailment、§6.3 算法与 evidence Match | §6.1/6.3/6.4 |
-| 07 | [`07-parameters.md`](07-parameters.md) | Params、扩展的 `param_bounds` 与 `BoundMeet` | §6.2/6.5/6.6 |
+| 07 | [`07-parameters.md`](07-parameters.md) | Params、扩展的 `param_bounds`、`BoundMeet` 与 §6.7 scheme 声明 | §6.2/6.5/6.6/6.7 |
 | 08 | [`08-constraints.md`](08-constraints.md) | Constraint 标识、值语法、剩余义务与 `Resolve` | §8 |
 | 09 | [`09-intersection.md`](09-intersection.md) | grant 的交集 ∩ 与 `ConstraintUnion` 投影 | §7 (7.1) |
 | 10 | [`10-decisions.md`](10-decisions.md) | Decision 与 satisfaction 函数、verdict、reason 排序 | §9/§10 |
@@ -59,7 +59,7 @@
 | §3 Grammar | `03-identifiers` | capability-id、wildcard、scheme 消歧 |
 | §4 Action | `04-actions` | 4.1 Operation / 4.2 ObservedAction / 4.3 Identity |
 | §5 Grant | `05-grants` | 逐字段拆解 |
-| §6 Binding | `06-entailment`, `07-parameters` | 6.1 entailment → 06；6.2 parameters → 07；6.3 algorithm → 06；6.4 match → 06；6.5 `param_bounds` → 07；6.6 `BoundMeet` → 07 |
+| §6 Binding | `06-entailment`, `07-parameters` | 6.1 entailment → 06；6.2 parameters → 07；6.3 algorithm → 06；6.4 match → 06；6.5 `param_bounds` → 07；6.6 `BoundMeet` → 07；6.7 scheme 声明 → 07 |
 | §7 Intersection | `09-intersection` | 7.1 `ConstraintUnion` → 09 |
 | §8 Constraint | `08-constraints` | 8.1 auth-side / 8.2 evidence-side / 8.3 unified grammar / 8.4 residual channel / 8.5 `Resolve` |
 | §9 Decision Function | `10-decisions`, `11-reason-codes` | 9.1 ordering → 10；9.2 reason codes → 11 |
@@ -77,7 +77,7 @@
 
 ## 规范基线
 
-`Spec baseline: 46b10d1c64433ec74592dff44cdb4c68ae91073f`（编写本参考时 capability 仓库的 `git rev-parse HEAD`；本参考集所依据的规范文本，是日期为 2026-09-25 的工作树修订版）。
+`Spec baseline: 77e0b1a2119ceb3be3b224bb77f9cbe19d7585e1`（本参考最后一次修订时 capability 仓库的 `git rev-parse HEAD`；本参考集所依据的规范文本，是最后修订日期为 2026-10-16 的工作树修订版，涵盖 CLC-1.16 至 CLC-1.19 各版本）。
 
 ---
 ← *本文件是索引。* · → 继续阅读 [`01-quickstart.md`](01-quickstart.md) · 相关：[`02-overview.md`](02-overview.md)、[`13-conformance.md`](13-conformance.md)

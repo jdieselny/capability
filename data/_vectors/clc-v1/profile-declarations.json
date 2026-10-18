@@ -1,0 +1,199 @@
+{
+  "schema": "clc-profile-declarations-v1",
+  "spec_clause": "§13.8.1 obligations 6 and 7 (rev CLC-1.18)",
+  "note": "One declaration per carrier profile used by the two cross-walk corpora. Obligation 6 is discharged by 'relies_on_transitivity': a profile that iterates the per-pair relation and composes by Intersect makes no transitivity claim and MUST NOT declare a basis; a profile that concludes a chain result from adjacent pairs alone MUST declare one. Obligation 7 is discharged by 'union_axis': the carrier's conjunctive fields must be routed to the constraint union or enforced by the carrier, never reported as a containment result.",
+  "declarations": [
+    {
+      "profile": "aic-jwt-da->clc-v1",
+      "corpora": ["clc-v1/crosswalk-vectors.json", "clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "per-hop Contains; a chain's authority is the Intersect of the declared sets (§13.11)"
+      },
+      "union_axis": { "fields": ["capabilities[].constraints"], "routed_to": "constraint-union" }
+    },
+    {
+      "profile": "oauth-rar->clc-v1",
+      "corpora": ["clc-v1/crosswalk-vectors.json", "clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "RAR carries no chain; the profile maps one grant per action and makes no chain claim"
+      },
+      "union_axis": { "fields": [], "routed_to": "not-applicable" }
+    },
+    {
+      "profile": "ucan->clc-v1",
+      "corpora": ["clc-v1/crosswalk-vectors.json", "clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "the pinned profile maps {with, can}; a delegation chain of UCAN tokens is iterated per hop"
+      },
+      "union_axis": { "fields": ["caveats"], "routed_to": "carrier-enforced" }
+    },
+    {
+      "profile": "emilia-aeg->clc-v1",
+      "corpora": ["clc-v1/crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "AEG capability classes are mapped one per grant; no chain claim"
+      },
+      "union_axis": { "fields": [], "routed_to": "not-applicable" }
+    },
+    {
+      "profile": "delegation-chain->clc-v1",
+      "corpora": ["clc-v1/crosswalk-vectors.json", "clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "the chain form: Contains per adjacent pair, composed by Intersect(chain...) (§13.11); the language asserts no closure, so no basis is claimed"
+      },
+      "union_axis": { "fields": ["per-hop constraints"], "routed_to": "constraint-union" }
+    },
+    {
+      "profile": "atn-manifest->clc-v1",
+      "corpora": ["clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "ATN §9.2 intersection is applied per dimension; preconditions are a union axis, not a containment input"
+      },
+      "union_axis": { "fields": ["preconditions"], "routed_to": "constraint-union" }
+    },
+    {
+      "profile": "aat-i4->clc-v1",
+      "corpora": ["clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "tools(derived) ⊆ tools(parent) is judged per pair; the token chain is the carrier's"
+      },
+      "union_axis": { "fields": [], "routed_to": "not-applicable" }
+    },
+    {
+      "profile": "aip-attenuation->clc-v1",
+      "corpora": ["clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "AIP §4.4 is a per-hop attenuation walk over scope and budget; absent dimensions are resolved by the profile, not inferred by the relation"
+      },
+      "union_axis": { "fields": [], "routed_to": "not-applicable" }
+    },
+    {
+      "profile": "aae-constraint->clc-v1",
+      "corpora": ["clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "AAE equality-or-more-restrictive is a per-element pair comparison"
+      },
+      "union_axis": { "fields": ["VALIDITY", "allowed_domains[].required"], "routed_to": "carrier-enforced" }
+    },
+    {
+      "profile": "aoa-scope->clc-v1",
+      "corpora": ["clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "AOA delegation_chain is iterated by the AS; the profile maps the scope string per hop"
+      },
+      "union_axis": { "fields": [], "routed_to": "not-applicable" }
+    },
+    {
+      "profile": "aegis-delegation->clc-v1",
+      "corpora": ["clc-d/containment-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "AIAM1-CAP-011 states composition is not closed under transitivity, matching the per-pair relation"
+      },
+      "union_axis": { "fields": ["allowed_roles", "environment", "risk_level", "scope"], "routed_to": "carrier-enforced" }
+    }
+  ],
+  "examples": [
+    {
+      "profile": "example/declared-derived",
+      "illustrative": true,
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": true,
+        "basis": "definition-derived",
+        "domain": "the profile's identifier grammar and its closed parameter families",
+        "argument": "the relation is transitive by construction for this grammar, and the argument is recorded in the profile"
+      },
+      "union_axis": { "fields": [], "routed_to": "not-applicable" }
+    },
+    {
+      "profile": "example/declared-checkable",
+      "illustrative": true,
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": true,
+        "basis": "mechanically-checkable",
+        "domain": "capability identifiers of the form ns/action-v1:<op> with params drawn from the profile's declared enums",
+        "procedure": "for each adjacent pair, decide Contains; a composed verdict is admitted only when every pair admits it, re-runnable from the corpus alone"
+      },
+      "union_axis": { "fields": [], "routed_to": "not-applicable" }
+    }
+  ],
+  "negative_cases": [
+    {
+      "id": "pd-neg-001",
+      "want": "basis-missing",
+      "declaration": {
+        "profile": "x-1",
+        "chain_check": { "iterates_hops": true, "relies_on_transitivity": true },
+        "union_axis": { "fields": [], "routed_to": "not-applicable" }
+      }
+    },
+    {
+      "id": "pd-neg-002",
+      "want": "domain-or-procedure-missing",
+      "declaration": {
+        "profile": "x-2",
+        "chain_check": { "iterates_hops": true, "relies_on_transitivity": true, "basis": "mechanically-checkable", "domain": "some declared domain" },
+        "union_axis": { "fields": [], "routed_to": "not-applicable" }
+      }
+    },
+    {
+      "id": "pd-neg-003",
+      "want": "basis-without-claim",
+      "declaration": {
+        "profile": "x-3",
+        "chain_check": { "iterates_hops": true, "relies_on_transitivity": false, "basis": "asserted" },
+        "union_axis": { "fields": [], "routed_to": "not-applicable" }
+      }
+    },
+    {
+      "id": "pd-neg-004",
+      "want": "unknown-basis",
+      "declaration": {
+        "profile": "x-4",
+        "chain_check": { "iterates_hops": true, "relies_on_transitivity": true, "basis": "obvious" },
+        "union_axis": { "fields": [], "routed_to": "not-applicable" }
+      }
+    },
+    {
+      "id": "pd-neg-005",
+      "want": "union-axis-misrouted",
+      "declaration": {
+        "profile": "x-5",
+        "chain_check": { "iterates_hops": true, "relies_on_transitivity": false },
+        "union_axis": { "fields": ["preconditions"], "routed_to": "contained" }
+      }
+    },
+    {
+      "id": "pd-neg-006",
+      "want": "union-axis-fields-mismatch",
+      "declaration": {
+        "profile": "x-6",
+        "chain_check": { "iterates_hops": true, "relies_on_transitivity": false },
+        "union_axis": { "fields": ["preconditions"], "routed_to": "not-applicable" }
+      }
+    }
+  ]
+}

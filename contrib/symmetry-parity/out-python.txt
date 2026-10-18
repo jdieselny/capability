@@ -1,0 +1,54 @@
+CLC symmetry corpus
+------------------------------------------------------------------------------------------------
+sym-001 auth=allow            match=MATCH                        PASS
+sym-002 auth=allow            match=MATCH                        PASS
+sym-003 auth=allow            match=NOT_EQUIVALENT               PASS
+sym-004 auth=allow            match=action_not_matchable         PASS
+sym-005 auth=allow            match=MATCH                        PASS
+sym-006 auth=allow            match=MATCH                        PASS
+sym-007 auth=allow            match=NOT_EQUIVALENT               PASS
+sym-008 auth=allow            match=INDETERMINATE                PASS
+sym-009 auth=deny             match=MATCH                        PASS
+sym-010 auth=allow            match=NOT_EQUIVALENT               PASS
+sym-011 auth=allow            match=MATCH                        PASS
+sym-012 auth=deny             match=NO_EVIDENCE                  PASS
+sym-013 auth=deny             match=NO_EVIDENCE                  PASS
+sym-014 auth=allow            match=INDETERMINATE                PASS
+sym-015 auth=allow            match=INDETERMINATE                PASS
+sym-016 auth=allow_unresolved match=MATCH                        PASS
+sym-017 auth=allow_unresolved match=MATCH / satisfied            PASS
+sym-018 auth=allow            match=MATCH / violated             PASS
+sym-019 auth=allow            match=MATCH / satisfied            PASS
+sym-020 auth=allow            match=MATCH / violated             PASS
+sym-021 auth=allow            match=MATCH / violated             PASS
+sym-022 auth=allow            match=MATCH / satisfied            PASS
+sym-023 auth=allow            match=MATCH / unknown              PASS
+sym-024 auth=allow            match=MATCH / violated             PASS
+sym-025 auth=allow            match=MATCH / violated             PASS
+sym-026 auth=allow            match=MATCH / unknown              PASS
+sym-027 auth=allow_unresolved match=MATCH / error                PASS
+sym-028 auth=allow            match=MATCH / violated             PASS
+sym-029 auth=allow            match=MATCH / violated             PASS
+sym-030 auth=allow            match=MATCH / violated             PASS
+sym-031 auth=allow_unresolved match=MATCH / violated             PASS
+sym-032 auth=allow            match=MATCH / violated             PASS
+sym-033 auth=allow            match=MATCH                        PASS
+sym-034 auth=allow            match=NOT_EQUIVALENT               PASS
+sym-035 auth=allow_unresolved match=MATCH                        PASS
+sym-036 auth=deny             match=NO_EVIDENCE                  PASS
+sym-037 auth=allow            match=MATCH                        PASS
+sym-038 auth=deny             match=NO_EVIDENCE                  PASS
+sym-039 auth=deny             match=NO_EVIDENCE                  PASS
+sym-040 auth=allow_unresolved match=MATCH                        PASS
+sym-041 auth=allow_unresolved match=MATCH                        PASS
+sym-042 auth=allow_unresolved match=MATCH                        PASS
+sym-043 auth=allow_unresolved match=MATCH                        PASS
+sym-044 auth=allow_unresolved match=MATCH                        PASS
+sym-045 auth=allow            match=MATCH                        PASS
+sym-046 auth=deny             match=NO_EVIDENCE                  PASS
+sym-047 auth=allow            match=MATCH / UNSATISFIED          PASS
+sym-048 auth=allow            match=MATCH / SATISFIED            PASS
+sym-049 auth=allow            match=MATCH / SATISFIED            PASS
+sym-050 auth=allow            match=MATCH / UNSATISFIED          PASS
+------------------------------------------------------------------------------------------------
+Ran: 50 | Skipped (evidence side): 0 | Fail: 0

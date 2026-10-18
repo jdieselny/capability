@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.com/schemas/clc-v1/scheme-declaration.schema.json",
+  "title": "CLC Scheme Declaration v1",
+  "description": "Draft schema for the CLC-1.19 scheme declaration artifact (docs/scheme-declaration-v1.md). Closed object: undeclared members are refused.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["@version", "scheme", "declaration_id", "clc_revision", "digest", "capabilities"],
+  "properties": {
+    "@version": { "const": "CLC-SCHEME-v1" },
+    "scheme": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_.-]*-v[0-9]+$",
+      "description": "Must equal the scheme segment of the capability ids it governs, e.g. std/payments-v1."
+    },
+    "declaration_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[^\\s]+$"
+    },
+    "clc_revision": {
+      "type": "string",
+      "pattern": "^CLC-[0-9]+\\.[0-9]+$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[A-Za-z0-9_-]{43}$",
+      "description": "base64url(SHA-256(JCS(this object without the digest member))), unpadded."
+    },
+    "capabilities": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[A-Za-z0-9_.:-]+$" },
+      "additionalProperties": { "$ref": "#/$defs/capability" }
+    },
+    "constraint_types": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "description": "Scheme-defined constraint type names. Informative here: the core still refuses types it does not know with unknown_constraint."
+    }
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["params"],
+      "properties": {
+        "params": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "pattern": "^[A-Za-z0-9_.:-]+$" },
+          "additionalProperties": { "$ref": "#/$defs/parameter" }
+        }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain"],
+      "properties": {
+        "domain": {
+          "enum": ["bound", "enum", "exact", "quantity", "decimal-string", "subdomain", "path-prefix"]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16,
+          "description": "Required with domain=quantity in this draft: the unit is fixed at declaration time and never converted."
+        },
+        "optional": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "domain": { "const": "quantity" } }, "required": ["domain"] },
+          "then": { "required": ["unit"] },
+          "else": { "not": { "required": ["unit"] } }
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "@version": "CLC-SCHEME-v1",
+      "scheme": "std/payments-v1",
+      "declaration_id": "std/payments-v1@2026-10-17",
+      "clc_revision": "CLC-1.19",
+      "digest": "sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "capabilities": {
+        "transfer": {
+          "params": {
+            "amount": { "domain": "quantity", "unit": "CNY" },
+            "currency": { "domain": "enum" },
+            "counterparty": { "domain": "enum" },
+            "account": { "domain": "enum" }
+          }
+        }
+      },
+      "constraint_types": ["payments:quota:daily"]
+    }
+  ]
+}

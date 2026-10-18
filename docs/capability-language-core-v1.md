@@ -4,7 +4,7 @@
 
 > **Preview** — Not for production use. APIs and features may change before official release.
 
-**Category**: Experimental | **Status**: Working Draft | **Date**: 2026-09-10 | **Last amended**: 2026-09-25
+**Category**: Experimental | **Status**: Working Draft | **Date**: 2026-09-10 | **Last amended**: 2026-10-16
 
 ## Abstract
 
@@ -66,6 +66,8 @@ which is retired.
 | CLC-1.15 | 2026-09-25 | §6.5, §6.6, §7, §7.1, §12.1, §13.2, §13.3, §13.4.5, §13.5, §13.6, §13.11, §13.12, Appendix B.12, IANA | **Corrective: the Iman Schrock review of CLC-1.14 landed.**  The §6.6 `numeric ∩ enum` exception is **removed** — the filtered-enum meet was broader than either source (numeric `{min:2,max:4}` ∩ enum `{1,3,5}` filtered to `enum{3}`, which accepts the array `[3]` while the numeric source fail-closes it at §6.5 layer 9), so every cross-family numeric × enum meet now refuses with `invalid_params_binding` in either order, agreeing with §6.5's mixed-family rejection and §13.4.3's added-family refusal.  §6.5 layer 8 gains the missing definition of enum `equal`: **JSON type-sensitive equality** (`true ≠ 1`, `"1" ≠ 1`; numbers compare after §6.2 canonicalization, so `1 = 1.0`), fixing the implementation divergence where Python's `True == 1` allowed what Go/TypeScript denied.  §6.6's step-grid rationale is corrected: incommensurable steps (5, 7) *do* share a common grid (multiples of 35) — the meet fails closed not because no grid exists but because the meet's `step` must be one of the two declared steps and the language does not synthesize an undeclared grid (behavior unchanged).  §7.1 pins `ConstraintUnion`'s ordering to **UTF-8 byte order** (UTF-16 code-unit order placed an emoji before U+E000–U+FFFF characters).  `delegation_mode_not_narrower` is attributed to the **binding-profile pre-check** (§13.4.5) and removed from the core's reason commitments (§12, §13.5, §13.6, §13.11, IANA) — the relation never took a mode argument.  §13.3 states `Contains` antisymmetry on **semantic equivalence classes**, and §13.11 adds the caller's complete-authenticated-root-first-chain obligation (no decision rule changes).  §12.1 records the honest verdict-stability scope of the CLC-1.10→1.14 `param_bounds`-meet change (deny→allow on that subset) and of this revision (allow→deny for the cross-family sub-case).  No input without `param_bounds` changes verdict; on the §6.6 meet subset the cross-family direction reverses CLC-1.14.  Corpus: adds `bm-026`/`bm-027` (cross-family refusal, both orders), `param-bounds-equality-vectors.json` (type-sensitive equality), `constraint-union-collation-vectors.json` (UTF-8 order), and `param-bounds-meet-property-cases.json` (the meet invariant: every successful meet authorizes only what **every** source authorizes), and `intersect-011/-012/-013` in `vectors.json` (the 2026-09-25 cross-type audit of §7 rule 6: string × number merge refusal, type-sensitive enum-member equality, `1.0` ≡ `1` — corpus 120 → 123 vectors).  **Review follow-up (same date):** the scalar ∩ `nested` pair (numeric or enum vs. object, either order) is adjudicated from the CLC-1.14 empty-meet reading to the cross-family refusal `invalid_params_binding` — design-notes D12, so the empty-meet code stays reserved for genuinely empty meets *within one value family* (§6.6, §7, Appendix B.12); `bm-012`/`bm-013` (numeric × enum, with and without an in-range member) are re-adjudicated to a single refusal reason for every cross-family pair (a baseline-impacting change: allow→deny on that subset, recorded in §12.1); and the §8.4 residual-obligation collation is pinned to the §7.1 UTF-8 byte order (the TS implementation sorted by default UTF-16 code-unit order, silently diverging from Go and Python) — the corpus runners now assert the exact manifest order instead of pre-sorting both sides. |
 | CLC-1.16 | 2026-09-28 | §6.2, §6.5, §8.1, §12, §12.1, §13.4.2, §13.4.3, Appendix B, References | **Corrective: the cross-port cross-check landed.**  §6.2 step 3 gains the **I-JSON integer bound** — an integer-valued numeric param whose magnitude exceeds 2^53 − 1 is refused (`invalid_params_number`, [RFC7493] §2.2) instead of being rounded to binary64 (**verdict change** on that subset: a comparison over a rounded value becomes a refusal; recorded in §12.1).  New step 8 refuses a **leading UTF-8 BOM** on the raw path ([RFC8259] §8.1 permits ignoring it, CLC MUST NOT; closes the ECMAScript-`trim()` U+FEFF divergence; **allow → deny** for implementations that trimmed).  New step 9 requires **host numeric-carrier normalization**: every numeric carrier (`int` vs `float64`, `BigInteger`, `decimal`) compares under JSON number semantics and MUST NOT fall into a string-shaped fallback (fixes the reference-engine grant-carrier bug where `{"n":50}` against `{"n":"50"}` was allowed by a text comparison).  §6.2 step 7's decoded entry hardens from advice into obligation: the raw-text entry is the **sole conformance entry point**, and a decoder that repairs malformed Unicode (U+FFFD substitution, e.g. Go's `encoding/json`) MUST NOT feed an entry used for a conformance claim — closing the Go-vs-Python/TypeScript lone-surrogate divergence at the decoded entry.  §8.1 states the **`max_rows` × key-closure reconciliation**: the constraint's operand is not exempt from layer-7 closure, a bounded grant carrying a `max_rows` constraint declares `max_rows` in **both** places at once, and an over-bound constraint integer is `invalid_constraint` (codification plus the bound extension).  §13.4.2 states that **`:`-segments are not a hierarchy** (`Contains(std/database-v1:query, std/database-v1:query:SELECT)` → `child_exceeds_parent` in both directions), and §13.4.3 reduces params narrowing to a **normative five-row decision table** (the child's key set EQUALS the parent's; both the "fewer keys is narrower" and the "more keys is narrower" readings are refused) — codifications, no verdict change.  Corpus: 123 → 146 vectors.  `params-040`–`params-052` (kind=decide, the layer-8 type-sensitivity backfill over the §6.2 params algebra, tagged CLC-1.15; decide 50 → 63), then `params-053`–`params-062` — the corpus pins for the I-JSON integer bound and the leading-BOM refusal, kind=entail, tagged CLC-1.16, covering both sides of each bound, the spellings that must not launder an over-bound integer (exponent and trailing-`.0` forms), the non-integer case the bound must not reach, and the BOM × size precedence.  [RFC8259] added to the normative references. |
 | CLC-1.17 | 2026-10-13 | §6.2, §12.1, Appendix B | **Corrective: numeric-corner closeout.**  §6.2 step 3 is restated so the **I-JSON integer bound is judged on the mathematical value of the received token** — an integer-valued number outside `[−(2^53 − 1), 2^53 − 1]` is refused whether or not binary64 represents it exactly (`1e100` and `9007199254740992` are refused), correcting the CLC-1.16 justification that such a number "has no exact IEEE-754 binary64 representation".  Step 3 also states that **number identity is the JSON number, not its spelling** (`-0` ≡ `0`, `1e3` ≡ `1000`, `1.5e-3` ≡ `0.0015`), and that a non-integer-valued token of at most 17 significant digits is carried as its IEEE-754 binary64 value (round-to-nearest, ties to even) — a decimal/arbitrary-precision carrier MUST use that same value.  **No verdict change**: every clause restates CLC-1.16 behavior.  Corpus: 146 → 154 vectors (`params-063`–`params-070`, kind=entail, tagged CLC-1.17: the zero-sign, exponent-spelling, exactly-representable-over-bound, max-finite and subnormal pins) and `param-bounds-vectors.json` 43 → 49 (`pb-044`–`pb-049`: negative-axis, zero-sign and `step` binary64-arithmetic corners).  The [RFC7493] citation is corrected from §6 to §2.2. |
+| CLC-1.18 | 2026-10-16 | §11, §12.1, §13.8.1, §13.9.7(new), §13.10.5(new) | **Additive: the binding-profile contract is completed.**  Review of the eleven pinned carrier mappings showed that the obligations a profile carries were stated for *mapping* (resolve inheritance, preserve identity dimensions, residualize, do not invent) but not for the two properties a carrier-side chain check depends on.  §13.8.1 gains two obligations: a profile that performs a chain check **MUST declare its transitivity basis** as definition-derived, mechanically-checkable or asserted — and, where mechanically-checkable, state the finite domain and the deterministic procedure — because `Contains` is a per-pair predicate and claims no transitive closure; and a profile **MUST NOT report a union axis as a containment result** (`Contains` never reads constraints, `preconditions` or any conjunctive carrier field).  New **§13.9.7** records, informatively, how a carrier's own decision states (permanent/transient refusal, evaluated/not-evaluated, established-negative/not-established/stale, undecided/local-only) map onto the three CLC verdicts and the `Resolve` values, so a carrier is not pushed into inventing a fourth verdict.  §11 states that a **relation between two artifacts is not expressible**: a carrier normalizes it into a fact or enforces it outside, and the presence of the two endpoints is never the relation.  **No CLC-A verdict, reason code or vector changes**; the corpus and both implementations are untouched, and CLC-1.17 inputs stay readable. |
+| CLC-1.19 | 2026-10-17 | §6.7(new), §9.1, §9.2, §12.1, §13.4.3, IANA | **Additive with a minor gate: the scheme declaration and four declared domains.**  §6.7 defines the `CLC-SCHEME-v1` input — a content-addressed artifact (digest over its JCS form without the digest member) that states each parameter's domain, pinned by the carrier and never fetched by the core.  Four domains join `bound`/`enum`/`exact`: `quantity` (unit fixed at declaration, never converted; `value × 10^-scale`), `decimal-string` (value-space comparison), `subdomain` (whole-label suffix) and `path-prefix` (segment boundary).  A parameter with no declaration keeps the shape-inferred domain, so **no existing input changes meaning**; an input that relies on a declaration MUST declare CLC-1.19 and a lower implementation refuses through the minor gate.  Two reason codes are added: `unit_mismatch` (§9.1 layer 9) and `unsupported_domain` (declaration validation, resolved before layer 1).  `Contains` compares under the parent's declared domain and refuses a domain mismatch with `params_not_narrower`; `BoundMeet` meets same-domain values and refuses cross-domain pairs with `invalid_params_binding`. |
 
 ---
 
@@ -248,11 +250,11 @@ Two identity levels, corresponding to the two Action forms:
 A CapabilityId covers a class; an ActionId identifies the material content of one
 action.  It does not identify an **occurrence**: ActionId binds the declared
 material content, and correlation to a particular occurrence additionally requires
-an occurrence discriminator defined and checked by the consuming profile.  CAID-03
-Section 4.6 carries such a discriminator as the optional `occurrence_id` of an
+an occurrence discriminator defined and checked by the consuming profile.  CAID-05
+Section 4.7 carries such a discriminator as the optional `occurrence_id` of an
 action object; when a profile uses one, it MUST appear among the declared material
 fields for it to affect the digest.  Allocating unique occurrences and proving
-one-time consumption or execution stay outside both documents (CAID-03 Section 7).
+one-time consumption or execution stay outside both documents (CAID-05 Section 7).
 Entailment checks class coverage; Match checks content binding.
 
 ---
@@ -548,8 +550,8 @@ Evidence E is bound to exact action A if:
 Match is content correlation only.  It does not validate a native
 artifact and does not authorize execution.  It also does not identify an
 occurrence: correlation to a particular occurrence additionally requires an
-occurrence discriminator defined and checked by the consuming profile (CAID-03
-Section 4.6), and a profile that uses one MUST pin how it is obtained and that the
+occurrence discriminator defined and checked by the consuming profile (CAID-05
+Section 4.7), and a profile that uses one MUST pin how it is obtained and that the
 language sees it among the declared material fields.
 
 Cross-format mapping (E's native format ≠ A's canonical form) uses an
@@ -786,6 +788,13 @@ or disjoint enums; `invalid_params_binding` for an unrepresentable one — every
 cross-family pair in either order, including scalar ∩ nested, and
 incommensurable step grids); no new reason code is introduced.
 
+**Declared domains meet here too.**  Where a scheme declaration (§6.7) names a
+domain for a key, two values of the **same** declared domain meet per that
+domain's rule in §6.7 (`quantity`: the narrower normalized bound, same unit,
+`unit_mismatch` otherwise); a pair of **different** declared domains is a
+cross-family pair and refuses with `invalid_params_binding`, exactly as the
+scalar × enum and scalar × nested pairs above.
+
 **Key site.**  A key's **declaration site** (`params` vs `param_bounds`) must
 agree across the sources of one `Intersect`.  A key declared in `params` by one
 source and in `param_bounds` by another is refused (`invalid_params_binding`).
@@ -795,6 +804,63 @@ difference is a key-set difference).  A key that no source declares in
 `param_bounds` stays in `params` and follows the §7 `params` meet unchanged.
 
 ---
+
+### 6.7 Scheme Declaration (normative)
+
+A **scheme declaration** states, for one scheme, the **domain** of each
+parameter.  It is an input to evaluation, pinned by the carrier or the relying
+party; the core never fetches it (P9).  The artifact's grammar is
+`CLC-SCHEME-v1` (schema: `scheme-declaration.schema.json`); this subsection
+fixes what CLC does with it.
+
+**Why it exists.**  Without a declaration the domain is inferred from the
+value's shape — number → bound, array → enum, scalar → exact (P4).  That
+inference cannot express a quantity, a decimal string compared in its value
+space, a subdomain, or a path prefix.  A declaration states the domain instead
+of leaving it to the shape.  It adds **no grammar**: `params` and `param_bounds`
+are unchanged, and a parameter it does not name keeps the inferred domain, so
+every existing grant keeps its meaning.
+
+**Domains.**  In addition to `bound`, `enum` and `exact`, this revision defines
+four domains.  Each is a type, not syntax (§6 extension rule), so none of them
+adds a wildcard shape or an operator:
+
+| Domain | Value | Comparison | Containment (§13.4.3) |
+|---|---|---|---|
+| `quantity` | `{"value": <number>, "unit": <string>, "scale"?: <integer>}` | the unit MUST equal the declaration's `unit` (no conversion, `unit_mismatch` otherwise); `value × 10^-scale` ≤ the granted bound | same unit; child ≤ parent |
+| `decimal-string` | a decimal literal matching `^[+-]?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?$` — no surrounding whitespace, no underscores, no `NaN`/`Infinity`, no `.5` or `500.` | value-space comparison (`"500"` ≡ `"500.00"`, `"1e3"` ≡ `"1000"`, `"007"` ≡ `"7"`) | child ≤ parent |
+| `subdomain` | a DNS name — no surrounding or embedded whitespace, one optional trailing dot | whole-label suffix, case-insensitive | child is the parent or below it |
+| `path-prefix` | a path | segment-boundary prefix (`/a/b` does not cover `/a/bc`) | child is the parent or below it |
+
+**Resolution order.**  Declaration validation (member closure, digest match,
+known domains) resolves before §9.1 layer 1 together with the §12.1 revision
+check.  A malformed declaration, a digest mismatch, or a domain the
+implementation does not support is refused with `unsupported_domain`; a
+declaration that requires a later language revision is refused through the
+minor gate.
+
+An implementation MAY validate a declaration when it loads it, and the
+reference engine does; the evaluation path still refuses an unsupported domain
+on its own, so a caller that supplies a declaration through an API without that
+pre-validation cannot bypass the rule.
+
+**Evaluation rules.**
+
+- Authorization uses the declared domain's comparison (§6.3); a value whose
+  shape does not match the domain is `invalid_params_binding`.
+- A parameter with a declared domain MUST be declared in `params`, not in
+  `param_bounds`: the domain has its own comparison rule, and a `param_bounds`
+  family on the same key would be a second, unspecified one.  A
+  `param_bounds` entry on a declared-domain key is `invalid_params_binding`.
+- `Contains` compares child against parent under the **parent's** declared
+  domain.  If the two sides declare different domains for the same key, the
+  pair is not comparable and the result is `params_not_narrower`.
+- `BoundMeet` (§6.6) meets two values of the same declared domain per that
+  domain's rule (for `quantity`, the narrower bound with the same unit; a
+  different unit is `unit_mismatch`), and refuses a cross-domain pair with
+  `invalid_params_binding`, exactly as CLC-1.15 does for cross-family meets.
+- A declaration MUST NOT name a parameter the scheme's capability does not
+  define, and MUST NOT name a domain outside the set this revision defines.
 
 ## 7. Intersection (∩)
 
@@ -1247,6 +1313,13 @@ When more than one condition fails for a grant/operation pair, the
 layer in this fixed order.  It applies to `Entails` (§6.3),
 `Intersect` (§7) and `Authorize` (this section).
 
+**Declaration validation resolves before layer 1.**  The language-revision
+check (§12.1) and the scheme declaration (§6.7) are evaluated before any layer
+below: an input whose declaration is malformed, whose digest does not match, or
+which names a domain this implementation does not support is refused with
+`unsupported_domain` (or `unsupported_language_revision` where the revision
+gate applies), and no layer-1..11 code is reported.
+
 | # | Layer | Checks | Reason code(s) |
 |---|-------|--------|----------------|
 | 1 | CapabilityId validity | §3 grammar, wildcard shape | `invalid_capability_id`, `missing_capability_id`, `unsupported_wildcard` |
@@ -1257,7 +1330,7 @@ layer in this fixed order.  It applies to `Entails` (§6.3),
 | 6 | Null values | Any `null` parameter value | `invalid_params_null` |
 | 7 | Param presence | Grant bounds a param the operation omits (or operation has no `params`); operation carries a key the grant does not declare.  A `param_bounds` key with `optional:true` is exempt from the omission half (§6.5) | `params_missing`, `undeclared_param` |
 | 8 | Enum membership and cardinality | Request value not a member of a granted array set (§6.2); request cardinality outside a `param_bounds` `min_items`/`max_items` (§6.5) | `not_in_enum`, `params_cardinality` |
-| 9 | Bound comparison | Numeric/bound exceeded; `param_bounds` `min`/`max` out of range; `step` not an integer multiple (§6.5) | `params_exceed_grant`, `params_out_of_range`, `params_not_multiple` |
+| 9 | Bound comparison | Numeric/bound exceeded; `quantity` value above the declared unit's bound; `quantity` unit differs from the declared unit (no conversion); `param_bounds` `min`/`max` out of range; `step` not an integer multiple (§6.5, §6.7) | `params_exceed_grant`, `unit_mismatch`, `params_out_of_range`, `params_not_multiple` |
 | 10 | Coverage emptiness | Intersection result empty; zero sources; no grant covers the operation | `no_overlap`, `absent_source`, `capability_not_authorized` |
 | 11 | Constraint evaluation | Non-recognized `(scheme,type)`; recognized type value out of §8.1 grammar; recognized type violated | `unknown_constraint`, `invalid_constraint`, `{type}:violated` |
 
@@ -1372,8 +1445,10 @@ compatibility checks MUST compare the canonical prefix only.
 | `params_cardinality` | Request cardinality is outside a `param_bounds` `min_items`/`max_items` (§6.5) |
 | `params_out_of_range` | Request value is outside a `param_bounds` `min`/`max` inclusive bound (§6.5) |
 | `params_not_multiple` | Request value is not an integer multiple of a `param_bounds` `step`, per the IEEE-754 rule (§6.5) |
+| `unit_mismatch` | A `quantity` value's unit differs from the unit fixed by the scheme declaration (§6.7).  Units are never converted, so a different unit is never covered |
 | `invalid_params_null` | `null` parameter value (rejected in v1) |
 | `unsupported_language_revision` | Declared CLC revision is incompatible with the implementation (§12.1; fails closed, no silent downgrade) |
+| `unsupported_domain` | The scheme declaration names a domain this implementation does not support, or the declaration is malformed / its digest does not match (§6.7, resolved before §9.1 layer 1) |
 | `unknown_constraint` | Unknown constraint type (fail-closed) |
 | `invalid_constraint` | Recognized type whose value fails its §8.1 value grammar |
 | `{type}:violated` | A known constraint is violated (e.g. `max_rows:violated`); also reported by `Resolve` for a discharged-as-violated obligation (§8.5) |
@@ -1462,6 +1537,18 @@ The boundary is:
   [BCR]; the narrow crosswalk between them is the composition point
 - Principal/agent delegation and token attenuation stay with PAP [PAP] and AAT
   [AAT]; CLC consumes their authorization outcome rather than redefining it
+- **A relation between two artifacts is not expressible.**  CLC evaluates a
+  role expression over facts, each with its own constraint; it has no term for a
+  relation that *connects* two artifacts — a carrier's "this permit is for that
+  quorum" (`draft-schrock-ep-authorization-evidence-chain-08` §4
+  `required_bindings`) or an audit record's derived agreement between a decision
+  and an observed effect (`draft-gilda-audit-agent-audit-record-00` §5.3).  A
+  carrier that carries such a relation MUST normalize it into a fact member that
+  its own verifier establishes, or enforce it outside the projection; the
+  presence of the two endpoints MUST NOT be read as the relation holding, and
+  CLC MUST NOT report an unchecked relation as satisfied.  A carrier that binds
+  by identity instead (`draft-thallapelly-oasnt-02` §6.2 `adg`) needs no such
+  rule: identity is what §4.2 and §6.4 already evaluate
 
 ---
 
@@ -1614,7 +1701,7 @@ provisioning and carries its own EXPERIMENTAL banner.
 ### 12.1 Language Revision
 
 Every implementation declares a language revision `CLC-<major>.<minor>` —
-this document declares **`CLC-1.17`**.  A capability input (grant,
+this document declares **`CLC-1.19`**.  A capability input (grant,
 operation, or OCM) SHOULD carry the revision it was authored against; an
 input without a declared revision is treated as `CLC-1.0`.
 
@@ -1762,10 +1849,41 @@ input without a declared revision is treated as `CLC-1.0`.
   `param-bounds-vectors.json` 43 → 49 (`pb-044`–`pb-049`).  The [RFC7493]
   citation is corrected to §2.2.
 
+- **CLC-1.18 is additive** (binding-profile contract completion; see the
+  Revision History): §13.8.1 gains two profile obligations — a profile that
+  performs a chain check MUST **declare its transitivity basis**
+  (definition-derived, mechanically-checkable or asserted, with the finite
+  domain and deterministic procedure stated for the second), and a profile MUST
+  NOT **report a union axis as a containment result**.  New §13.9.7 is
+  informative and records how a carrier's own decision states map onto the three
+  CLC verdicts and the `Resolve` values.  §11 adds the evidence-side counterpart:
+  a **relation between two artifacts is not expressible**, so a carrier either
+  normalizes it into a fact that its own verifier establishes or enforces it
+  outside the projection, and the presence of both endpoints is never the
+  relation.  The profile obligations are on *profiles*, not on the core relation:
+  `Contains` remains a per-pair predicate that claims no transitive closure and
+  reads no constraint, so **no CLC-A verdict, reason code or vector changes** and
+  a CLC-1.17 implementation stays CLC-A conformant
+  (it loses only the ability to *claim* the new profile obligations for a
+  profile it publishes).  A carrier profile written against §13.8.1 before this
+  revision MUST either add the two declarations or state that it is not
+  claiming a chain check.
+
+- **CLC-1.19 is additive with a minor gate**: it adds the **scheme
+  declaration** (§6.7) and four declared domains (`quantity`,
+  `decimal-string`, `subdomain`, `path-prefix`), plus the two reason codes
+  they need (`unit_mismatch`, `unsupported_domain`).  A parameter with no
+  declaration keeps the shape-inferred domain, so every CLC-1.18 input is
+  unchanged; an input that relies on a declared domain MUST declare CLC-1.19
+  or later, and an implementation that does not implement §6.7 refuses it
+  through the minor gate (`unsupported_language_revision`) rather than
+  evaluating it under the shape rule.  **No CLC-A verdict, reason code or
+  vector changes for an input without a declaration.**
+
 - **CLC-A conformance and the minor gate are the two sides of one rule.**
   Claiming CLC-A (this section) means implementing the CLC-A-relevant
   semantics of the revision claimed — so an implementation that advertises
-  `CLC-1.17` MUST implement `param_bounds` (grammar and the §6.6 meet), `Resolve`, `ConstraintUnion` and
+  `CLC-1.19` MUST implement `param_bounds` (grammar and the §6.6 meet), `Resolve`, `ConstraintUnion` and
   the §6.2 canonicalization, not merely tolerate their inputs.  The minor gate
   is the complement for an implementation that **lags**: it declares an older
   revision and refuses any input that uses a field or function introduced
@@ -1992,6 +2110,15 @@ comparison.
 The presence semantics match §6.2 exactly: a grant (parent or child) whose
 params are present-but-empty `{}` is unconstrained, identical to an absent
 params object (§9.2/§6.2).
+
+Where a **scheme declaration** (§6.7) names a domain for a key, the per-key
+value comparison is made under the **parent's** declared domain: `quantity`
+compares normalized values of the same unit, `decimal-string` compares value
+spaces, `subdomain` compares label suffixes and `path-prefix` compares segment
+boundaries.  If the two sides declare **different** domains for the same key,
+the pair is not comparable and layer 3 fails closed with
+`params_not_narrower` — a child is never narrower merely because it states a
+different domain.
 
 #### 13.4.4 Constraints are outside the relation
 
@@ -2224,6 +2351,53 @@ verdict and changes no relation.
      capability names; a profile MAY publish its own mapping, but the language
      asserts none.
 
+6. **Declare the transitivity basis before claiming a chain check.**
+   `Contains` is a per-pair predicate: it decides one adjacent-to-adjacent pair
+   and asserts nothing about a chain, a closure, or a composed authority
+   (§13.3, §13.9.3).  A profile that checks a chain of more than one hop is
+   therefore making a claim the language does not make for it.  Such a profile
+   MUST state its **transitivity basis** as exactly one of:
+   - **definition-derived** — the relation is transitive by construction for the
+     carrier's identifier grammar and parameter family, with the argument
+     recorded; or
+   - **mechanically-checkable** — the profile declares the finite domain the
+     claim ranges over and the deterministic procedure that decides it, so a
+     third party can re-run the claim; or
+   - **asserted** — the carrier states the property and no procedure is offered.
+
+   The basis is a property of the profile's chain claim, not of `Contains`; a
+   profile MUST NOT describe a chain check as a CLC relation, and a consumer
+   MUST NOT read `Contains(h1, h2)` plus `Contains(h2, h3)` as entailing
+   `Contains(h1, h3)` without the profile's declared basis.  A deployment that
+   needs only the pairwise judgement (every hop inside its own parent) needs no
+   basis and MUST NOT claim one.
+
+7. **Never report a union axis as a containment result.**  A carrier field that
+   is conjunctive over a chain — accumulated `constraints`, ATN
+   `preconditions`, AAE `CONSTRAINTS`, a `requires` precondition list — is a
+   *union* axis: each hop's burden adds to the chain's, and the composition
+   operator for it is the constraint union of §7.1, not the relation of §13.4.
+   A profile MUST route such a field to the union function (or to its own
+   enforcement outside the relation) and MUST NOT report it as contained,
+   narrowed, or checked-by-`Contains`.  The failure mode this obligation
+   closes is a chain reported as contained while a hop's constraint was neither
+   compared nor carried — a null constraint check is not evidence of
+   containment (§13.4.4).
+
+   **Evidence.**  Both obligations are pinned by data rather than by prose:
+   `data/_vectors/clc-v1/profile-declarations.json` carries one declaration per
+   profile used by the two cross-walk corpora, together with the illustrative
+   declarations that pin the accept path and the negative cases that pin each
+   refusal (`basis-missing`, `domain-or-procedure-missing`,
+   `basis-without-claim`, `unknown-basis`, `union-axis-misrouted`,
+   `union-axis-fields-mismatch`).  The declarations are checked — including the
+   requirement that the declared profiles equal the profiles the corpora
+   actually use — by the Go runner (`register/internal/crosswalkvectors`,
+   `TestProfileDeclarations`) and by its Java counterpart
+   (`com.varwof.clc.runner.ProfileDeclarationsTest`).  Both implementations
+   share an author, so this is regression evidence for the rule, not the
+   independent-implementation bar of §12.
+
 ### 13.9 Related Work and Positioning
 
 This subsection is **informative** and carries no requirements.  It records why
@@ -2324,9 +2498,9 @@ case plus cross-walk vectors, exactly as the pinned profiles did.
 
 | Work | Role | Relationship to CLC |
 |------|------|---------------------|
-| OAuth Rich Authorization Requests (RAR) | Structured `authorization_details` carried in the authorization request | RAR defines the *carriage* of structured authorization; CLC is a candidate *evaluation language* for the capabilities RAR declares.  Attenuating-agent-token work observes that RAR expresses a request but does not itself define how a holder derives or verifies a *narrower* token — the layer `Contains` addresses |
+| OAuth Rich Authorization Requests (RAR) | Structured `authorization_details` carried in the authorization request | RAR defines the *carriage* of structured authorization; CLC is a candidate *evaluation language* for the capabilities RAR declares.  Attenuating-agent-token work observes that RAR expresses a request but does not itself define how a holder derives or verifies a *narrower* token — the layer `Contains` addresses.  [LIU-SCHEMAS] goes one step further and lets each domain schema define its own subset semantics; the carrier profile's job is to carry that decision into the mapped grant.  [MISSION] supplies a named constraint vocabulary for such a profile (`max_amount` with amount and currency, `recipient_domain`), with no conversion between currencies |
 | OpenID Connect agent-identity claims | Agent capability claims in an ID Token | A profile could define how OIDC-delivered capabilities are evaluated and how a delegation chain is containment-checked |
-| WIMSE AI Identity Management System (`draft-ietf-wimse-aims`) | Informational best-practice framework reusing WIMSE and OAuth; explicitly identifies gaps rather than defining a capability algebra | CLC is a candidate concrete evaluation language for the authorization step AIMS describes and a candidate answer to the "capability containment" gap it leaves open; the two are complementary, not competing |
+| WIMSE AI Identity Management System ([WIMSE-AIMS], `draft-ietf-wimse-aims`) | Informational best-practice framework reusing WIMSE and OAuth; explicitly identifies gaps rather than defining a capability algebra | CLC is a candidate concrete evaluation language for the authorization step AIMS describes and a candidate answer to the "capability containment" gap it leaves open; the two are complementary, not competing |
 | WIMSE agent delegation chain ([ASOR], `draft-asor-wimse-agent-delegation-chain`) | Token format, chain linkage (`par_hash`), a scope/constraint vocabulary with subsumption rules, and an 8-step offline verification algorithm carried in an RFC 9068 JWT profile | A carrier-level peer that defines *how* a narrower token is carried and verified; CLC is the carrier-neutral semantics for the per-hop subset judgement such a verifier performs.  `Contains` is the relation its `DT(child) ⊆ DT(parent)` check needs, and its `scopes`/`constraints` map onto CLC's Grant/params/constraints; the two are complementary, not competing (the AAT row makes the same split one layer up) |
 | W3C ZCAPs | Linked-Data-Proof signed capability documents with caveats and chaining | ZCAPs defines the document/carrier; CLC can define the containment relation over its capabilities |
 | UCAN | DID/IPLD authorization tokens with delegation and attenuation | Same split: UCAN is the carrier, CLC the semantics |
@@ -2340,16 +2514,18 @@ case plus cross-walk vectors, exactly as the pinned profiles did.
 | Agent-auth architecture drafts (e.g. `draft-klrc-aiagent-auth`) | "Agent as workload", reusing existing mechanisms; notes that no single existing policy engine covers the full delegation-chain verification need | A natural consumer: CLC can be the evaluation language such a framework calls into |
 | Dual-identity / attenuating-token drafts (e.g. `draft-ni-wimse-ai-agent-identity`, AAT above) | Bind agent identity to owner identity; define how a holder derives and a verifier checks a narrower token | Answers *who delegated* and *how derivation is carried*; CLC answers *what was delegated and whether it narrowed* |
 | Agent interaction/delegation protocols (e.g. AIDP) | Interaction and delegation flow over capability systems | Capability-based sibling; CLC is the evaluation layer rather than the interaction flow |
+| WIMSE agent credential delegation ([SWEENEY], `draft-sweeney-wimse-credential-delegation`) | Server-side counterpart of a delegation-chain token: the same scope/constraint vocabulary applied where the credential is issued | A carrier-level consumer like [ASOR], one side of the exchange: the issuance side maps to grants, and `Contains` is the relation its attenuation check needs |
+| Cross-organisation delegation requirements ([REECE], `draft-reece-wimse-cross-org-delegation`) | Requirements only — recursive attenuation (R1), a verdict vocabulary, and a separation of admission from consumption; no token format | There is nothing to map, so it is cited as requirements, not as a profile: `Contains` per hop plus `AuthorizeWithChain` is a concrete answer to R1, and its verdict vocabulary is the state/reporting layer §13.9.7 addresses |
 
 The external names above are recorded as context and MUST be re-verified against
 their current revisions before any submission or citation; this subsection makes
 no claim about their exact present contents.  The mapping rows were checked
 against these revisions on 2026-09-21: `draft-somoza-dmsc-atn-agent-trust-negotiation-00`
 (§5, §6, §9), `draft-niyikiza-oauth-attenuating-agent-tokens-01` (§3.5, §4),
-`draft-prakash-aip-01` (§3.3, §4.4), `draft-kroehl-agentic-trust-aae-02` (§2.3,
+`draft-prakash-aip-02` (§3.3, §4.4), `draft-kroehl-agentic-trust-aae-02` (§2.3,
 §2.5, §3), `draft-liu-agent-operation-authorization-02` (§3, §6),
 `draft-ietf-wimse-aims-00`, and the `aegis-initiative/aegis-governance` repository
-(AIAM-1 v0.1, `AIAM1-DEL-010`), and `draft-asor-wimse-agent-delegation-chain-01` (§3, §4, §5, §6, checked 2026-09-26).  Each of these is an individual draft, an informational draft, or a non-IETF repository, with one exception: the WIMSE working group adopted `draft-ietf-wimse-aims` on 2026-09-09, so it is cited here as a working-group document rather than as an individual draft.  The AEGIS material is an informational architecture, not a specification with a formal standing.
+(AIAM-1 v0.1, `AIAM1-DEL-010`), and `draft-asor-wimse-agent-delegation-chain-02` (§3, §4, §5, §6, re-checked 2026-10-17 with AIP-02).  Each of these is an individual draft, an informational draft, or a non-IETF repository, with one exception: the WIMSE working group adopted `draft-ietf-wimse-aims` on 2026-09-09, so it is cited here as a working-group document rather than as an individual draft.  The AEGIS material is an informational architecture, not a specification with a formal standing.
 
 #### 13.9.4 Where the demand actually is
 
@@ -2405,6 +2581,34 @@ with, CLC is a candidate.  Publishing CLC as the capability language core of a
 wider agent-authorization architecture (the AIC direction) is exactly that
 positioning; containment is kept additive so such a reference can be made
 without disturbing the CLC-A core any adopter already implements.
+
+#### 13.9.7 Carrier decision states that are not containment results
+
+This subsection is **informative** and adds no requirement.  Review of the
+carrier mappings surfaced a recurring modelling question: adjacent work
+introduces decision *states* that are neither a containment verdict nor an
+authorization verdict, and a carrier that adopts CLC should not be pushed into
+inventing a fourth verdict for them.  The table records where each such state
+lands in CLC's own vocabulary.  Nothing here changes §9, §8.4, §8.5 or §13.4.
+
+| A carrier's own state | Where it is defined (recorded 2026-10-16) | CLC reading |
+|---|---|---|
+| refusal is **permanent** for the presented artifact | [JACKSON] §5 | `deny` with its own §9.2 reason if the artifact fails evaluation; the *durability* of the refusal is the verifier's state, not a CLC value |
+| refusal is **transient** because an input could not be obtained | [JACKSON] §5 | a core decision cannot reach it: an input the core does not hold is a `deny` under §6 (fail-closed), while a *recognized obligation the core does not evaluate* is `allow_unresolved` plus a §8.4 residual |
+| `evaluation.status = not-evaluated` with `unavailableInput` | [GILDA] §5.4 | `allow_unresolved` with the residual obligation named; never a fourth verdict.  `evaluation.status = evaluated` with `decision.reported = deny` is `deny` |
+| per-input **established-negative / not-established / stale** | [KONDA] §6 | `violated` / `unknown` / `unknown` respectively at the §8.5 `Resolve` boundary; `stale` for a non-`time` input has no core clock, so it is `unknown` until the carrier refreshes it |
+| **undecided** membership or attenuation (`UNDECIDED`) | [BCR] §6 | `allow_unresolved` for the undecided part, with the remainder decided normally (§8.4, §8.5) |
+| **local-only** / not decidable without a source the decision point does not hold | [BCR] §6 | `allow_unresolved` residualized to the consumer; the core is locally decidable by design (P9) and never performs the lookup |
+
+Two consequences a carrier should take from the table.  First, **the three
+CLC verdicts are closed**: a carrier maps its states onto `allow` / `deny` /
+`allow_unresolved` and reports its own subdivision alongside, in its own record
+format — the evaluation member of [GILDA] is the
+worked example.  Second, **a state that requires a source the decision point
+does not hold is a decision to defer, not a new verdict**: the §8.4 residual
+channel exists precisely so that "I could not check this yet" travels with the
+decision instead of being flattened into `allow` (which would grant more than
+the artifact declares) or into `deny` (which would misreport a policy decision).
 
 ### 13.10 Open Issues
 
@@ -2473,6 +2677,37 @@ hop and then `Authorize` against the **intersection** of the chain, so the
 parent's constraints (a union axis, outside containment) are not lost.  It is a
 CLC-D function, not a core change; a CLC-A implementation is unaffected.
 
+#### 13.10.5 Profile obligations for a chain claim (closed in CLC-1.18)
+
+Cross-checking the eleven pinned carrier mappings raised two questions the
+profile contract did not answer; both are now stated in §13.8.1 instead of
+being left to each profile's prose:
+
+- **On what basis may a profile claim transitivity?**  `Contains` is per-pair
+  (§13.3), and the §13.8.1 non-goal list already said a chain check is the
+  profile's iteration — but it did not say what a profile owes a reader when it
+  performs that iteration.  §13.8.1 obligation 6 now requires the basis to be
+  declared (definition-derived, mechanically-checkable or asserted, with the
+  finite domain and deterministic procedure stated for the second) and forbids
+  reading two adjacent `Contains` results as a transitive one.
+- **What happens to a carrier's conjunctive fields?**  §13.4.4 already keeps
+  constraints outside the relation and §7.1 already exposes the union
+  projection, but a profile could still describe a chain as contained while
+  carrying a hop's `preconditions`
+  (`draft-somoza-dmsc-atn-agent-trust-negotiation` §9.2), `CONSTRAINTS`
+  (`draft-kroehl-agentic-trust-aae` §3) or `requires`
+  (`draft-izmaylov-agent-permission-receipts` §5) uncompared.  §13.8.1
+  obligation 7 now forbids reporting a union axis as a containment result.
+- **Where do a carrier's own decision states go?**  The new informative
+  §13.9.7 records the mapping onto the three verdicts and the `Resolve` values
+  so a carrier is not pushed into inventing a fourth verdict.
+
+All three bind profiles, not the relation: no CLC-A or CLC-D verdict, reason
+code or vector moves, and an implementation that publishes no profile is
+unaffected.  What changes is what a profile may *claim*: one written against the
+earlier text either adds the declarations or states that it claims no chain
+check.
+
 ### 13.11 AuthorizeWithChain (fused chain authorization)
 
 `Contains` is a declared-set comparison and `Authorize` is an operation-time
@@ -2527,7 +2762,7 @@ refuses.  The two-grant form `AuthorizeWithChain(parent, child, op)` named in
 
 Containment is folded into this document's revision stream: its changes are
 recorded in the Revision History and its conformance class CLC-D is declared in
-§12.1 in step with the language revision (this revision is `CLC-1.15`; CLC-D
+§12.1 in step with the language revision (this revision is `CLC-1.19`; CLC-D
 first appeared in `CLC-1.9`, folded from `EXT-00 rev 0`).
 
 - A CLC-A input is unaffected by the addition of CLC-D; compatible reading of
@@ -3004,9 +3239,10 @@ Two of the §13.8.1 obligations are visible in the pinned vectors:
 This document requests no IANA actions.
 
 Constraint types (`max_rows`, `time`, `network`) and reason codes are defined
-by this document as fixed sets.  Should this work be adopted by a working
-group, that group may wish to consider whether either set warrants a registry;
-this revision does not propose one.
+by this document as fixed sets.  CLC-1.19 adds two reason codes to that set
+(`unit_mismatch`, `unsupported_domain`) and no new constraint type.  Should
+this work be adopted by a working group, that group may wish to consider
+whether either set warrants a registry; this revision does not propose one.
 
 The containment relation (§13) registers three additional reason codes
 (`child_exceeds_parent`, `params_not_narrower`,
@@ -3099,13 +3335,13 @@ adjacent capability drafts (ATN, AAT, AIP, AAE, AOA, AEGIS) reviewed on
 - [AIC] J. Wei, "AI Agent Identity Certificate (AIC) Extension for X.509
   v3", draft-wei-aic-identity-cert, Work in Progress, September 2026.
 - [CAID] "The Canonical Action Identifier (CAID)",
-  draft-schrock-canonical-action-identifier-03, Work in Progress.  Section 4.6
-  defines the optional `occurrence_id`; Section 7 keeps occurrence allocation and
-  one-time consumption outside the identifier.
+  draft-schrock-canonical-action-identifier-05, Work in Progress.  Section 4.7
+  defines the optional `occurrence_id` as a member of `tool.call.1`; Section 7
+  keeps occurrence allocation and one-time consumption outside the identifier.
 - [EMILIA-AEB] "Action Evidence Boundary",
   draft-schrock-action-evidence-boundary-07, Work in Progress.
 - [AEC] "Authorization Evidence Chains: Composing Heterogeneous Agent-Action
-  Evidence (EP-AEC)", draft-schrock-ep-authorization-evidence-chain-06, Work in
+  Evidence (EP-AEC)", draft-schrock-ep-authorization-evidence-chain-08, Work in
   Progress.
 - [BCR] "Bounded Capability Receipts and Durable Spend Control for Agent
   Actions", draft-schrock-ep-bounded-capability-receipts-06, Work in Progress.
@@ -3117,7 +3353,7 @@ adjacent capability drafts (ATN, AAT, AIP, AAE, AOA, AEGIS) reviewed on
   draft-niyikiza-oauth-attenuating-agent-tokens-01, Work in Progress.  §4.1
   states `C(child) ⊆ C(parent)`; §4.5 (I4) defines per-type constraint
   subsumption.
-- [AIP] "Agent Identity Protocol", draft-prakash-aip-01, Work in Progress.
+- [AIP] "Agent Identity Protocol", draft-prakash-aip-02, Work in Progress.
   §4.4 defines a structural attenuation walk over scope and budget.
 - [AAE] "Agentic Trust Agent Authorization Envelope",
   draft-kroehl-agentic-trust-aae-02, Work in Progress.  §3 defines
@@ -3133,7 +3369,41 @@ adjacent capability drafts (ATN, AAT, AIP, AAE, AOA, AEGIS) reviewed on
   (AIAM-1 v0.1).  `AIAM1-DEL-010` requires monotonic authority narrowing;
   `AIAM1-CAP-011` states composition is not closed under transitivity.
 - [ASOR] "Verifiable Attenuated Delegation for AI Agent Chains",
-  draft-asor-wimse-agent-delegation-chain-01, Work in Progress.  Carries
-  chain linkage via `par_hash`, the `DT(child) ⊆ DT(parent)` subsumption
-  rule, and an 8-step offline verification in an RFC 9068 JWT profile
-  (§3–§6, checked 2026-09-26).
+  draft-asor-wimse-agent-delegation-chain-02, Work in Progress.  Carries
+  chain linkage via `par_hash` (committed to a parent token instance, §5), the
+  `DT(child) ⊆ DT(parent)` subsumption rule, and an 8-step offline
+  verification in an RFC 9068 JWT profile (§3–§6, checked 2026-10-17).
+- [JACKSON] "Verifier-Side Evaluation Semantics for Delegated Authority
+  Chains", draft-jackson-wimse-evaluation-04, Work in Progress.  §5 requires a
+  refusal to be classified permanent or transient toward a caller the verifier
+  authenticated and serves, and to be indistinguishable toward anyone else;
+  Appendix A restates Sections 3–5 as conformance cases.
+- [KONDA] "Preserving Evaluation State in Agent Protocol Decisions",
+  draft-konda-agentproto-evaluation-state-01, Work in Progress.  §6 separates
+  established-negative, not-established and stale as states of particular
+  inputs, and states that not-established is not a fourth authorization
+  decision.
+- [GILDA] "An Audit Record Format for AI Agent Authorization Decisions",
+  draft-gilda-audit-agent-audit-record-00, Work in Progress.  §5.4 defines the
+  `evaluation` member: `evaluation.status` is `evaluated` or `not-evaluated`,
+  and a not-evaluated record carries `unavailableInput`.
+- [WIMSE-AIMS] "AI Identity Management System", draft-ietf-wimse-aims-00,
+  Work in Progress (WIMSE working-group document).  A best-practice framework
+  that identifies identity and authorization gaps rather than defining a
+  capability algebra.
+- [SWEENEY] "Credential Delegation Protocol for AI Agents in Multi-System
+  Environments", draft-sweeney-wimse-credential-delegation-01, Work in
+  Progress.  The issuing side of a delegation chain, applying the same
+  scope and constraint vocabulary [ASOR] carries.
+- [REECE] "Cross-Organizational Delegation for Workload and Agent Identity:
+  Problem Statement and Requirements", draft-reece-wimse-cross-org-delegation-02,
+  Work in Progress.  Requirements only: recursive attenuation (R1) and a
+  separation of admission from consumption, with no token format.
+- [LIU-SCHEMAS] "Domain-Specific Authorization Schemas for OAuth 2.0",
+  draft-liu-oauth-authorization-schemas-00, Work in Progress.  Each domain
+  schema defines its own subset semantics for the `authorization_details` it
+  carries.
+- [MISSION] "Mission-Bound Authorization for OAuth 2.0",
+  draft-mcguinness-oauth-mission-00, Work in Progress.  A named constraint
+  vocabulary, including `max_amount` with amount and currency, carried with a
+  mission.

@@ -40,6 +40,7 @@ Reason selection follows the §9.1 layer order (the *first applicable* layer win
 | `params_out_of_range` | Request value outside a `param_bounds` `min`/`max` inclusive bound (§6.5) |
 | `params_not_multiple` | Request value not an integer multiple of `step`, per the IEEE-754 rule (§6.5) |
 | `params_exceed_grant` | Request parameters exceed the granted bound |
+| `unit_mismatch` | A `quantity` value's unit differs from the unit fixed by the scheme declaration (§6.7); units are never converted. |
 | **Layer 10 — Coverage emptiness** | |
 | `capability_not_authorized` | No grant in the effective set covers the operation |
 | `no_overlap` | Intersection of multiple sources is empty |
@@ -50,6 +51,7 @@ Reason selection follows the §9.1 layer order (the *first applicable* layer win
 | `{type}:violated` | A known constraint violated (e.g. `max_rows:violated`); also reported by `Resolve` for a discharged-as-violated obligation (§8.5) |
 | **Cross-cutting** | |
 | `unsupported_language_revision` | Declared CLC revision incompatible with the implementation (§12.1; fails closed, no downgrade) |
+| `unsupported_domain` | Scheme declaration names an unsupported domain, or is malformed / digest mismatch (§6.7, resolved before §9.1 layer 1) |
 | `invalid_resolution` | A `Resolve` resolution entry is malformed (unknown `status`, non-string/empty `constraint`) (§8.5) |
 | `invalid_timestamp` | The `Resolve` `now` argument is not a valid UTC instant (§8.5) |
 

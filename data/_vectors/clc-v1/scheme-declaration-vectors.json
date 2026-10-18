@@ -1,0 +1,31 @@
+[
+  {"id":"d-001","expect":"accept","declaration":{
+    "@version":"CLC-SCHEME-v1","scheme":"std/payments-v1","declaration_id":"d-001","clc_revision":"CLC-1.19",
+    "capabilities":{"transfer":{"params":{"amount":{"domain":"bound"},"currency":{"domain":"enum"}}}}}},
+  {"id":"d-002","expect":"accept","declaration":{
+    "@version":"CLC-SCHEME-v1","scheme":"std/payments-v1","declaration_id":"d-002","clc_revision":"CLC-1.19",
+    "capabilities":{"transfer":{"params":{"amount":{"domain":"quantity","unit":"CNY"}}}}}},
+  {"id":"d-003","expect":"accept","declaration":{
+    "@version":"CLC-SCHEME-v1","scheme":"std/payments-v1","declaration_id":"d-003","clc_revision":"CLC-1.19",
+    "capabilities":{"transfer":{"params":{
+      "host":{"domain":"subdomain"},"path":{"domain":"path-prefix"},"fee":{"domain":"decimal-string"}}}}}},
+  {"id":"d-004","expect":"reject","code":"unsupported_domain","declaration":{
+    "@version":"CLC-SCHEME-v1","scheme":"std/payments-v1","declaration_id":"d-004","clc_revision":"CLC-1.19",
+    "capabilities":{"transfer":{"params":{"amount":{"domain":"money"}}}}}},
+  {"id":"d-005","expect":"reject","code":"invalid_declaration","declaration":{
+    "@version":"CLC-SCHEME-v1","scheme":"std/payments-v1","declaration_id":"d-005","clc_revision":"CLC-1.19",
+    "capabilities":{"transfer":{"params":{"amount":{"domain":"quantity"}}}}}},
+  {"id":"d-006","expect":"reject","code":"invalid_declaration","declaration":{
+    "@version":"CLC-SCHEME-v1","scheme":"std/payments-v1","declaration_id":"d-006","clc_revision":"CLC-1.19",
+    "capabilities":{"transfer":{"params":{"amount":{"domain":"bound","unit":"CNY"}}}}}},
+  {"id":"d-007","expect":"reject","code":"invalid_declaration","declaration":{
+    "@version":"CLC-SCHEME-v1","declaration_id":"d-007","clc_revision":"CLC-1.19",
+    "capabilities":{"transfer":{"params":{"amount":{"domain":"bound"}}}}}},
+  {"id":"d-008","expect":"reject","code":"invalid_declaration","declaration":{
+    "@version":"CLC-SCHEME-v1","scheme":"std/payments-v1","declaration_id":"d-008","clc_revision":"CLC-1.19",
+    "capabilities":{}}},
+  {"id":"d-009","expect":"reject","code":"declaration_digest_mismatch","declaration":{
+    "@version":"CLC-SCHEME-v1","scheme":"std/payments-v1","declaration_id":"d-009","clc_revision":"CLC-1.19",
+    "digest":"sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "capabilities":{"transfer":{"params":{"amount":{"domain":"bound"}}}}}}
+]

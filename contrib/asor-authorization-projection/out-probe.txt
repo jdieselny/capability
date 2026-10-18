@@ -1,0 +1,27 @@
+ASOR delegation chain → CLC authorization projection
+Fields: draft-asor-wimse-agent-delegation-chain-02 §3/§4.1/§4.2 (checked 2026-10-17)
+
+1. Mapping
+   asor/agent-delegation-v1:crm:customer:read params=map[max_rows:5000]
+   asor/agent-delegation-v1:crm:customer:write params=map[max_rows:5000]
+   asor/agent-delegation-v1:crm:* params=map[max_rows:5000]
+   asor/agent-delegation-v1:crm:customer:read params=map[max_rows:3000]
+   residual: par_hash: chain linkage, carrier-only (ASOR §5)
+   residual: del_depth / del_max_depth: chain shape, carrier-only (§3)
+   residual: delegation_mode: carrier pre-check (§13.4.5 in CLC terms)
+   residual: sub / principal standing at use: outside the chain (§9.7)
+   residual: status / revocation: outside the chain (fail-closed carrier step)
+
+2. Set containment (every leaf grant inside some root grant)
+   asor/agent-delegation-v1:crm:customer:read contains=true (contained)
+
+3. Chain authorization for an operation
+   read, max_rows 2000 (inside leaf)      want allow    got allow                        PASS
+   read, max_rows 3000 (at leaf bound)    want allow    got allow                        PASS
+   read, max_rows 3001 (above leaf)       want deny     got deny/params_exceed_grant     PASS
+   write (root only, leaf lacks it)       want no-chain got no-chain                     PASS
+
+Reading: CLC decides the scope/constraint subset steps; par_hash, depth,
+mode, standing and status stay with the carrier.  Note that one ASOR token
+maps to *several* CLC grants (one per scope), so a chain is selected per
+operation — a mapping rule the binding profile has to state.

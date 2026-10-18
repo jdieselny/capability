@@ -19,7 +19,7 @@ This reference is organized the way a programming-language manual is: a quicksta
 | 04 | [`04-actions.md`](04-actions.md) | Operation, ObservedAction, Identity and ActionId projection | §4 |
 | 05 | [`05-grants.md`](05-grants.md) | The Grant object, field by field | §5 |
 | 06 | [`06-entailment.md`](06-entailment.md) | Authorization binding: entailment, the §6.3 algorithm, and evidence Match | §6.1/6.3/6.4 |
-| 07 | [`07-parameters.md`](07-parameters.md) | Params, extended `param_bounds`, and `BoundMeet` | §6.2/6.5/6.6 |
+| 07 | [`07-parameters.md`](07-parameters.md) | Params, extended `param_bounds`, `BoundMeet`, and the §6.7 scheme declaration | §6.2/6.5/6.6/6.7 |
 | 08 | [`08-constraints.md`](08-constraints.md) | Constraint identities, value grammars, residual obligations, `Resolve` | §8 |
 | 09 | [`09-intersection.md`](09-intersection.md) | Intersection ∩ of grants, and the `ConstraintUnion` projection | §7 (7.1) |
 | 10 | [`10-decisions.md`](10-decisions.md) | Decision and satisfaction functions, verdicts, reason ordering | §9/§10 |
@@ -59,7 +59,7 @@ Refer to `13-conformance` for the full, carefully-worded statement and to `Spec`
 | §3 Grammar | `03-identifiers` | capability-id, wildcard, scheme disambiguation |
 | §4 Action | `04-actions` | 4.1 Operation / 4.2 ObservedAction / 4.3 Identity |
 | §5 Grant | `05-grants` | field-by-field dissection |
-| §6 Binding | `06-entailment`, `07-parameters` | 6.1 entailment → 06; 6.2 parameters → 07; 6.3 algorithm → 06; 6.4 match → 06; 6.5 `param_bounds` → 07; 6.6 `BoundMeet` → 07 |
+| §6 Binding | `06-entailment`, `07-parameters` | 6.1 entailment → 06; 6.2 parameters → 07; 6.3 algorithm → 06; 6.4 match → 06; 6.5 `param_bounds` → 07; 6.6 `BoundMeet` → 07; 6.7 scheme declaration → 07 |
 | §7 Intersection | `09-intersection` | 7.1 `ConstraintUnion` → 09 |
 | §8 Constraint | `08-constraints` | 8.1 auth-side / 8.2 evidence-side / 8.3 unified grammar / 8.4 residual channel / 8.5 `Resolve` |
 | §9 Decision Function | `10-decisions`, `11-reason-codes` | 9.1 ordering → 10; 9.2 reason codes → 11 |
@@ -77,7 +77,7 @@ Refer to `13-conformance` for the full, carefully-worded statement and to `Spec`
 
 ## Spec baseline
 
-`Spec baseline: 46b10d1c64433ec74592dff44cdb4c68ae91073f` (`git rev-parse HEAD` of the capability repository at the time this reference was written; the normative text this set of pages was written against is the working-tree revision dated 2026-09-25).
+`Spec baseline: 77e0b1a2119ceb3be3b224bb77f9cbe19d7585e1` (`git rev-parse HEAD` of the capability repository when this reference was last amended; the normative text this set of pages was written against is the working-tree revision of the specification last amended 2026-10-16, revisions CLC-1.16 through CLC-1.19).
 
 ---
 ← *This is the index.* · → continue with [`01-quickstart.md`](01-quickstart.md) · related: [`02-overview.md`](02-overview.md), [`13-conformance.md`](13-conformance.md)

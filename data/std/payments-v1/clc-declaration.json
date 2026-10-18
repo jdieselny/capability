@@ -1,0 +1,29 @@
+{
+  "@version": "CLC-SCHEME-v1",
+  "scheme": "std/payments-v1",
+  "declaration_id": "std/payments-v1@2026-10-17",
+  "clc_revision": "CLC-1.19",
+  "capabilities": {
+    "transfer": {
+      "params": {
+        "amount": {
+          "domain": "quantity",
+          "unit": "CNY"
+        },
+        "currency": {
+          "domain": "enum"
+        },
+        "counterparty": {
+          "domain": "enum"
+        },
+        "account": {
+          "domain": "enum"
+        }
+      }
+    }
+  },
+  "constraint_types": [
+    "payments:quota:daily"
+  ],
+  "digest": "sha256:JanOD-jKbrUCZhsZVXBt0V9wgqZPzTYMwItcZqt8U3w"
+}

@@ -93,21 +93,41 @@ CLC 与本仓的语料面向**第三方可用**，而不是作者专有：
 - [`docs/capability-language-core-v1.md`](docs/capability-language-core-v1.md) —— **英文正本**（规范权威）。
 - [`docs/reference/`](docs/reference/) —— **16 页可读语言参考**（开发者文档，非规范正本）。
   中文版：[`docs/reference/zh/`](docs/reference/zh/)，与英文参考页同步维护，已覆盖 §13 与附录 C。
+- 本轮修订的工作文档：[`docs/scheme-declaration-v1.md`](docs/scheme-declaration-v1.md)（§6.7 的
+  设计理由与四项裁决）、[`docs/input-rejection-taxonomy.md`](docs/input-rejection-taxonomy.md)、
+  [`docs/cross-family-decision-table.md`](docs/cross-family-decision-table.md)、
+  [`docs/boundary-coverage-map.md`](docs/boundary-coverage-map.md)、
+  [`docs/evidence-relation-normalization.md`](docs/evidence-relation-normalization.md)、
+  [`docs/symmetry-corpus-v1.md`](docs/symmetry-corpus-v1.md) 与
+  [`docs/vector-index.md`](docs/vector-index.md)（全部语料按分组与运行器索引）。
+  前六份的中文版在 [`docs/zh/`](docs/zh/) 下。
 
 ## 当前语言版本
 
-本仓语言的当前修订为 **CLC-1.17**：规范在 §12.1 中声明该版本，语料带有标注到
-该版本的向量，三个消费方实现（`register` 的 Go、`aic-capability-demo` 的
-Python/TypeScript）均在同一版本上。逐版差异与裁决影响见
+本仓语言的当前修订为 **CLC-1.19**：规范在 §12.1 中声明该版本，并新增 scheme
+declaration（§6.7），含四个声明域（`quantity`、`decimal-string`、`subdomain`、
+`path-prefix`）与两个原因代码（`unit_mismatch`、`unsupported_domain`）。三个消费方
+实现（`register` 的 Go、`aic-capability-demo` 的 Python/TypeScript）均声明
+**CLC-1.19**，并经 `*WithDomains` 入口（quantity、decimal-string、subdomain、
+path-prefix）实现 §6.7。**没有声明的输入行为与之前完全一致。** CLC-1.18 是
+**仅配置契约的修订**——它给绑定配置（binding-profile）契约增加两项义务
+（§13.8.1：宣称链检查之前必须声明传递性依据；绝不能把 union 轴报告为包含结果），
+并新增一份信息性的载体判定状态映射（§13.9.7）。它不改变任何 CLC-A 裁决、原因代码
+或向量，因此版本号跳这一版时实现行为没有任何变化。逐版差异与裁决影响见
 [`docs/capability-language-core-v1.md`](docs/capability-language-core-v1.md)
 的 changelog 表。
 
 已发布的 Internet-Draft
 [`draft-wei-capability-language-core-00`](https://datatracker.ietf.org/doc/draft-wei-capability-language-core/)
-为 **CLC-1.15**。两者相差两版，其中 **CLC-1.16**（I-JSON 整数上界、前导 BOM 拒绝、
-宿主数值载体归一化、§13.4.3 params 收窄决策表）**含裁决变更**。因此按 -00 文本
+为 **CLC-1.15**。携带本仓文本（CLC-1.19）的 **-01** 版已在本地备好、尚未提交，它会消掉
+下面的差值。在 -01 发布之前，两者相差四版，其中 **CLC-1.16**（I-JSON 整数上界、前导 BOM
+拒绝、宿主数值载体归一化、§13.4.3 params 收窄决策表）**含裁决变更**。因此按 -00 文本
 实现的实现方，在该子集上与本仓行为不同，且在 §12.1 的 minor 门之下，面对标注为
-CLC-1.16/1.17 的输入会 fail-closed 拒绝。引用行为时请引**仓库版本**。
+CLC-1.16 至 CLC-1.19 的输入会 fail-closed 拒绝。引用行为时请引**仓库版本**。
+
+**投影探针。** 五份载体草案——三份证据侧（EMILIA AEC、WIMSE 审计记录、OASNT）与两份
+授权侧（ASOR、OAuth RAR）——由小型可运行探针映射进 CLC，每份都记录了映射带不动的残余：
+[`contrib/PROJECTION-PROBES.md`](contrib/PROJECTION-PROBES.md)。
 
 ## CLC-v1 一致性向量与 scheme
 
@@ -118,7 +138,9 @@ CLC-1.16/1.17 的输入会 fail-closed 拒绝。引用行为时请引**仓库版
   `vectors.schema.json`、`clc-v1-ambiguities.md`（裁决记录）、
   **1184 条确定性 P11 属性用例**（`property-cases.json`，由
   `scripts/gen-property-cases.py` 生成）与 **12 条 OCMP 离线用例**
-  （`offline-vectors.json`）。消费方实现：
+  （`offline-vectors.json`，每条带结构化 `inputs`；profile 的 R2–R7 已在
+  `register/ocmp`、`aic-capability-demo/ocmp.py` 与 `ts/ocmp.ts` 三端实现，
+  均 12/12）。消费方实现：
   [`varwof/register`](https://github.com/varwof/register)（Go）、
   [`varwof/aic-capability-demo`](https://github.com/varwof/aic-capability-demo)（Python）
   与其 [`ts/`](https://github.com/varwof/aic-capability-demo/tree/main/ts)
@@ -162,6 +184,25 @@ CLC-1.16/1.17 的输入会 fail-closed 拒绝。引用行为时请引**仓库版
   **500 条用例**（rev CLC-1.15）：每个成功的 meet 只授权**每一个**来源都授权的内容
   （由 `scripts/gen-param-bounds-meet-property-cases.py` 生成；CI 断言生成文件与已提交文件
   逐字节一致）。
+- `data/_vectors/clc-v1/symmetry-vectors.json` —— rev CLC-1.18/1.19 的
+  **50 条对称性向量**：每条向量同时携带**同一次操作的两侧**——授权关系判定的
+  grant/operation，以及执行后观察到的操作——固定授权 ⇄ 证据成对语义、链与多授权
+  并集，以及 §11 关系边界（`sym-047`…`sym-050`），由 `register/internal/symmetryvectors` 运行。
+- `data/_vectors/clc-v1/profile-declarations.json` —— rev CLC-1.18 的
+  **11 份 profile 声明**，固定 §13.8.1 义务六与义务七（宣称链检查前先声明传递性依据；
+  绝不把 union 轴报告为包含结果），每个载体 profile 一份，另有接受路径与各类拒绝用例；
+  由 Go 运行器及其 Java 对应件校验。
+- `data/_vectors/clc-v1/scheme-declaration-vectors.json` —— rev CLC-1.19 的
+  **9 条声明校验向量**，对应 §6.7 的 `CLC-SCHEME-v1` 输入：摘要匹配、成员封闭、
+  不支持的域 → `unsupported_domain`、声明域的键出现在 `param_bounds` →
+  `invalid_params_binding`，配 `scheme-declaration.schema.json`；一份可直接使用的
+  声明样例在 `data/std/payments-v1/clc-declaration.json`。
+- `data/_vectors/clc-v1/quantity-vectors.json` —— rev CLC-1.19 的
+  **8 条向量**，对应 `quantity` 声明域：界内、超界、单位不符、scale 归一化、
+  缺少 scale、非对象值，以及包含关系的接受/拒绝，经 `*WithDomains` 入口求值。
+- `data/_vectors/clc-v1/string-domain-vectors.json` —— rev CLC-1.19 的
+  **24 条向量**，对应 `decimal-string`、`subdomain`、`path-prefix`：值空间比较、
+  词法拒绝与跨域拒绝。
 - `data/std/robot-line-v1/v1.json` —— 工业机器人产线能力（10 项能力）。分类工位 id 按
   CLC-v1 的枚举规则用数组表示（`"station": [1,2,3]`）。
 - `data/std/clinical-v1/`、`data/std/payments-v1/`、`data/std/data-v1/` —— CLC v1 的

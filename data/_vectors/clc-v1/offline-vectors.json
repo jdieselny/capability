@@ -14,14 +14,37 @@
       "rule": "R2",
       "scenario": "Principal/agent chain does not chain to a configured trust anchor",
       "inputs": {
-        "trust_anchor": null,
-        "credential": "present, self-issued"
+        "grant_covers": true,
+        "trust_anchor": false,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 5,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "trust_anchor_missing"
       },
-      "derivation": "input marked MUST in OCMP §2 is unreadable -> deny (R2)"
+      "derivation": "input marked MUST in OCMP §2 is unreadable -> deny (R2)",
+      "description": {
+        "trust_anchor": null,
+        "credential": "present, self-issued"
+      }
     },
     {
       "id": "offline-002",
@@ -30,14 +53,37 @@
       "rule": "R3",
       "scenario": "No revocation/status snapshot available at eval time",
       "inputs": {
-        "status_snapshot": null,
-        "grant_lifetime": "still valid"
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": false,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 5,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "status_snapshot_missing"
       },
-      "derivation": "a stale/missing snapshot MUST NOT be treated as 'no revocations' (R3)"
+      "derivation": "a stale/missing snapshot MUST NOT be treated as 'no revocations' (R3)",
+      "description": {
+        "status_snapshot": null,
+        "grant_lifetime": "still valid"
+      }
     },
     {
       "id": "offline-003",
@@ -46,17 +92,40 @@
       "rule": "R3",
       "scenario": "Trusted local time t > valid_until (snapshot out of freshness window)",
       "inputs": {
-        "status_snapshot": {
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
           "as_of": 1000,
-          "valid_until": 2000
+          "valid_until": 2000,
+          "version": 5,
+          "last_accepted": 5
         },
-        "trusted_time": 2100
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2100,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "status_snapshot_expired"
       },
-      "derivation": "t > valid_until -> deny; expiry is not an availability fallback (R3)"
+      "derivation": "t > valid_until -> deny; expiry is not an availability fallback (R3)",
+      "description": {
+        "status_snapshot": {
+          "as_of": 1000,
+          "valid_until": 2000
+        },
+        "trusted_time": 2100
+      }
     },
     {
       "id": "offline-004",
@@ -65,14 +134,37 @@
       "rule": "R3",
       "scenario": "Snapshot version lower than the last accepted one",
       "inputs": {
-        "last_accepted_version": 5,
-        "incoming_version": 4
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 4,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "status_snapshot_rollback"
       },
-      "derivation": "version MUST be monotonic; a lower version MUST be rejected (R3)"
+      "derivation": "version MUST be monotonic; a lower version MUST be rejected (R3)",
+      "description": {
+        "last_accepted_version": 5,
+        "incoming_version": 4
+      }
     },
     {
       "id": "offline-005",
@@ -81,17 +173,40 @@
       "rule": "R3",
       "scenario": "Trusted local time t < as_of (not-yet-valid snapshot)",
       "inputs": {
-        "status_snapshot": {
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
           "as_of": 3000,
-          "valid_until": 4000
+          "valid_until": 4000,
+          "version": 5,
+          "last_accepted": 5
         },
-        "trusted_time": 2000
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "status_snapshot_expired"
       },
-      "derivation": "t < as_of -> deny (OCMP §8 'not-yet-valid'); same code as expired (R3)"
+      "derivation": "t < as_of -> deny (OCMP §8 'not-yet-valid'); same code as expired (R3)",
+      "description": {
+        "status_snapshot": {
+          "as_of": 3000,
+          "valid_until": 4000
+        },
+        "trusted_time": 2000
+      }
     },
     {
       "id": "offline-006",
@@ -100,14 +215,37 @@
       "rule": "R4",
       "scenario": "Grant within its lifetime but listed in the snapshot as revoked",
       "inputs": {
-        "credential_lifetime": "still valid",
-        "snapshot_entry": "revoked"
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 5,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": true,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "revoked"
       },
-      "derivation": "snapshot revocation overrides remaining lifetime (R4)"
+      "derivation": "snapshot revocation overrides remaining lifetime (R4)",
+      "description": {
+        "credential_lifetime": "still valid",
+        "snapshot_entry": "revoked"
+      }
     },
     {
       "id": "offline-007",
@@ -116,14 +254,37 @@
       "rule": "R5",
       "scenario": "Operation reuses an already-consumed counter value / nonce",
       "inputs": {
-        "counter_value": 7,
-        "last_consumed": 7
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 5,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 7,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "replay_detected"
       },
-      "derivation": "each accepted operation consumes exactly one counter value; reuse MUST be denied (R5)"
+      "derivation": "each accepted operation consumes exactly one counter value; reuse MUST be denied (R5)",
+      "description": {
+        "counter_value": 7,
+        "last_consumed": 7
+      }
     },
     {
       "id": "offline-008",
@@ -132,14 +293,37 @@
       "rule": "R5",
       "scenario": "Counter goes backwards, or the replay state is unwritable/corrupt",
       "inputs": {
-        "counter_value": 3,
-        "last_consumed": 9
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 5,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 3,
+        "last_consumed": 9,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "replay_state_invalid"
       },
-      "derivation": "a backwards counter MUST be denied (R5)"
+      "derivation": "a backwards counter MUST be denied (R5)",
+      "description": {
+        "counter_value": 3,
+        "last_consumed": 9
+      }
     },
     {
       "id": "offline-009",
@@ -148,14 +332,37 @@
       "rule": "R6",
       "scenario": "Scheme-declared required local fact (e.g. cell occupancy) unreadable",
       "inputs": {
-        "required_fact": "safety_plc/cell_unoccupied",
-        "fact_source": "unreachable"
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 5,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": false,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "fact_unavailable"
       },
-      "derivation": "facts MUST NOT be invented, defaulted, or cached past scheme freshness (R6)"
+      "derivation": "facts MUST NOT be invented, defaulted, or cached past scheme freshness (R6)",
+      "description": {
+        "required_fact": "safety_plc/cell_unoccupied",
+        "fact_source": "unreachable"
+      }
     },
     {
       "id": "offline-010",
@@ -164,14 +371,37 @@
       "rule": "R7",
       "scenario": "Wall-clock offset from last trusted sync exceeds scheme tolerance",
       "inputs": {
-        "offset": "3h",
-        "tolerance": "5min"
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 5,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 10800,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "clock_unsynchronized"
       },
-      "derivation": "untrusted time source MUST deny rather than guess (R7)"
+      "derivation": "untrusted time source MUST deny rather than guess (R7)",
+      "description": {
+        "offset": "3h",
+        "tolerance": "5min"
+      }
     },
     {
       "id": "offline-011",
@@ -180,14 +410,37 @@
       "rule": "R2",
       "scenario": "Scheme-declared local policy (e.g. cell gate) absent at eval time",
       "inputs": {
-        "local_policy": null,
-        "grant": "otherwise valid"
+        "grant_covers": true,
+        "trust_anchor": true,
+        "local_policy": false,
+        "status": {
+          "present": true,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 5,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "local_policy_missing"
       },
-      "derivation": "required local policy is a MUST input; unreadable -> deny (R2)"
+      "derivation": "required local policy is a MUST input; unreadable -> deny (R2)",
+      "description": {
+        "local_policy": null,
+        "grant": "otherwise valid"
+      }
     },
     {
       "id": "offline-012",
@@ -196,15 +449,38 @@
       "rule": "R2",
       "scenario": "No grant in the manifest covers the request (or the grant set is absent/empty)",
       "inputs": {
-        "grant": "absent or empty",
-        "credential": "present, verified",
-        "status_snapshot": "present, within window"
+        "grant_covers": false,
+        "trust_anchor": true,
+        "local_policy": true,
+        "status": {
+          "present": true,
+          "verified": true,
+          "as_of": 1000,
+          "valid_until": 3000,
+          "version": 5,
+          "last_accepted": 5
+        },
+        "credential_expired": false,
+        "revoked": false,
+        "replay_enabled": true,
+        "counter": 8,
+        "last_consumed": 7,
+        "required_fact": true,
+        "fact_available": true,
+        "trusted_time": 2000,
+        "clock_offset": 0,
+        "clock_tolerance": 300
       },
       "expect": {
         "verdict": "deny",
         "reason": "capability_not_authorized"
       },
-      "derivation": "OCMP §3 R2 first row: no grant covers the request -> deny with the CLC-v1 §9.1 layer 10 code"
+      "derivation": "OCMP §3 R2 first row: no grant covers the request -> deny with the CLC-v1 §9.1 layer 10 code",
+      "description": {
+        "grant": "absent or empty",
+        "credential": "present, verified",
+        "status_snapshot": "present, within window"
+      }
     }
   ]
 }

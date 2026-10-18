@@ -1,6 +1,6 @@
 # 15 · 术语表
 
-> **规范来源：** [`capability-language-core-v1.md`](../../capability-language-core-v1.md) §2、§13.2
+> **规范来源：** [`capability-language-core-v1.md`](../../capability-language-core-v1.md) §2、§6.7、§9.2、§11、§13.2、§13.8.1、§13.9.7
 > 本页是便于阅读的指南。如有冲突，以规范为准。
 > 状态：Preview — 不供生产环境使用。
 
@@ -30,6 +30,8 @@
 
 **CapabilityId** — 按 §3 文法标识某 scheme 内一类 Action 的结构化名称（§2/§3）。
 
+**Carrier decision state** — 载体自身的拒绝／搁置状态（永久或临时拒绝、`not-evaluated`、established-negative / not-established / stale、undecided、local-only）。§13.9.7（说明性，修订 CLC-1.18）将其逐一映射到 CLC 的三个 verdict 与 `Resolve` 取值；它绝不是第四个 verdict。见 [12-containment](12-containment.md)。
+
 **CLC-A / CLC-D / CLC-E** — 一致性类别：授权基线（已声明）、委派包含（已声明）、证据侧（**已实现，未声明**）（§12）。见 [13-conformance](13-conformance.md)。
 
 **CLC-<major>.<minor>** — 实现所声明、且各输入编写时所依据的语言修订；未声明的输入视为 CLC-1.0（§12.1）。
@@ -43,6 +45,8 @@
 ## D
 
 **Decision** — 授权侧结果：`{verdict: "allow"|"deny"|"allow_unresolved", reason, unresolved}`（§9）。
+
+**Declared domain** — scheme declaration 为参数声明的 domain：形状推断的 `bound`/`enum`/`exact`，或 CLC-1.19 的四个 domain（`quantity`、`decimal-string`、`subdomain`、`path-prefix`）之一。未声明的参数保持形状推断的 domain（§6.7）。见 [07-parameters](07-parameters.md)。
 
 **Declared set** — 授权作为操作限制而携带的参数（§6.2 值语义），以及其已声明键集（`params` 和 `param_bounds` 键的并集）（§13.2/§13.4.3）。
 
@@ -96,6 +100,8 @@
 
 **Reason code** — 稳定标识符；规范代码 = 第一个 `:` 之前的所有内容；`: <detail>` 只是诊断后缀（§9.2）。
 
+**Relation between two artifacts（不可表达）** — CLC 对事实求值角色表达式，没有用来表示*连接*两个工件之关系的术语；载体必须把这种关系规范化为其验证器确立的事实，或在投影之外执行它；两个端点同时存在绝不等于该关系成立（§11，修订 CLC-1.18）。
+
 **Resolve** — 决策后函数，消费 Decision 并履行残余义务（§8.5）。
 
 **Residual obligation** — `unresolved` 中携带的、已识别但未求值的约束（§8.4）。
@@ -104,7 +110,19 @@
 
 **Satisfaction** — 证据侧判定：`SATISFIED` 或 `UNSATISFIED`（二值；`unknown` 只在内部使用）（§10）。
 
+**Scheme declaration** — 内容寻址的 `CLC-SCHEME-v1` 工件，为一个 scheme 声明每个参数的 domain；由载体或依赖方固定，核心从不获取；其 digest 覆盖去掉 `digest` 成员后的 JCS 形式（§6.7，修订 CLC-1.19）。见 [07-parameters](07-parameters.md)。
+
+## T
+
+**Transitivity basis** — 检查委派链的 profile 在宣称链检查之前必须声明的依据：定义推导、可机械检验（须给出有限域与确定性过程）或仅作断言。`Contains` 只针对相邻对，不声称传递闭包（§13.8.1 义务 6，修订 CLC-1.18）。
+
 ## U
+
+**Union axis** — 链上合取性的载体字段（累积的 `constraints`、ATN 的 `preconditions`、AAE 的 `CONSTRAINTS`、`requires` 列表）：它按 §7.1 约束并集组合，profile 绝不能把它报告为包含结果（§13.8.1 义务 7，修订 CLC-1.18）。
+
+**unit_mismatch** — reason code（§9.1 第 9 层）：`quantity` 值的 unit 与 scheme declaration 中固定的 unit 不符；单位从不转换（§6.7，修订 CLC-1.19）。
+
+**unsupported_domain** — 当 scheme declaration 声明的 domain 不受实现支持、声明格式错误或 digest 不匹配时，失败关闭所用的原因；声明校验在 §9.1 第 1 层之前解析（§6.7，修订 CLC-1.19）。
 
 **unsupported_language_revision** — 输入声明的修订不兼容时，失败关闭所用的原因（§12.1）。
 

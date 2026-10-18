@@ -1,0 +1,16 @@
+OCMP offline profile
+------------------------------------------------------------------------------------------------
+offline-001  want deny/trust_anchor_missing    got deny/trust_anchor_missing    PASS
+offline-002  want deny/status_snapshot_missing got deny/status_snapshot_missing PASS
+offline-003  want deny/status_snapshot_expired got deny/status_snapshot_expired PASS
+offline-004  want deny/status_snapshot_rollback got deny/status_snapshot_rollback PASS
+offline-005  want deny/status_snapshot_expired got deny/status_snapshot_expired PASS
+offline-006  want deny/revoked                 got deny/revoked                 PASS
+offline-007  want deny/replay_detected         got deny/replay_detected         PASS
+offline-008  want deny/replay_state_invalid    got deny/replay_state_invalid    PASS
+offline-009  want deny/fact_unavailable        got deny/fact_unavailable        PASS
+offline-010  want deny/clock_unsynchronized    got deny/clock_unsynchronized    PASS
+offline-011  want deny/local_policy_missing    got deny/local_policy_missing    PASS
+offline-012  want deny/capability_not_authorized got deny/capability_not_authorized PASS
+------------------------------------------------------------------------------------------------
+Total: 12 | Pass: 12 | Fail: 0

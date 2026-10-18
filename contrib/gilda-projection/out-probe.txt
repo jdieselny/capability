@@ -1,0 +1,20 @@
+Gilda audit record → CLC result vocabulary
+Fields: draft-gilda-wimse-agent-audit-record-02 §5.3, §6.5 (checked 2026-10-17)
+
+g-1  reported=permit                 status=evaluated     observed=occurred     agreement=agree         -> CLC allow            want allow            PASS
+g-2  reported=permit-with-conditions status=evaluated     observed=occurred     agreement=agree         -> CLC allow_unresolved want allow_unresolved PASS
+      residual: conditions: carrier-owned
+g-3  reported=deny                   status=evaluated     observed=occurred     agreement=disagree      -> CLC deny             want deny             PASS
+      residual: agreement=disagree: relation between decision and effect, no CLC axis
+g-4  reported=permit                 status=not-evaluated observed=occurred     agreement=indeterminate -> CLC allow_unresolved want allow_unresolved PASS
+      residual: unavailableInput:standing source
+      residual: agreement=indeterminate: relation between decision and effect, no CLC axis
+g-5  reported=deny                   status=not-evaluated observed=occurred     agreement=indeterminate -> CLC deny             want deny             PASS
+      residual: unavailableInput:consumption state
+      residual: agreement=indeterminate: relation between decision and effect, no CLC axis
+g-6  reported=permit                 status=evaluated     observed=not-observed agreement=one-sided     -> CLC allow            want allow            PASS
+      residual: agreement=one-sided: relation between decision and effect, no CLC axis
+
+Reading: the decision and evaluation members project cleanly; the derived
+agreement does not.  It is the second instance of the same boundary as AEC
+required_bindings: a relation between two artifacts is not a CLC verdict.
