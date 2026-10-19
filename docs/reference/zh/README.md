@@ -77,7 +77,8 @@
 
 ## 规范基线
 
-`Spec baseline: 77e0b1a2119ceb3be3b224bb77f9cbe19d7585e1`（本参考最后一次修订时 capability 仓库的 `git rev-parse HEAD`；本参考集所依据的规范文本，是最后修订日期为 2026-10-16 的工作树修订版，涵盖 CLC-1.16 至 CLC-1.19 各版本）。
+`Spec baseline: c8e4daf5ac08833527e25e9cccfdda0e81b3232a`（标签
+`clc-v1.19`；规范最后修订日期为 2026-10-17，涵盖 CLC-1.16 至 CLC-1.19）。
 
 ---
 ← *本文件是索引。* · → 继续阅读 [`01-quickstart.md`](01-quickstart.md) · 相关：[`02-overview.md`](02-overview.md)、[`13-conformance.md`](13-conformance.md)

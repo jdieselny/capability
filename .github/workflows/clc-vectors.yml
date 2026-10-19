@@ -65,6 +65,9 @@ jobs:
           print('new corpora check OK: 50/8/24/9 + 11 declarations')
           PY
 
+      - name: Validate extension canonical parity fixture
+        run: python3 scripts/check-extension-parity.py
+
       - name: Validate vectors against schema, and against the documented count
         run: |
           python3 - <<'PY'

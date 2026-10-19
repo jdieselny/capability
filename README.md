@@ -168,7 +168,8 @@ minimal capability decision language):
   implementations: [`varwof/register`](https://github.com/varwof/register) (Go),
   [`varwof/aic-capability-demo`](https://github.com/varwof/aic-capability-demo)
   (Python) and its [`ts/`](https://github.com/varwof/aic-capability-demo/tree/main/ts)
-  (TypeScript, Node-only, zero dependencies); all three are asserted on
+  (TypeScript, zero runtime dependencies; its compiler is a development
+  dependency for typechecking); all three are asserted on
   **verdict, normative reason code and the merged intersection result**
   (`result_params` / `result_constraints`), the `allow_unresolved` verdict and
   §9.1 multi-grant aggregation of rev CLC-1.3, and the property and offline
@@ -226,7 +227,8 @@ minimal capability decision language):
   grant/operation the authorization relation decides and the action observed
   after execution — pinning the authorization ⇄ evidence pairs, the chain and
   multi-grant unions, and the §11 relation boundary (`sym-047`…`sym-050`), run
-  by `register/internal/symmetryvectors`.
+  by `register/internal/symmetryvectors` and the Python/TypeScript symmetry
+  runners.
 - `data/_vectors/clc-v1/profile-declarations.json` — **11 profile declarations**
   (rev CLC-1.18) pinning §13.8.1 obligations 6 and 7 (declare the transitivity
   basis before claiming a chain check; never report a union axis as a
@@ -245,6 +247,11 @@ minimal capability decision language):
 - `data/_vectors/clc-v1/string-domain-vectors.json` — **24 vectors** (rev
   CLC-1.19) for `decimal-string`, `subdomain` and `path-prefix`: value-space
   comparison, the lexical refusals and the cross-domain refusal.
+- `data/_vectors/clc-v1/extension-parity-vectors.json` — one shared fixture
+  with **10 fixed canonical outputs and 8 stable negative error codes** for
+  Context, Decision Record, Challenge, DSSE Envelope, ActionId, SourceChain and
+  Requirement. It has a schema gate; the Go, Python and TypeScript runners each
+  check the expected values and CI compares their canonical JSON byte-for-byte.
 - `data/std/robot-line-v1/v1.json` — industrial robot line capabilities
   (10 capabilities).  Categorical station ids are expressed as arrays
   (`"station": [1,2,3]`) per the CLC-v1 enum rule.

@@ -59,6 +59,12 @@ the file lengths, checked against the files on 2026-10-18.
 | `quantity-vectors.json` | 8 | authorize 5, contains 3 | `quantity` domain pilot |
 | `string-domain-vectors.json` | 24 | (no kind field) | `decimal-string`, `subdomain`, `path-prefix`, including the lexical refusals |
 
+## Cross-language canonical parity
+
+| File | Count | Outputs | What it pins |
+|---|---:|---:|---|
+| `clc-v1/extension-parity-vectors.json` | 1 fixture | 10 + 8 errors | one shared input, fixed positive outputs and stable negative error codes for Decision Context, Record, Challenge, DSSE Envelope, ActionId, SourceChain and Requirement |
+
 ## Property corpora
 
 | File | Shape | Invariant |
@@ -75,8 +81,9 @@ the file lengths, checked against the files on 2026-10-18.
 | containment, chain, reason-collapse, mode-lattice | `semantics` + CLC-D runners | `contains-*`, `authorize-chain-*` |
 | cross-walks | `internal/crosswalkvectors` (+ profile declarations) | crosswalk runners / Java test-local copy |
 | evidence | `internal/evidencevectors` | — (Go only) |
-| symmetry | `internal/symmetryvectors` | — (Go only) |
+| symmetry | `internal/symmetryvectors` | `symmetry-vectors-run.py` / `ts/symmetry-vectors-run.ts` |
 | scheme declarations, quantity, declared domains | `internal/schemedecl` + `semantics` | `quantity-vectors-run.py` / `ts/quantity-vectors-run.ts` |
+| extension canonical parity | `cmd/extension-parity-run` | `extension-parity-run.py` / `ts/extension-parity-run.ts` |
 
 ## Notes
 
@@ -85,6 +92,10 @@ the file lengths, checked against the files on 2026-10-18.
   case.  A `kind` field would make it uniform with the other corpora.
 - The three property corpora are not counted as vectors: they generate inputs
   and assert an invariant.
+- The extension parity fixture is one input object with ten fixed outputs, not
+  a decision corpus, plus eight stable negative error codes for the same object
+  graph. Go, Python and TypeScript each validate the expected values and emit
+  canonical JSON; CI compares all three byte-for-byte.
 - **OCMP (2026-10-18, structured, three ports):** every vector carries a
   **structured `inputs` object** (the original prose is kept under
   `description`).  Go (`register/ocmp`), Python (`aic-capability-demo/ocmp.py`)

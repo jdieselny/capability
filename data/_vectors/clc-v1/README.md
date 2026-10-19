@@ -7,7 +7,7 @@ regression test of the specification, not independent validation (§12):
 
 - Go: [`varwof/register`](https://github.com/varwof/register) → `cmd/vectors-run`, `go test ./semantics/`
 - Python: [`varwof/aic-capability-demo`](https://github.com/varwof/aic-capability-demo) → `vectors-run.py`, `property_test.py`
-- TypeScript: [`varwof/aic-capability-demo/ts`](https://github.com/varwof/aic-capability-demo/tree/main/ts) → `vectors-run.ts`, `property.ts` (Node, zero dependencies)
+- TypeScript: [`varwof/aic-capability-demo/ts`](https://github.com/varwof/aic-capability-demo/tree/main/ts) → `vectors-run.ts`, `property.ts` (Node; zero runtime npm dependencies, TypeScript compiler as a development dependency)
 
 ## Files
 
@@ -29,6 +29,7 @@ regression test of the specification, not independent validation (§12):
 | `scheme-declaration-vectors.json` | **9** §6.7 declaration-validation vectors (rev CLC-1.19): digest match, member closure, `unsupported_domain`, `invalid_params_binding`, with `scheme-declaration.schema.json`; a worked declaration is `../../data/std/payments-v1/clc-declaration.json` |
 | `quantity-vectors.json` | **8** `quantity` declared-domain vectors (rev CLC-1.19): in/above bound, unit mismatch, scale normalization, missing scale, non-object value, containment accepted/refused, evaluated through the `*WithDomains` entry points |
 | `string-domain-vectors.json` | **24** `decimal-string` / `subdomain` / `path-prefix` vectors (rev CLC-1.19): value-space comparison, lexical refusals and the cross-domain refusal |
+| `extension-parity-vectors.json` | one shared fixture with **10** fixed canonical outputs and **8** stable negative error codes for Context, Decision Record, Challenge, DSSE Envelope, ActionId, SourceChain and Requirement; schema-gated and compared byte-for-byte across Go/Python/TypeScript |
 | `clc-v1-ambiguities.md` | Resolution log for conflicts found while implementing |
 
 ## Running
@@ -46,6 +47,10 @@ CLC_VECTORS=../capability/data/_vectors/clc-v1/vectors.json python3 vectors-run.
 
 # OCMP offline reference vectors: coverage + vocabulary gate (no evaluator yet)
 python3 ../capability/scripts/check-offline-vectors.py
+
+# Three-language extension canonical parity (run from each implementation,
+# all pointed at the shared capability repository)
+CLC_CAPABILITY_DIR=../capability python3 ../aic-capability-demo/extension-parity-run.py
 ```
 
 Both runners assert **verdict and the normative reason code** (the part before

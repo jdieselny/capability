@@ -77,7 +77,9 @@ Refer to `13-conformance` for the full, carefully-worded statement and to `Spec`
 
 ## Spec baseline
 
-`Spec baseline: 77e0b1a2119ceb3be3b224bb77f9cbe19d7585e1` (`git rev-parse HEAD` of the capability repository when this reference was last amended; the normative text this set of pages was written against is the working-tree revision of the specification last amended 2026-10-16, revisions CLC-1.16 through CLC-1.19).
+`Spec baseline: c8e4daf5ac08833527e25e9cccfdda0e81b3232a` (tag
+`clc-v1.19`; the normative text last amended 2026-10-17, revisions CLC-1.16
+through CLC-1.19).
 
 ---
 ← *This is the index.* · → continue with [`01-quickstart.md`](01-quickstart.md) · related: [`02-overview.md`](02-overview.md), [`13-conformance.md`](13-conformance.md)

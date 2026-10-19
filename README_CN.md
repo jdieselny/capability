@@ -144,7 +144,8 @@ CLC-1.16 至 CLC-1.19 的输入会 fail-closed 拒绝。引用行为时请引**�
   [`varwof/register`](https://github.com/varwof/register)（Go）、
   [`varwof/aic-capability-demo`](https://github.com/varwof/aic-capability-demo)（Python）
   与其 [`ts/`](https://github.com/varwof/aic-capability-demo/tree/main/ts)
-  （TypeScript，仅 Node、零依赖）；三方断言 **verdict、规范码 reason 与交集结果
+  （TypeScript，零运行时依赖；TypeScript 编译器仅作为 typecheck 开发依赖）；
+  三方断言 **verdict、规范码 reason 与交集结果
   （`result_params` / `result_constraints`）**，覆盖 rev CLC-1.3 的
   `allow_unresolved` 独立 verdict 与 §9.1 多 grant 聚合；属性测试与 offline 检查在 CI 中
   运行（`scripts/`）。
@@ -187,7 +188,8 @@ CLC-1.16 至 CLC-1.19 的输入会 fail-closed 拒绝。引用行为时请引**�
 - `data/_vectors/clc-v1/symmetry-vectors.json` —— rev CLC-1.18/1.19 的
   **50 条对称性向量**：每条向量同时携带**同一次操作的两侧**——授权关系判定的
   grant/operation，以及执行后观察到的操作——固定授权 ⇄ 证据成对语义、链与多授权
-  并集，以及 §11 关系边界（`sym-047`…`sym-050`），由 `register/internal/symmetryvectors` 运行。
+  并集，以及 §11 关系边界（`sym-047`…`sym-050`），由
+  `register/internal/symmetryvectors` 及 Python/TypeScript symmetry runner 运行。
 - `data/_vectors/clc-v1/profile-declarations.json` —— rev CLC-1.18 的
   **11 份 profile 声明**，固定 §13.8.1 义务六与义务七（宣称链检查前先声明传递性依据；
   绝不把 union 轴报告为包含结果），每个载体 profile 一份，另有接受路径与各类拒绝用例；
@@ -203,6 +205,11 @@ CLC-1.16 至 CLC-1.19 的输入会 fail-closed 拒绝。引用行为时请引**�
 - `data/_vectors/clc-v1/string-domain-vectors.json` —— rev CLC-1.19 的
   **24 条向量**，对应 `decimal-string`、`subdomain`、`path-prefix`：值空间比较、
   词法拒绝与跨域拒绝。
+- `data/_vectors/clc-v1/extension-parity-vectors.json` —— 一份共享 fixture，
+  **10 个固定 canonical 输出与 8 个稳定负向错误码**，覆盖 Context、
+  Decision Record、Challenge、DSSE Envelope、ActionId、SourceChain 与
+  Requirement。它有 schema 门；Go、Python、TypeScript 三个 runner 各自校验
+  expected，CI 对三方 canonical JSON 做逐字节比较。
 - `data/std/robot-line-v1/v1.json` —— 工业机器人产线能力（10 项能力）。分类工位 id 按
   CLC-v1 的枚举规则用数组表示（`"station": [1,2,3]`）。
 - `data/std/clinical-v1/`、`data/std/payments-v1/`、`data/std/data-v1/` —— CLC v1 的

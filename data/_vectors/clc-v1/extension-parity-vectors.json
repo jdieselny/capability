@@ -1,0 +1,118 @@
+{
+  "@version": "CLC-PARITY-v1",
+  "grant": {
+    "id": "std/database-v1:query:SELECT",
+    "params": {"limit": 100}
+  },
+  "operation": {
+    "id": "std/database-v1:query:SELECT",
+    "params": {"limit": 50}
+  },
+  "context": {
+    "at": "2026-10-19T12:00:00Z",
+    "max_age_sec": 60,
+    "nonce": "ctx-1",
+    "epoch_id": 7
+  },
+  "challenge_decision": {
+    "verdict": "allow_unresolved",
+    "unresolved": [
+      "varwof/constraint-v1:time:window:[{\"start\":\"00:00\",\"end\":\"01:00\"}]"
+    ]
+  },
+  "challenge_params": {
+    "id": "challenge-1",
+    "nonce": "12345678",
+    "audience": "agent.example",
+    "action_material": {"operation": "shed"},
+    "now": "2026-10-19T12:00:00Z",
+    "ttl_sec": 300,
+    "retry_timing": {
+      "not_before": "2026-10-19T12:00:30Z",
+      "jitter_sec": 5
+    }
+  },
+  "action_definition": {
+    "type": "payment.release",
+    "material_fields": ["amount", "currency"]
+  },
+  "action": {
+    "amount": 5,
+    "currency": "USD",
+    "note": "not material"
+  },
+  "source_chain": {
+    "authority_material": {"source": "authority"},
+    "artifact_material": {"source": "artifact"}
+  },
+  "requirement": {
+    "@version": "CLC-REQUIREMENT-v1",
+    "requirement_id": "req-parity",
+    "expression": "approver AND executor",
+    "constraints": [
+      {
+        "role": "approver",
+        "constraint": "varwof/evidence-v1:quorum:distinct:2"
+      },
+      {
+        "role": "executor",
+        "constraint": "varwof/evidence-v1:exclusion:initiator"
+      }
+    ]
+  },
+  "facts": [
+    {
+      "type": "approver",
+      "subject": "alice",
+      "issued_at": "",
+      "verified": true
+    },
+    {
+      "type": "approver",
+      "subject": "bob",
+      "issued_at": "",
+      "verified": true
+    },
+    {
+      "type": "executor",
+      "subject": "carol",
+      "issued_at": "",
+      "verified": true
+    }
+  ],
+  "requirement_context": {"initiator": "alice"},
+  "expect": {
+    "action_id": "clc-action:1:payment.release:jcs-sha256:idORTIDvaE--SwEaGWsGuJJls_hz2CrLoCegFm3E3LA",
+    "challenge_digest": {
+      "alg": "sha-256",
+      "value": "acZ0BkmkppwHt30pobhSZfxKqe9Ew2ftFQHZVdGVXsc="
+    },
+    "context_digest": {
+      "alg": "sha-256",
+      "value": "4WwDAtylrFECmx7XwFUTEgH4KJqYnSKu43Sf25GcaAE="
+    },
+    "envelope_payload_sha256": "0160dfc15ba6b66e0569a1b864c0abc7f4d84d7fc6b279b5eb4de7f1d11c1ad1",
+    "record_canonical_sha256": "4b09039816bc28445b2a43a255e516b2475bb0dce7e8f8548f8f7ee2f5aba21e",
+    "requirement_digest": {
+      "alg": "sha-256",
+      "value": "uQDQvLQhXrnrqiDMwrJD0hlUuKFEoEMDJPO/vweOfWU="
+    },
+    "requirement_roles": ["approver", "executor"],
+    "requirement_verdict": "satisfied",
+    "source_chain_digest": {
+      "alg": "sha-256",
+      "value": "1PZieet3J3OzBR0big5Nvr63tsEg6pLPChmIjKvRmA0="
+    },
+    "standing_ids": ["child", "root"],
+    "negative_errors": {
+      "context_stale": "context_stale",
+      "record_missing_digest": "record_input_digest_mismatch",
+      "record_tampered_verdict": "record_verdict_mismatch",
+      "challenge_expired": "challenge_expired",
+      "challenge_retry_not_before": "challenge_retry_not_before",
+      "envelope_no_signature": "envelope_signature",
+      "action_malformed": "action_shape",
+      "requirement_invalid_expression": "requirement_expression"
+    }
+  }
+}

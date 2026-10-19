@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.com/schemas/clc-v1/extension-parity-vectors.schema.json",
+  "title": "CLC extension canonical parity fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "@version",
+    "grant",
+    "operation",
+    "context",
+    "challenge_decision",
+    "challenge_params",
+    "action_definition",
+    "action",
+    "source_chain",
+    "requirement",
+    "facts",
+    "requirement_context",
+    "expect"
+  ],
+  "properties": {
+    "@version": {"const": "CLC-PARITY-v1"},
+    "grant": {"type": "object"},
+    "operation": {"type": "object"},
+    "context": {
+      "type": "object",
+      "required": ["at", "max_age_sec", "nonce"],
+      "additionalProperties": false,
+      "properties": {
+        "at": {"type": "string"},
+        "max_age_sec": {"type": "integer"},
+        "nonce": {"type": "string"},
+        "epoch_id": {"type": "integer"},
+        "snapshot_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "challenge_decision": {
+      "type": "object",
+      "required": ["verdict", "unresolved"],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": {"const": "allow_unresolved"},
+        "unresolved": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "challenge_params": {
+      "type": "object",
+      "required": ["id", "nonce", "action_material", "now", "ttl_sec"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "nonce": {"type": "string"},
+        "audience": {"type": "string"},
+        "action_material": {"type": "object"},
+        "now": {"type": "string"},
+        "ttl_sec": {"type": "integer"},
+        "retry_timing": {
+          "type": "object",
+          "required": ["not_before", "jitter_sec"],
+          "additionalProperties": false,
+          "properties": {
+            "not_before": {"type": "string"},
+            "jitter_sec": {"type": "integer"}
+          }
+        }
+      }
+    },
+    "action_definition": {
+      "type": "object",
+      "required": ["type", "material_fields"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {"type": "string"},
+        "material_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "action": {"type": "object"},
+    "source_chain": {
+      "type": "object",
+      "required": ["authority_material", "artifact_material"],
+      "additionalProperties": false,
+      "properties": {
+        "authority_material": {"type": "object"},
+        "artifact_material": {"type": "object"}
+      }
+    },
+    "requirement": {"type": "object"},
+    "facts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "subject", "issued_at", "verified"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {"type": "string"},
+          "subject": {"type": "string"},
+          "issued_at": {"type": "string"},
+          "verified": {"type": "boolean"}
+        }
+      }
+    },
+    "requirement_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "now": {"type": "string"},
+        "initiator": {"type": "string"},
+        "executor": {"type": "string"}
+      }
+    },
+    "expect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_canonical_sha256",
+        "context_digest",
+        "challenge_digest",
+        "action_id",
+        "envelope_payload_sha256",
+        "source_chain_digest",
+        "standing_ids",
+        "requirement_digest",
+        "requirement_roles",
+        "requirement_verdict",
+        "negative_errors"
+      ],
+      "properties": {
+        "record_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "context_digest": {"$ref": "#/$defs/digest"},
+        "challenge_digest": {"$ref": "#/$defs/digest"},
+        "action_id": {"type": "string", "pattern": "^clc-action:1:"},
+        "envelope_payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_chain_digest": {"$ref": "#/$defs/digest"},
+        "standing_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"}
+        },
+        "requirement_digest": {"$ref": "#/$defs/digest"},
+        "requirement_roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"}
+        },
+        "requirement_verdict": {"const": "satisfied"},
+        "negative_errors": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "context_stale",
+            "record_missing_digest",
+            "record_tampered_verdict",
+            "challenge_expired",
+            "challenge_retry_not_before",
+            "envelope_no_signature",
+            "action_malformed",
+            "requirement_invalid_expression"
+          ],
+          "properties": {
+            "context_stale": {"const": "context_stale"},
+            "record_missing_digest": {"const": "record_input_digest_mismatch"},
+            "record_tampered_verdict": {"const": "record_verdict_mismatch"},
+            "challenge_expired": {"const": "challenge_expired"},
+            "challenge_retry_not_before": {"const": "challenge_retry_not_before"},
+            "envelope_no_signature": {"const": "envelope_signature"},
+            "action_malformed": {"const": "action_shape"},
+            "requirement_invalid_expression": {"const": "requirement_expression"}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alg", "value"],
+      "properties": {
+        "alg": {"type": "string"},
+        "value": {"type": "string"}
+      }
+    }
+  }
+}
