@@ -1,7 +1,7 @@
-# Vector index (2026-10-18)
+# Vector index (2026-10-20)
 
 Every corpus under `data/_vectors/`, grouped by what it decides.  Counts are
-the file lengths, checked against the files on 2026-10-18.
+the file lengths, checked against the files on 2026-10-20.
 
 ## At a glance
 
@@ -9,7 +9,7 @@ the file lengths, checked against the files on 2026-10-18.
 |---|---|---|
 | CLC-A authorization core | 7 | 281 |
 | CLC-D containment | 4 | 87 |
-| Carrier cross-walks | 3 | 57 (+11 profile declarations) |
+| Carrier cross-walks | 3 | 58 (+11 profile declarations) |
 | Evidence side | 2 | 44 |
 | Symmetry and declared domains (CLC-1.18/1.19) | 4 | 91 |
 | Property corpora (generate inputs, assert invariants) | 3 | — |
@@ -40,7 +40,7 @@ the file lengths, checked against the files on 2026-10-18.
 | File | Vectors | Kinds | What it pins |
 |---|---|---|---|
 | `clc-v1/crosswalk-vectors.json` | 13 | crosswalk 8, crossing 5 | native → CLC and back |
-| `clc-d/containment-crosswalk-vectors.json` | 44 | contain-crosswalk 44 | per-carrier containment |
+| `clc-d/containment-crosswalk-vectors.json` | 45 | contain-crosswalk 45 | per-carrier containment |
 | `clc-v1/profile-declarations.json` | 11 declarations | — | §13.8.1 obligations 6/7, one per carrier profile |
 
 ## Evidence side (`data/_vectors/clc-v1/`)

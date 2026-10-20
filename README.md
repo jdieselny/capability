@@ -177,7 +177,7 @@ minimal capability decision language):
 - `data/_vectors/clc-d/` — the **CLC-D delegation-containment** corpus (rev
   CLC-1.9, spec §13): **64 containment vectors**, **784 forward-closure
   property cases** (`scripts/gen-contain-property-cases.py`, also carrying the
-  §13.3 antisymmetry assertion) and **44 cross-vendor crosswalk vectors** (AIC-JWT
+  §13.3 antisymmetry assertion) and **45 cross-vendor crosswalk vectors** (AIC-JWT
   DA, OAuth RAR, UCAN, delegation chain, ATN, AAT, AIP, AAE, AOA, AEGIS, with §13.8.1
   obligation-3 `out_of_scope` declarations), plus the §13.5 **3 reason-collapse
   policy vectors** (`reason-collapse-vectors.json`) and the profile-owned §13.4.5

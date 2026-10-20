@@ -89,7 +89,7 @@
       "chain_check": {
         "iterates_hops": true,
         "relies_on_transitivity": false,
-        "note": "AAE equality-or-more-restrictive is a per-element pair comparison"
+        "note": "AAE-02 equality-or-more-restrictive is a per-element pair comparison; currency-valued numeric bounds carry both value and currency, and a currency change fails closed unless an explicit conversion policy applies"
       },
       "union_axis": { "fields": ["VALIDITY", "allowed_domains[].required"], "routed_to": "carrier-enforced" }
     },

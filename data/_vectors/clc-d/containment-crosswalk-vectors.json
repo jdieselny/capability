@@ -684,24 +684,30 @@
  {
   "id": "ccx-030",
   "kind": "contain-crosswalk",
-  "spec_clause": "CLC §13.4.3 (AAE §3 numeric)",
+  "spec_clause": "CLC §13.4.3 (AAE-02 §3 numeric)",
   "profile": "aae-constraint->clc-v1",
   "parent_source": {
    "action": "read",
    "constraints": {
-    "max_transaction_value": 500
+    "max_transaction_value": {
+     "value": 500,
+     "currency": "USD"
+    }
    }
   },
   "child_source": {
    "action": "read",
    "constraints": {
-    "max_transaction_value": 300
+    "max_transaction_value": {
+     "value": 300,
+     "currency": "USD"
+    }
    }
   },
   "expect": {
    "contains": true
   },
-  "derivation": "AAE 'equal to or more restrictive' for numeric upper bounds: the delegated value must be <= the parent value",
+  "derivation": "AAE 'equal to or more restrictive' for currency-valued numeric upper bounds: the delegated value must be <= the parent value in the same currency",
   "out_of_scope": [
    "validity"
   ]
@@ -709,25 +715,31 @@
  {
   "id": "ccx-031",
   "kind": "contain-crosswalk",
-  "spec_clause": "CLC §13.4.3 (AAE §3 numeric)",
+  "spec_clause": "CLC §13.4.3 (AAE-02 §3 numeric)",
   "profile": "aae-constraint->clc-v1",
   "parent_source": {
    "action": "read",
    "constraints": {
-    "max_transaction_value": 300
+    "max_transaction_value": {
+     "value": 300,
+     "currency": "USD"
+    }
    }
   },
   "child_source": {
    "action": "read",
    "constraints": {
-    "max_transaction_value": 500
+    "max_transaction_value": {
+     "value": 500,
+     "currency": "USD"
+    }
    }
   },
   "expect": {
    "contains": false,
    "reason": "params_not_narrower"
   },
-  "derivation": "AAE §7.4 delegation amplification: a delegated AAE that raises a numeric bound is not strictly subordinate",
+  "derivation": "AAE-02 §7.4 delegation amplification: a delegated AAE that raises a numeric bound is not strictly subordinate",
   "out_of_scope": [
    "validity"
   ]
@@ -735,18 +747,24 @@
  {
   "id": "ccx-032",
   "kind": "contain-crosswalk",
-  "spec_clause": "CLC §13.4.2 (AAE §3 actions)",
+  "spec_clause": "CLC §13.4.2 (AAE-02 §3 actions)",
   "profile": "aae-constraint->clc-v1",
   "parent_source": {
    "action": "read",
    "constraints": {
-    "max_transaction_value": 500
+    "max_transaction_value": {
+     "value": 500,
+     "currency": "USD"
+    }
    }
   },
   "child_source": {
    "action": "book",
    "constraints": {
-    "max_transaction_value": 500
+    "max_transaction_value": {
+     "value": 500,
+     "currency": "USD"
+    }
    }
   },
   "expect": {
@@ -761,7 +779,7 @@
  {
   "id": "ccx-033",
   "kind": "contain-crosswalk",
-  "spec_clause": "CLC §13.4.3 (AAE §3 allowlist)",
+  "spec_clause": "CLC §13.4.3 (AAE-02 §3 allowlist)",
   "profile": "aae-constraint->clc-v1",
   "parent_source": {
    "action": "read",
@@ -791,7 +809,7 @@
  {
   "id": "ccx-034",
   "kind": "contain-crosswalk",
-  "spec_clause": "CLC §13.4.3 (AAE §3 allowlist)",
+  "spec_clause": "CLC §13.4.3 (AAE-02 §3 allowlist)",
   "profile": "aae-constraint->clc-v1",
   "parent_source": {
    "action": "read",
@@ -814,7 +832,7 @@
    "contains": false,
    "reason": "params_not_narrower"
   },
-  "derivation": "AAE allowlist subset: a delegated value outside the parent value expands the accepted set",
+  "derivation": "AAE-02 allowlist subset: a delegated value outside the parent value expands the accepted set",
   "out_of_scope": [
    "validity"
   ]
@@ -1041,5 +1059,37 @@
    "contains": true
   },
   "derivation": "the same id and the same schema digest satisfy ATN's identity rule; the child ceiling at or below the parent's is contained"
+ },
+ {
+  "id": "ccx-045",
+  "kind": "contain-crosswalk",
+  "spec_clause": "CLC §13.4.3 (AAE-02 §3 currency)",
+  "profile": "aae-constraint->clc-v1",
+  "parent_source": {
+   "action": "read",
+   "constraints": {
+    "max_transaction_value": {
+     "value": 500,
+     "currency": "USD"
+    }
+   }
+  },
+  "child_source": {
+   "action": "read",
+   "constraints": {
+    "max_transaction_value": {
+     "value": 300,
+     "currency": "EUR"
+    }
+   }
+  },
+  "expect": {
+   "contains": false,
+   "reason": "params_not_narrower"
+  },
+  "derivation": "AAE-02 §3 requires the same currency on both sides of a currency-valued constraint unless the relying party has an explicit conversion policy; a lower numeric value in a different currency is therefore not contained",
+  "out_of_scope": [
+   "validity"
+  ]
  }
 ]

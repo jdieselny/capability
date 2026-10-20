@@ -174,14 +174,14 @@ ordinary test entry point: Go in `semantics/corpus_runners_test.go`, Java in
 `Program.Main("all")` in `ClcCorpusRunnersTest`. The standalone runners stay as
 the manual path and load the same files.
 
-`crosswalk-vectors` (13) and `containment-crosswalk-vectors` (44) are different:
+`crosswalk-vectors` (13) and `containment-crosswalk-vectors` (45) are different:
 their `crosswalk`/`crossing`/`contain-crosswalk` kinds apply a **carrier binding
 profile** (§13.12) that maps another ecosystem's native structure into CLC grants
 — eleven profiles, one per carrier (OAuth-RAR RFC 9396, AIC-JWT, UCAN, ATN
 manifests, AAE, AoA scope, AEGIS delegation, …). The pinned adapter lives in
 `register/internal/crosswalkvectors`. Java carries a test-local copy of the same
 eleven mappings (`CrosswalkProfiles`) and runs both corpora against the Java
-engine, all 13 and 44 green; .NET has no counterpart. The CLC-side operations the
+engine, all 13 and 45 green; .NET has no counterpart. The CLC-side operations the
 profiles drive (`Contains`, `Authorize`, `Intersect`) are ported on both SDKs and
 green. `evidence-vectors` (32) likewise has no Java or .NET implementation, and
 `offline-vectors` (12) is a Python check.
@@ -239,7 +239,7 @@ makes "verdict-preserving" an assertion rather than a statement.
 
 The rest of `../data/_vectors/clc-d/` is unevenly covered:
 `containment-vectors.json` (64) runs on Go, Java and .NET, and
-`containment-crosswalk-vectors.json` (44) runs on Go and, through the Java
+`containment-crosswalk-vectors.json` (45) runs on Go and, through the Java
 test-local profile copy, on Java.
 
 ---
@@ -282,4 +282,3 @@ all but 10 cases and on the decoded path in all but 140; no case was unstable.
   collides their numbering (5990 lines, 3990 unique ids); the first comparison
   run reported 85 disagreements that were entirely an artifact of the collision.
   The generator still numbers both sets from one counter.
-

@@ -152,7 +152,7 @@ CLC-1.16 至 CLC-1.19 的输入会 fail-closed 拒绝。引用行为时请引**�
 - `data/_vectors/clc-d/` —— **CLC-D 委派包含**语料（rev CLC-1.9，规范 §13）：
   **64 条包含向量**、**784 条前向闭包属性用例**（`scripts/gen-contain-property-cases.py`，
   同时承载 §13.3 反对称断言）
-  与 **44 条跨厂商 crosswalk 向量**（AIC-JWT DA、OAuth RAR、UCAN、委派链、ATN、AAT、AIP、
+  与 **45 条跨厂商 crosswalk 向量**（AIC-JWT DA、OAuth RAR、UCAN、委派链、ATN、AAT、AIP、
   AAE、AOA、AEGIS，含 §13.8.1 义务三的 `out_of_scope` 声明），另有 §13.5 的
   **3 条 reason 折叠策略向量**（`reason-collapse-vectors.json`）与 profile 持有的
   §13.4.5 **5 条 AIC-JWT DA 模式格向量**（`profile-owned/`）。该关系及其 profile
