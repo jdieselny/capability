@@ -68,6 +68,7 @@ Every member is optional, the object is **closed** (unknown members rejected), a
 A scheme declaration states, per capability scheme, the domain of each parameter. It is an input (pinned by carrier/relying party) and the core never fetches it. When present, a declared domain governs; parameters without a declaration keep the shape-inferred domain.
 
 **Domains (in addition to bound/enum/exact):**
+
 | Domain | Value | Comparison | Containment |
 |---|---|---|---|
 | `quantity` | `{"value": number, "unit": string, "scale"?: integer}` | unit equals the declared unit (no conversion); `value × 10^-scale` | same unit; child ≤ parent |

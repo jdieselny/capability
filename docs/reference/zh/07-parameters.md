@@ -68,6 +68,7 @@ Bound = {   // at most one value family + the orthogonal "optional"
 scheme declaration 为每个能力 scheme 声明每个参数的 domain。它是求值输入（由载体或依赖方固定），CLC 不会自动获取。若存在声明，则按声明的 domain 判断；未声明的参数沿用形状推断的 domain。
 
 **新增的四个 domain（除 bound/enum/exact 外）：**
+
 | Domain | 值 | 比较方式 | 包含关系 |
 |---|---|---|---|
 | `quantity` | `{"value": number, "unit": string, "scale"?: integer}` | 单位必须等于声明的 unit（不转换）；按 `value × 10^-scale` 比较 | 同 unit，child ≤ parent |
