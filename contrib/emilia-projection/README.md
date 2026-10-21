@@ -17,7 +17,7 @@
 运行：
 
 ```sh
-cd register && go run ./cmd/emilia-projection-probe
+(cd ../register && go run ./cmd/emilia-projection-probe)
 ```
 
 ## 映射规则（探针实现的）
@@ -31,17 +31,18 @@ cd register && go run ./cmd/emilia-projection-probe
 | `@version` | `CLC-REQUIREMENT-v1` | 版本改写 |
 | `purpose` | — | 描述性，丢弃 |
 | `status_required` | — | 载体负责（AEB 的状态查询），CLC 无对应 |
-| `required_bindings` | — | **无法表达**：事实之间的"关系"（`permits`）不在 CLC 文法里 |
+| `required_bindings` | 新角色 `ep:binding:permits` | native verifier 输出派生事实；原 `ep-quorum` 和 `policy-permit` 均保留 |
 | `subject_id_source` | — | 载体负责（谁提供主体标识） |
 
-## 实际求值结果（`out-probe.txt`）
+## 实际求值结果（`out-probe.txt`，13/13 PASS）
 
 | # | 事实 | 期望 | 实际 |
 |---|---|---|---|
-| 1 | 两名已验证批准 + 一份许可，均在新鲜期内 | SATISFIED | SATISFIED |
+| 1 | 两名已验证批准 + 一份许可 + 派生 binding 事实 | SATISFIED | SATISFIED |
 | 2 | 其中一名批准 `verified=false` | UNSATISFIED | UNSATISFIED（`quorum:distinct_subjects=1<threshold=2`） |
-| 3 | 一条批准的 `issued_at` 超过 300s | UNSATISFIED | UNSATISFIED（`freshness:stale`） |
-| 4 | 事实按 `component_type` 字面标注为 `ep-human-authorization` | UNSATISFIED | UNSATISFIED（`requirement:expression_false`） |
+| 3 | binding 事实很新，但一条批准已超过 300s | UNSATISFIED | UNSATISFIED（`freshness:stale`） |
+| 4 | 原 quorum/permit 都在，但没有派生 binding 事实 | UNSATISFIED | UNSATISFIED（`requirement:expression_false`） |
+| 5 | 事实按 `component_type` 字面标注为 `ep-human-authorization` | UNSATISFIED | UNSATISFIED（`requirement:expression_false`） |
 
 动作身份（CAID → CLC §4.2）：
 
@@ -58,15 +59,37 @@ cd register && go run ./cmd/emilia-projection-probe
    ⇒ binding profile 必须给出角色映射表，不能留给实现猜。
 2. **`status_required`**：要求"新鲜的状态结果"，CLC 没有对应约束类型；只能由
    AEB/载体执行，并作为残差上报。
-3. **`required_bindings`**（`policy-permit -permits-> ep-quorum`）：**CLC 表达不了**。
-   CLC 的 requirement 是"角色布尔表达式 + 每角色约束"，没有**事实间关系**。
-   这是目前发现的第一个真正的表达缺口，不是 profile 能补的——要么 AEC 先做关系
-   归一化（把关系结果变成一个事实），要么 CLC 将来加一个受限的关系项。
+3. **`required_bindings`**（`policy-permit -permits-> ep-quorum`）：CLC
+   不直接比较事实间关系，因此由 native verifier 把它归一化为
+   `ep:binding:permits` 派生事实。requirement 保留原始
+   `ep-quorum AND policy-permit`，再与派生角色做 AND；关系事实只补充，不替代
+   quorum。若 verifier 不输出该事实，表达式为假。
+   - 派生事实绑定 source/target artifact 摘要、action、verifier/trust 结果、
+     distinct subjects、原始证据时间和 status 快照。
+   - freshness 取原始证据和状态，而不是关系重算时间；重算关系不能刷新旧批准。
 4. **`subject_id_source`**：主体标识由谁提供属于载体语义，CLC 只消费 `subject`。
 5. **`purpose`**：描述性字段，丢弃（不应影响求值，AEC 自己也这么写）。
 
+### binding identity 派生检查
+
+`out-probe.txt` 还检查 canonical relation tuple 的 base64url SHA-256 与固定
+subject 一致，并分别修改 source artifact、target artifact、action 和 status
+快照，确认四种修改都会改变 subject。
+
+CLC core 把 binding subject 当作不透明值：只要 native verifier 给出
+`verified=true` 的 `ep:binding:permits` fact，CLC 就接受该 role。因此
+source/target/action/status 的实际绑定由 native verifier 负责，不由 CLC
+重新计算。probe 用 `EMI-BIND-006` 明确记录这条边界，避免把 role 在场误写成
+CLC 已验证关系内容。
+
+Python 和 TypeScript runner（`probe.py`、`probe.mjs`）读取 register 仓库中的
+同一 `emilia-binding-fixture-v1.json`，并输出同样的 13 个 case ID、
+`want` 和 `got`。Go 通过 `go:embed` 读取该 fixture。
+
 ## 结论
 
-投影模型对 **freshness / quorum / 表达式组合** 是够用的，且结果与 AEC 的语义
-一致；**关系型证据绑定（required_bindings）是唯一的硬缺口**。这一点应在
-binding profile 的"不能表达什么"一节里明写，而不是悄悄丢掉。
+投影模型对 **freshness / quorum / 表达式组合** 是够用的。关系型证据绑定
+（`required_bindings`）通过 native-verifier 派生事实处理，且不删除或替代原始
+quorum。status、revocation、subject resolution 和关系重算不得刷新旧证据的规则
+仍是 binding profile 的显式义务。CLC 验证 role、`verified` 和约束；relation
+tuple 的身份及来源由 native verifier 和 binding profile 验证。

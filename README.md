@@ -149,8 +149,12 @@ revision.
 **Projection probes.**  Five carrier drafts — three evidence-side (EMILIA AEC,
 the WIMSE audit record, OASNT) and two authorization-side (ASOR, OAuth RAR) —
 are mapped into CLC by small runnable probes, each with the residuals the
-mapping could not carry:
-[`contrib/PROJECTION-PROBES.md`](contrib/PROJECTION-PROBES.md).
+mapping could not carry. The checked-in outputs, source revision pins and
+36 stable case IDs are indexed in a machine-checkable manifest,
+[`contrib/projection-cases-v1.json`](contrib/projection-cases-v1.json).
+The 13 EMILIA AEC/CAID/binding cases also run in Python and TypeScript
+against the same fixture.
+Overview: [`contrib/PROJECTION-PROBES.md`](contrib/PROJECTION-PROBES.md).
 
 ## CLC-v1 conformance vectors and schemes
 

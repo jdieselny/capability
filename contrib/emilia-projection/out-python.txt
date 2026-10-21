@@ -1,0 +1,16 @@
+EMILIA → CLC evidence projection probe (Python)
+fixture: register/cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json
+
+PASS EMI-BIND-001 base relation tuple has the pinned subject              want=qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s got=qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s
+PASS EMI-AEC-001 two verified approvals, permit and binding              want=SATISFIED got=SATISFIED
+PASS EMI-AEC-002 one approval unverified                                 want=UNSATISFIED got=UNSATISFIED/quorum:distinct_subjects=1<threshold=2
+PASS EMI-AEC-003 fresh binding does not refresh an old approval          want=UNSATISFIED got=UNSATISFIED/freshness:stale
+PASS EMI-AEC-004 missing derived binding fact                            want=UNSATISFIED got=UNSATISFIED/requirement:expression_false
+PASS EMI-AEC-005 facts typed ep-human-authorization (literal component_type) want=UNSATISFIED got=UNSATISFIED/requirement:expression_false
+PASS EMI-CAID-001 same tool+args, extra occurrence_id                     want=MATCH got=MATCH
+PASS EMI-CAID-002 args amount changed                                     want=NOT_EQUIVALENT got=NOT_EQUIVALENT
+PASS EMI-BIND-002 source mutation changes the relation subject            want=different got=different
+PASS EMI-BIND-003 target mutation changes the relation subject            want=different got=different
+PASS EMI-BIND-004 action mutation changes the relation subject            want=different got=different
+PASS EMI-BIND-005 status mutation changes the relation subject            want=different got=different
+PASS EMI-BIND-006 CLC treats the binding subject as opaque                want=opaque-subject-accepted got=opaque-subject-accepted

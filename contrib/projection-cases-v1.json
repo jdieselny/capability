@@ -1,0 +1,117 @@
+{
+  "@version": "clc-projection-cases-v1",
+  "corpus_base_revision": "260dc231c5244e7ee328aa3a0ae335c8a634a78d",
+  "corpus_base_revision_note": "This manifest, corrected example and regenerated outputs are working-tree changes based on this revision; the resulting capability commit is the corpus revision to cite after publication.",
+  "probe_repository": "https://github.com/varwof/register",
+  "probe_base_revision": "c4cbc53f117e7e7dc3eae980267c5b6e12f08e50",
+  "probe_revision": "ccd49cd5aefdd125116a0d1a87d079ddf9fa1ce7",
+  "probe_source_sha256": {
+    "cmd/asor-projection-probe/main.go": "c86579790062a74af25d673bae0287be4e1fdc558d27f6893bde17d6e3b99088",
+    "cmd/emilia-projection-probe/main.go": "eaca2c5c28e3aada1925098adda1fa10cd55f0479d5405da03a5c5d800629d4b",
+    "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json": "431ad466bf12ffcb542fa52235d60af5629c6e6f58d2def2baf8ef8c18080df9",
+    "cmd/gilda-projection-probe/main.go": "ee22fe91ac42999514509336db470b9864ab631541a971b97ea4beffd2c87ffb",
+    "cmd/oasnt-projection-probe/main.go": "70a89c94cc6d80b307042a91197891a97f450b7c82ddc0f5d4542189dbb6a9fd",
+    "cmd/rar-projection-probe/main.go": "a4251020dd7de8c99c1466962d3dbcc1c5ed1c1942761e2cab02ef3189c39b6a"
+  },
+  "total_cases": 36,
+  "cross_language_binding": {
+    "case_set": "emilia-projection",
+    "fixture": "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json",
+    "fixture_sha256": "431ad466bf12ffcb542fa52235d60af5629c6e6f58d2def2baf8ef8c18080df9",
+    "demo_repository": "https://github.com/varwof/aic-capability-demo",
+    "demo_base_revision": "117998bfe3d671e08fdc0e0fa4dc5d302fe52453",
+    "demo_source_sha256": {
+      "clc_semantics.py": "0b894fe83d250fa15d7ded1a3d6eab397895b90000f434b73a7dde07b5e6662b",
+      "evidence_semantics.py": "02d5c8de1fdb6c093e711ea0d20bd6e252eb2942a77723e2e3dd028f9ea0977d",
+      "ts/clc_semantics.ts": "e812bc56cfb42712957f0d223eaf1d52646efc74f25f37021cf7984a9dfe44a7",
+      "ts/evidence_semantics.ts": "ac20074ecfa10fd80569bedc4a1225b2c4f4f1681013574e32942ee53b2b77b6"
+    },
+    "python": {
+      "source": "contrib/emilia-projection/probe.py",
+      "source_sha256": "107f80fc1735da1cd2442daaca08b4169e3df022cf4e47d106b1f4aef11eb5db",
+      "output": "contrib/emilia-projection/out-python.txt",
+      "output_sha256": "c0efadaad7639b75822f971e95db7dbe7a51cf837abf68b11619e7fb03a9631a",
+      "command": "python3 contrib/emilia-projection/probe.py"
+    },
+    "typescript": {
+      "source": "contrib/emilia-projection/probe.mjs",
+      "source_sha256": "10055f1ea76a87157d9f462e0411fb93c4765216954edc3cf87c1ab6f1674316",
+      "output": "contrib/emilia-projection/out-typescript.txt",
+      "output_sha256": "6a580c9cbf6a748e2e3932567c40373a1bf3f9f3f2a2d09ca2bb6c934470c64b",
+      "command": "node --disable-warning=ExperimentalWarning --experimental-strip-types contrib/emilia-projection/probe.mjs"
+    }
+  },
+  "probes": {
+    "emilia-projection": {
+      "output": "contrib/emilia-projection/out-probe.txt",
+      "output_sha256": "699e83c1721d27bb09d1afe3794c71658378e9e4147121f2bbe0121fda59472e",
+      "command": "go run ./cmd/emilia-projection-probe",
+      "cases": [
+        {"id": "EMI-AEC-001", "want": "SATISFIED", "got": "SATISFIED"},
+        {"id": "EMI-AEC-002", "want": "UNSATISFIED", "got": "UNSATISFIED/quorum:distinct_subjects=1<threshold=2"},
+        {"id": "EMI-AEC-003", "want": "UNSATISFIED", "got": "UNSATISFIED/freshness:stale"},
+        {"id": "EMI-AEC-004", "want": "UNSATISFIED", "got": "UNSATISFIED/requirement:expression_false"},
+        {"id": "EMI-AEC-005", "want": "UNSATISFIED", "got": "UNSATISFIED/requirement:expression_false"},
+        {"id": "EMI-CAID-001", "want": "MATCH", "got": "MATCH"},
+        {"id": "EMI-CAID-002", "want": "NOT_EQUIVALENT", "got": "NOT_EQUIVALENT"},
+        {"id": "EMI-BIND-001", "want": "qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s", "got": "qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s"},
+        {"id": "EMI-BIND-002", "want": "different", "got": "different"},
+        {"id": "EMI-BIND-003", "want": "different", "got": "different"},
+        {"id": "EMI-BIND-004", "want": "different", "got": "different"},
+        {"id": "EMI-BIND-005", "want": "different", "got": "different"},
+        {"id": "EMI-BIND-006", "want": "opaque-subject-accepted", "got": "opaque-subject-accepted"}
+      ]
+    },
+    "gilda-projection": {
+      "output": "contrib/gilda-projection/out-probe.txt",
+      "output_sha256": "4199f197366da8df72b5dd86a2dc5464d3120e23477d6e1253b78713d88245c3",
+      "command": "go run ./cmd/gilda-projection-probe",
+      "cases": [
+        {"id": "GIL-001", "want": "allow", "got": "allow"},
+        {"id": "GIL-002", "want": "allow_unresolved", "got": "allow_unresolved"},
+        {"id": "GIL-003", "want": "deny", "got": "deny"},
+        {"id": "GIL-004", "want": "allow_unresolved", "got": "allow_unresolved"},
+        {"id": "GIL-005", "want": "deny", "got": "deny"},
+        {"id": "GIL-006", "want": "allow", "got": "allow"}
+      ]
+    },
+    "oasnt-projection": {
+      "output": "contrib/oasnt-projection/out-probe.txt",
+      "output_sha256": "0a9c94c9d227872381fc8b9e632dad5d09eaa7993d99ca6574cf180e8625ef94",
+      "command": "go run ./cmd/oasnt-projection-probe",
+      "cases": [
+        {"id": "OAS-ADG-001", "want": "MATCH", "got": "MATCH"},
+        {"id": "OAS-ADG-002", "want": "NOT_EQUIVALENT", "got": "NOT_EQUIVALENT"},
+        {"id": "OAS-ADG-003", "want": "NOT_EQUIVALENT", "got": "NOT_EQUIVALENT"},
+        {"id": "OAS-FACT-001", "want": "SATISFIED", "got": "SATISFIED"},
+        {"id": "OAS-FACT-002", "want": "UNSATISFIED", "got": "UNSATISFIED"},
+        {"id": "OAS-FACT-003", "want": "UNSATISFIED", "got": "UNSATISFIED"}
+      ]
+    },
+    "asor-authorization-projection": {
+      "output": "contrib/asor-authorization-projection/out-probe.txt",
+      "output_sha256": "e0304e4cadedf7a29a2c33765a223b28939a626a0e00d94ac92eb993f86ed33b",
+      "command": "go run ./cmd/asor-projection-probe",
+      "cases": [
+        {"id": "ASOR-001", "want": "mapping-exact", "got": "grants=3"},
+        {"id": "ASOR-002", "want": "mapping-exact", "got": "grants=1"},
+        {"id": "ASOR-003", "want": "contains=true", "got": "contains=true"},
+        {"id": "ASOR-004", "want": "allow", "got": "allow"},
+        {"id": "ASOR-005", "want": "allow", "got": "allow"},
+        {"id": "ASOR-006", "want": "deny", "got": "deny/params_exceed_grant"},
+        {"id": "ASOR-007", "want": "no-chain", "got": "no-chain"}
+      ]
+    },
+    "rar-authorization-projection": {
+      "output": "contrib/rar-authorization-projection/out-probe.txt",
+      "output_sha256": "ee6041e6a3c27a9f31191b70615ce1022aeb1b516c2864b60c2c6cf8313f2bfb",
+      "command": "go run ./cmd/rar-projection-probe",
+      "cases": [
+        {"id": "RAR-001", "want": "allow", "got": "allow"},
+        {"id": "RAR-002", "want": "deny", "got": "deny/params_exceed_grant"},
+        {"id": "RAR-003", "want": "deny", "got": "deny/not_in_enum"},
+        {"id": "RAR-004", "want": "allow", "got": "allow"}
+      ]
+    }
+  }
+}

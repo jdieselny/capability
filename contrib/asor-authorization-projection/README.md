@@ -34,16 +34,17 @@ asor/agent-delegation-v1:crm:*               params={max_rows:5000}
 asor/agent-delegation-v1:crm:customer:read   params={max_rows:3000}
 ```
 
-集合包含：叶的 grant 被根的 grant 包含（`Contains=true`）。
+七条机器可检查 case：
 
-链授权：
-
-| 操作 | 期望 | 实际 |
-|---|---|---|
-| read，`max_rows=2000` | allow | allow |
-| read，`max_rows=3000`（叶的上界） | allow | allow |
-| read，`max_rows=3001` | deny | deny / `params_exceed_grant` |
-| write（根有、叶没有） | no-chain | no-chain |
+| Case | 场景 | 期望 | 实际 |
+|---|---|---|---|
+| ASOR-001 | root token 精确映射为三个 grant | mapping-exact | grants=3 |
+| ASOR-002 | leaf token 精确映射为一个 grant | mapping-exact | grants=1 |
+| ASOR-003 | 每个 leaf grant 被父 grant 包含 | contains=true | contains=true |
+| ASOR-004 | read，`max_rows=2000` | allow | allow |
+| ASOR-005 | read，`max_rows=3000`（叶的上界） | allow | allow |
+| ASOR-006 | read，`max_rows=3001` | deny | deny / `params_exceed_grant` |
+| ASOR-007 | write（根有、叶没有） | no-chain | no-chain |
 
 ## 结论
 
@@ -66,5 +67,5 @@ asor/agent-delegation-v1:crm:customer:read   params={max_rows:3000}
 运行：
 
 ```sh
-cd register && go run ./cmd/asor-projection-probe
+(cd ../register && go run ./cmd/asor-projection-probe)
 ```

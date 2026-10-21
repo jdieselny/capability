@@ -5,14 +5,14 @@ canonical action: payments.transfer|amount=3000&currency=CNY
 adg: 0MRb5YozGHPT71GiH-DSFLJm1s2G4ZDLfiBE_CD_UzE
 
 1. Action binding (adg) against the presented action
-   same action                  want MATCH           got MATCH           PASS
-   amount 3001                  want NOT_EQUIVALENT  got NOT_EQUIVALENT  PASS
-   extra parameter added        want NOT_EQUIVALENT  got NOT_EQUIVALENT  PASS
+PASS OAS-ADG-001 same action                  want=MATCH got=MATCH
+PASS OAS-ADG-002 amount 3001                  want=NOT_EQUIVALENT got=NOT_EQUIVALENT
+PASS OAS-ADG-003 extra parameter added        want=NOT_EQUIVALENT got=NOT_EQUIVALENT
 
 2. Approval as a CLC fact (§10 requirement over one role)
-   int=clean, approved 30s ago      want SATISFIED   got SATISFIED   PASS
-   int=compromised (not eligible)   want UNSATISFIED got UNSATISFIED PASS
-   approved 301s ago                want UNSATISFIED got UNSATISFIED PASS
+PASS OAS-FACT-001 int=clean, approved 30s ago      want=SATISFIED got=SATISFIED
+PASS OAS-FACT-002 int=compromised (not eligible)   want=UNSATISFIED got=UNSATISFIED
+PASS OAS-FACT-003 approved 301s ago                want=UNSATISFIED got=UNSATISFIED
 
 3. Members with no CLC axis (residual, carrier or enforcement point)
    - dsp: what the human read; CLC has no disclosure axis

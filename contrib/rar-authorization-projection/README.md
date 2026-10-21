@@ -49,5 +49,5 @@ residual: locations
 运行：
 
 ```sh
-cd register && go run ./cmd/rar-projection-probe
+(cd ../register && go run ./cmd/rar-projection-probe)
 ```

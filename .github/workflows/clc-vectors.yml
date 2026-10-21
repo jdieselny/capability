@@ -223,6 +223,17 @@ jobs:
       - name: OCMP offline vectors (coverage + vocabulary)
         run: python3 scripts/check-offline-vectors.py
 
+      - name: Projection case manifest matches checked-in outputs
+        run: python3 tools/check_projection_cases.py
+
+      - uses: actions/checkout@v4
+        with:
+          repository: varwof/register
+          path: register
+
+      - name: Projection probes reproduce from pinned source files
+        run: python3 tools/check_projection_cases.py --register-dir register
+
       # contrib/ 的门：两个探针必须能被两个独立实现跑出**逐字节相同**的输出。
       # 门是"两实现一致"，不是与提交时的 out-*.txt 逐字节比——实现升版时
       # 打印的 CLC_REVISION 行会变，而判定与 reason 应当不变。
@@ -242,3 +253,9 @@ jobs:
             cmp /tmp/probe-py.txt /tmp/probe-ts.txt
             echo "contrib probe agree: $d"
           done
+
+      - name: Projection binding cases agree across implementations
+        run: |
+          python3 tools/check_projection_cases.py \
+            --register-dir register \
+            --demo-dir ../aic-capability-demo

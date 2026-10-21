@@ -1,18 +1,18 @@
 Gilda audit record → CLC result vocabulary
 Fields: draft-gilda-wimse-agent-audit-record-02 §5.3, §6.5 (checked 2026-10-17)
 
-g-1  reported=permit                 status=evaluated     observed=occurred     agreement=agree         -> CLC allow            want allow            PASS
-g-2  reported=permit-with-conditions status=evaluated     observed=occurred     agreement=agree         -> CLC allow_unresolved want allow_unresolved PASS
+PASS GIL-001  record=g-1 reported=permit                 status=evaluated     observed=occurred     agreement=agree         want=allow got=allow
+PASS GIL-002  record=g-2 reported=permit-with-conditions status=evaluated     observed=occurred     agreement=agree         want=allow_unresolved got=allow_unresolved
       residual: conditions: carrier-owned
-g-3  reported=deny                   status=evaluated     observed=occurred     agreement=disagree      -> CLC deny             want deny             PASS
+PASS GIL-003  record=g-3 reported=deny                   status=evaluated     observed=occurred     agreement=disagree      want=deny got=deny
       residual: agreement=disagree: relation between decision and effect, no CLC axis
-g-4  reported=permit                 status=not-evaluated observed=occurred     agreement=indeterminate -> CLC allow_unresolved want allow_unresolved PASS
+PASS GIL-004  record=g-4 reported=permit                 status=not-evaluated observed=occurred     agreement=indeterminate want=allow_unresolved got=allow_unresolved
       residual: unavailableInput:standing source
       residual: agreement=indeterminate: relation between decision and effect, no CLC axis
-g-5  reported=deny                   status=not-evaluated observed=occurred     agreement=indeterminate -> CLC deny             want deny             PASS
+PASS GIL-005  record=g-5 reported=deny                   status=not-evaluated observed=occurred     agreement=indeterminate want=deny got=deny
       residual: unavailableInput:consumption state
       residual: agreement=indeterminate: relation between decision and effect, no CLC axis
-g-6  reported=permit                 status=evaluated     observed=not-observed agreement=one-sided     -> CLC allow            want allow            PASS
+PASS GIL-006  record=g-6 reported=permit                 status=evaluated     observed=not-observed agreement=one-sided     want=allow got=allow
       residual: agreement=one-sided: relation between decision and effect, no CLC axis
 
 Reading: the decision and evaluation members project cleanly; the derived

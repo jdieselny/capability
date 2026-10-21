@@ -23,7 +23,7 @@ CLC 已经求值的形状。这也是 OASNT 对 action 所做的同一处理（`
 type      = <carrier>:binding:<relation>         e.g. ep:binding:permits
 subject   = base64url(SHA-256(JCS(relation tuple)))
 verified  = true      (the carrier's verifier decided the relation)
-issued_at = the instant the relation was decided
+issued_at = 被绑定证据的保守新鲜度时刻（绝不是关系重算时间）
 ```
 
 该 type 同时也就是 requirement 所指名的**角色标识符**，而 requirement 文法的标识符
@@ -33,8 +33,20 @@ issued_at = the instant the relation was decided
 **关系元组**是一个固定的、由载体声明的对象：
 
 ```json
-{"from_type":"policy-permit","relation":"permits","to_type":"ep-quorum",
- "subjects":["alice","bob"]}
+{"requirement_id":"treasury-wire-evidence@7",
+ "policy_generation":"policy-7",
+ "from":{"type":"policy-permit","artifact_digest":"sha256:..."},
+ "relation":"permits",
+ "to":{"type":"ep-quorum","artifact_set_digest":"sha256:..."},
+ "action_digest":"sha256:...",
+ "subjects":["alice","bob"],
+ "trust":{"verifier":"native-verifier","result":"verified"},
+ "status_digest":"sha256:...",
+ "evidence_issued_at":["2026-09-13T11:59:00Z", "..."],
+ "status_snapshot":{"outcome":"valid","source":"aeb-status",
+                    "checked_at":"2026-09-13T12:00:00Z",
+                    "valid_until":"2026-09-13T12:01:00Z",
+                    "revocation_generation":"rev-42"}}
 ```
 
 元组的规则，全部旨在使该机制保持有界且局部：
@@ -43,10 +55,21 @@ issued_at = the instant the relation was decided
   已要求的规范化相同；
 - `subjects` 在哈希之前按确定顺序排序（顺序由载体声明，例如 UTF-8 字节序），
   或者改由元组携带集合摘要；
+- 元组绑定实际的 source/target 制品、精确动作、native verifier 与 trust 结果、
+  distinct subjects、原始证据时间、requirement/policy generation，以及该验证器
+  使用的 status/revocation 快照；
 - 载体 MUST 说明该关系的语义、元组的成员，以及由谁来验证它——这正是绑定配置
   的四项义务，应用到一个关系上；
 - 该事实**不**自认证：只有当它由载体的原生验证产生时才具备资格（与任何事实
   相同的 `verified` 规则）。
+
+重算关系不能刷新它所连接的证据。派生事实的新鲜度和有效期来自原始 source/target
+证据及状态快照。今天重算出一个真实关系，如果其中一份批准已经过期，它仍然是过期
+证据。
+
+探针使用具体的合成 artifact fixture 来测试该形状，不声称这些 fixture 是 EMILIA
+生产系统的原始字节。关系与 artifact 摘要由发出派生事实的 native verifier 负责；
+CLC 把 fact subject 当作不透明值。
 
 ## 3. 示例 1 —— AEC `required_bindings`
 
@@ -56,19 +79,24 @@ to_type: ep-quorum}]`。归一化后：
 
 ```
 type    = ep:binding:permits
-subject = b64url(SHA-256(JCS({"from_type":"policy-permit","relation":"permits",
-                              "to_type":"ep-quorum","subjects":["alice","bob"]})))
+subject = b64url(SHA-256(JCS(relation tuple)))
 ```
 
-依赖方的 requirement 随后指名该角色：
+依赖方保留原始项，并增加派生角色：
 
 ```json
 {"@version":"CLC-REQUIREMENT-v1","requirement_id":"treasury-wire-evidence@7",
- "expression":"ep:binding:permits AND policy-permit",
- "constraints":[{"role":"ep:binding:permits","constraint":"varwof/evidence-v1:freshness:sec:300"}]}
+ "expression":"ep-quorum AND policy-permit AND ep:binding:permits",
+ "constraints":[
+   {"role":"ep-quorum","constraint":"varwof/evidence-v1:freshness:sec:300"},
+   {"role":"policy-permit","constraint":"varwof/evidence-v1:freshness:sec:600"},
+   {"role":"ep-quorum","constraint":"varwof/evidence-v1:quorum:distinct:2"}
+ ]}
 ```
 
-如果链验证器没有发出该事实，表达式即为假——端点在场并不是该关系（sym-047）。
+binding 事实补充而不是替代原始 quorum 和 permit。链验证器没有发出该事实时，
+表达式为假；端点在场并不等于关系成立（sym-047）。原始批准过期时，新算出的
+binding 事实也不能把它重新变成新鲜证据。
 
 ## 4. 示例 2 —— Gilda `agreement`
 

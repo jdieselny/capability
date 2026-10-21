@@ -411,9 +411,14 @@
      "operation":{"id":"std/payments-v1:transfer","params":{"amount":3000,"currency":"CNY"}},"verdict":"allow"},
    "observed":{"amount":3000,"currency":"CNY"},"expect":{"match":"MATCH"},
    "evidence":{"requirement":{"@version":"CLC-REQUIREMENT-v1","requirement_id":"binding@2",
-     "expression":"ep:binding:permits AND policy-permit"},
+     "expression":"ep-quorum AND policy-permit AND ep:binding:permits",
+     "constraints":[
+       {"role":"ep-quorum","constraint":"varwof/evidence-v1:freshness:sec:300"},
+       {"role":"ep-quorum","constraint":"varwof/evidence-v1:quorum:distinct:2"}]},
      "context":{"now":"2026-09-13T12:00:00Z"},
      "facts":[{"type":"ep:binding:permits","subject":"b64url-sha256-of-the-relation-tuple","verified":true,"issued_at":"2026-09-13T11:59:50Z"},
+              {"type":"ep-quorum","subject":"alice","verified":true,"issued_at":"2026-09-13T11:59:40Z"},
+              {"type":"ep-quorum","subject":"bob","verified":true,"issued_at":"2026-09-13T11:59:50Z"},
               {"type":"policy-permit","subject":"policy","verified":true,"issued_at":"2026-09-13T11:59:30Z"}],
      "verdict":"SATISFIED"}},
 
@@ -429,15 +434,20 @@
      "facts":[{"type":"ep:binding:permits","subject":"b64url-sha256-of-the-relation-tuple","verified":true,"issued_at":"2026-09-13T11:59:30Z"}],
      "verdict":"SATISFIED"}},
 
-  {"id":"sym-050","kind":"symmetry","spec_clause":"§10 step 4: a stale derived relation fact is not satisfied",
+  {"id":"sym-050","kind":"symmetry","spec_clause":"§10 step 4 + §11: a fresh relation fact does not refresh stale source evidence",
    "type":{"name":"payment.release.1","material":["amount","currency"]},"suite":"jcs-sha256",
    "authorization":{"grants":[{"id":"std/payments-v1:transfer","params":{"amount":5000,"currency":["CNY"]}}],
      "operation":{"id":"std/payments-v1:transfer","params":{"amount":3000,"currency":"CNY"}},"verdict":"allow"},
    "observed":{"amount":3000,"currency":"CNY"},"expect":{"match":"MATCH"},
-   "evidence":{"requirement":{"@version":"CLC-REQUIREMENT-v1","requirement_id":"binding@3",
-       "expression":"ep:binding:permits",
-       "constraints":[{"role":"ep:binding:permits","constraint":"varwof/evidence-v1:freshness:sec:60"}]},
+   "evidence":{"requirement":{"@version":"CLC-REQUIREMENT-v1","requirement_id":"binding@4",
+       "expression":"ep-quorum AND ep:binding:permits",
+       "constraints":[
+         {"role":"ep-quorum","constraint":"varwof/evidence-v1:freshness:sec:300"},
+         {"role":"ep-quorum","constraint":"varwof/evidence-v1:quorum:distinct:2"},
+         {"role":"ep:binding:permits","constraint":"varwof/evidence-v1:freshness:sec:60"}]},
      "context":{"now":"2026-09-13T12:00:00Z"},
-     "facts":[{"type":"ep:binding:permits","subject":"b64url-sha256-of-the-relation-tuple","verified":true,"issued_at":"2026-09-13T11:50:00Z"}],
-     "verdict":"UNSATISFIED"}}
+     "facts":[{"type":"ep:binding:permits","subject":"b64url-sha256-of-the-relation-tuple","verified":true,"issued_at":"2026-09-13T11:59:30Z"},
+              {"type":"ep-quorum","subject":"alice","verified":true,"issued_at":"2026-09-13T11:54:00Z"},
+              {"type":"ep-quorum","subject":"bob","verified":true,"issued_at":"2026-09-13T11:59:50Z"}],
+     "verdict":"UNSATISFIED","reason":"freshness:stale"}}
 ]

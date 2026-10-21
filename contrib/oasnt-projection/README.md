@@ -57,5 +57,5 @@ OASNT **没有**出现 `required_bindings` / `agreement` 那类缺口——因�
 运行：
 
 ```sh
-cd register && go run ./cmd/oasnt-projection-probe
+(cd ../register && go run ./cmd/oasnt-projection-probe)
 ```

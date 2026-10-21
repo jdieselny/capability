@@ -48,5 +48,5 @@ spec 的 `[GILDA]` 引用用新名 `-00`，本探针的核对对象是改名前�
 运行：
 
 ```sh
-cd register && go run ./cmd/gilda-projection-probe
+(cd ../register && go run ./cmd/gilda-projection-probe)
 ```
