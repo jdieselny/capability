@@ -274,9 +274,12 @@ jobs:
       - name: Install catalog probe dependency
         run: pip install --quiet cryptography
 
+      - name: Prepare sibling register checkout for probe discovery
+        run: cp -a register ../register
+
       - name: Scheme-admin and catalog corpora are reproducible
         env:
-          REGISTER_DIR: ${{ github.workspace }}/register
+          REGISTER_DIR: ${{ github.workspace }}/../register
           CLC_PY_DIR: ${{ github.workspace }}/aic-capability-demo
           CLC_TS_DIR: ${{ github.workspace }}/aic-capability-demo/ts
         run: |
