@@ -1,0 +1,289 @@
+{
+  "scheme_id": "varwof/scheme-admin-v1",
+  "name": "Varwof Scheme Administration (v1)",
+  "version": "1.0.0",
+  "description": "Provisional project-local scheme that states who may create, update, revoke, delegate and root-rotate a capability scheme package. This identifier is a project-local reference name, not a registered IETF or CLC namespace. The scheme defines management authority only; it adds no CLC grammar and no CLC verdict. A deployer recomputes authority from the publisher's AIC grant, the scheme package, the scheme transition and its own trust policy. See docs/scheme-admin-v1.md.",
+  "vendor": "varwof",
+  "product": "scheme-admin-v1",
+  "author": "varwof",
+  "license": "Apache-2.0",
+  "homepage": "https://varwof.com/register/docs/scheme-admin-v1",
+  "note": "scheme:verify is deliberately absent. Schema, digest and compatibility verification is unprivileged and MAY be performed by any party. A signed verification result is governance evidence only when an explicit approval profile says so.",
+  "capabilities": [
+    {
+      "id": "scheme:create",
+      "description": "Create the first package in an authorized namespace",
+      "summary": "Create generation 1 of a scheme package under a namespace the publisher administers",
+      "usage": "Used once per namespace, when the first immutable scheme package is proposed to a deployer.",
+      "when_not": "Not used to replace or amend an existing package; use scheme:update. Not used to re-create a revoked namespace without a new tombstone-aware decision.",
+      "examples": [
+        "Publish std/payments-v1 generation 1",
+        "Bootstrap a new vendor scheme namespace"
+      ],
+      "related": [
+        "scheme:update",
+        "scheme:revoke",
+        "scheme:delegate"
+      ],
+      "parameters": {
+        "namespace": {
+          "type": "string",
+          "description": "Absolute path-prefix namespace the package belongs to, e.g. /std/payments-v1",
+          "required": true
+        },
+        "change_class": {
+          "type": "list",
+          "description": "Single change class of this transition",
+          "enum": [
+            "patch",
+            "minor",
+            "major"
+          ],
+          "required": true
+        },
+        "major": {
+          "type": "int",
+          "description": "Numeric major version of the package revision",
+          "min": 0,
+          "max": 99,
+          "required": true
+        },
+        "clc_revision": {
+          "type": "list",
+          "description": "CLC revision the package requires",
+          "enum": [
+            "CLC-1.19"
+          ],
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "scheme:update",
+      "description": "Transition from one package digest/generation to another",
+      "summary": "Replace the active package of a namespace with a strictly newer generation",
+      "usage": "Used for every patch, minor or major change after generation 1.",
+      "when_not": "Not used to move to the same generation, to roll back, or to resurrect a revoked digest.",
+      "examples": [
+        "Advance std/payments-v1 from generation 6 to 7",
+        "Apply a major version bump under an explicit major grant"
+      ],
+      "related": [
+        "scheme:create",
+        "scheme:revoke",
+        "scheme:approve"
+      ],
+      "parameters": {
+        "namespace": {
+          "type": "string",
+          "description": "Absolute path-prefix namespace the package belongs to",
+          "required": true
+        },
+        "change_class": {
+          "type": "list",
+          "description": "Single change class of this transition",
+          "enum": [
+            "patch",
+            "minor",
+            "major"
+          ],
+          "required": true
+        },
+        "major": {
+          "type": "int",
+          "description": "Numeric major version of the target package revision",
+          "min": 0,
+          "max": 99,
+          "required": true
+        },
+        "clc_revision": {
+          "type": "list",
+          "description": "CLC revision the target package requires",
+          "enum": [
+            "CLC-1.19"
+          ],
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "scheme:revoke",
+      "description": "Revoke a package digest and create a tombstone",
+      "summary": "Publish a signed tombstone for an existing package digest",
+      "usage": "Used when a package must no longer be adopted. The tombstone names the revoked digest, the revocation generation, an effective time, a stable reason code and a replacement digest when known.",
+      "when_not": "Never used to physically delete an artifact. Public artifacts may already exist in caches, mirrors and audit logs.",
+      "examples": [
+        "Revoke a package after a specification defect",
+        "Tombstone a superseded major line"
+      ],
+      "related": [
+        "scheme:create",
+        "scheme:update"
+      ],
+      "parameters": {
+        "namespace": {
+          "type": "string",
+          "description": "Absolute path-prefix namespace the revoked package belongs to",
+          "required": true
+        },
+        "package_digest": {
+          "type": "string",
+          "description": "Digest of the package being revoked",
+          "required": true
+        },
+        "clc_revision": {
+          "type": "list",
+          "description": "CLC revision of the tombstone",
+          "enum": [
+            "CLC-1.19"
+          ],
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "scheme:delegate",
+      "description": "Delegate a strict subset of namespace/actions/versions",
+      "summary": "Issue a strictly narrower administration grant to another principal",
+      "usage": "Used to hand a sub-namespace, a subset of change classes, a lower major bound or a subset of CLC revisions to another administrator.",
+      "when_not": "Not used to widen a namespace, add a change class, raise a major bound or add a CLC revision. A delegation that is not strictly narrower is refused.",
+      "examples": [
+        "Delegate /std/payments-v1 to a payments team",
+        "Delegate patch-only authority below /std"
+      ],
+      "related": [
+        "scheme:create",
+        "scheme:update"
+      ],
+      "parameters": {
+        "namespace": {
+          "type": "string",
+          "description": "Absolute path-prefix namespace of the delegated authority",
+          "required": true
+        },
+        "change_class": {
+          "type": "list",
+          "description": "Change classes the delegate may use",
+          "enum": [
+            "patch",
+            "minor",
+            "major"
+          ],
+          "required": true
+        },
+        "major": {
+          "type": "int",
+          "description": "Highest major version the delegate may publish",
+          "min": 0,
+          "max": 99,
+          "required": true
+        },
+        "clc_revision": {
+          "type": "list",
+          "description": "CLC revisions the delegate may publish under",
+          "enum": [
+            "CLC-1.19"
+          ],
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "scheme:root-rotate",
+      "description": "Replace the bootstrap administration root by threshold",
+      "summary": "Move the configured trust root from the current root keys to the next root keys",
+      "usage": "Used when the bootstrap root must change. The transition is authorized by the current root and satisfies the separately configured next-root threshold.",
+      "when_not": "Never accepted when the proposed next root authorizes its own installation, when the current root does not authorize it, or when the next-root threshold is not met.",
+      "examples": [
+        "Rotate the bootstrap root key after a compromise",
+        "Hand administration to a new threshold key set"
+      ],
+      "related": [
+        "scheme:approve"
+      ],
+      "parameters": {
+        "package_digest": {
+          "type": "string",
+          "description": "Digest of the root administration package being replaced",
+          "required": true
+        },
+        "clc_revision": {
+          "type": "list",
+          "description": "CLC revision of the rotation",
+          "enum": [
+            "CLC-1.19"
+          ],
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "scheme:approve",
+      "description": "Optional multi-party approval action",
+      "summary": "Record an exact approval for one package and one transition digest",
+      "usage": "Used only when the deployer's trust policy requires an approval threshold. The approval pins the exact package digest and transition digest, so it cannot be replayed for another package.",
+      "when_not": "Not used as a substitute for scheme:create/update/revoke authority, and not used when the deployer requires no approval.",
+      "examples": [
+        "Second approver signs a specific transition",
+        "Release board approval for a major version"
+      ],
+      "related": [
+        "scheme:update",
+        "scheme:root-rotate"
+      ],
+      "parameters": {
+        "namespace": {
+          "type": "string",
+          "description": "Absolute path-prefix namespace of the approved package",
+          "required": true
+        },
+        "package_digest": {
+          "type": "string",
+          "description": "Exact digest of the approved package",
+          "required": true
+        },
+        "transition_digest": {
+          "type": "string",
+          "description": "Exact digest of the approved transition",
+          "required": true
+        },
+        "clc_revision": {
+          "type": "list",
+          "description": "CLC revision of the approval",
+          "enum": [
+            "CLC-1.19"
+          ],
+          "required": true
+        }
+      }
+    }
+  ],
+  "roles": {
+    "scheme-publisher": {
+      "display_name": "Scheme Publisher",
+      "grants": [
+        "scheme:create",
+        "scheme:update",
+        "scheme:revoke"
+      ]
+    },
+    "scheme-approver": {
+      "display_name": "Scheme Approver",
+      "grants": [
+        "scheme:approve"
+      ]
+    },
+    "namespace-delegator": {
+      "display_name": "Namespace Delegator",
+      "grants": [
+        "scheme:delegate"
+      ]
+    },
+    "root-administrator": {
+      "display_name": "Root Administrator",
+      "grants": [
+        "scheme:root-rotate"
+      ]
+    }
+  }
+}

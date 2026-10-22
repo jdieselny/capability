@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.com/schemas/scheme-admin-v1/transition.schema.json",
+  "title": "CLC Scheme Transition v1",
+  "description": "Immutable description of one proposed change to a scheme package lineage. Closed object: undeclared members are refused, including any trusted `authorized`, `verified` or `approved` result boolean. The deployer constructs the concrete management operation from this transition and recomputes authorization locally.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "@version",
+    "action",
+    "scheme",
+    "namespace",
+    "to_generation",
+    "to_digest",
+    "change_class",
+    "target_clc_revision"
+  ],
+  "properties": {
+    "@version": {
+      "const": "CLC-SCHEME-TRANSITION-v1"
+    },
+    "action": {
+      "enum": ["create", "update", "revoke", "root-rotate"]
+    },
+    "scheme": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_.-]*-v[0-9]+$"
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^/[A-Za-z0-9_.:/-]+$",
+      "description": "Absolute clean path form of the scheme namespace. For a package transition it must equal `/` + `scheme`."
+    },
+    "from_generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "to_generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "from_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "to_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "change_class": {
+      "enum": ["patch", "minor", "major"]
+    },
+    "target_clc_revision": {
+      "type": "string",
+      "pattern": "^CLC-[0-9]+\\.[0-9]+$"
+    },
+    "revocation_reason": {
+      "enum": [
+        "superseded",
+        "security-defect",
+        "publisher-withdrawal",
+        "policy-violation",
+        "compromised"
+      ]
+    },
+    "revocation_effective_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "replacement_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "tombstone_generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "next_root_package_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "next_root_keys": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/digest" }
+    },
+    "next_root_threshold": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "action": { "const": "create" } }, "required": ["action"] },
+      "then": {
+        "not": {
+          "anyOf": [
+            { "required": ["from_generation"] },
+            { "required": ["from_digest"] }
+          ]
+        },
+        "properties": { "to_generation": { "const": 1 } }
+      }
+    },
+    {
+      "if": { "properties": { "action": { "enum": ["update", "revoke"] } }, "required": ["action"] },
+      "then": {
+        "required": ["from_generation", "from_digest"]
+      }
+    },
+    {
+      "if": { "properties": { "action": { "const": "revoke" } }, "required": ["action"] },
+      "then": {
+        "required": [
+          "revocation_reason",
+          "revocation_effective_time",
+          "tombstone_generation"
+        ]
+      }
+    },
+    {
+      "if": { "properties": { "action": { "const": "root-rotate" } }, "required": ["action"] },
+      "then": {
+        "required": [
+          "from_generation",
+          "from_digest",
+          "next_root_package_digest",
+          "next_root_keys",
+          "next_root_threshold"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[A-Za-z0-9_-]{43}$"
+    }
+  },
+  "examples": [
+    {
+      "@version": "CLC-SCHEME-TRANSITION-v1",
+      "action": "update",
+      "scheme": "std/payments-v1",
+      "namespace": "/std/payments-v1",
+      "from_generation": 6,
+      "to_generation": 7,
+      "from_digest": "sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "to_digest": "sha256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+      "change_class": "minor",
+      "target_clc_revision": "CLC-1.19"
+    }
+  ]
+}

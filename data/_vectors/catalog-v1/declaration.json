@@ -1,0 +1,29 @@
+{
+  "@version": "CLC-SCHEME-v1",
+  "capabilities": {
+    "refund": {
+      "params": {
+        "amount": {
+          "domain": "exact"
+        }
+      }
+    },
+    "transfer": {
+      "params": {
+        "amount": {
+          "domain": "exact"
+        },
+        "counterparty": {
+          "domain": "exact"
+        },
+        "currency": {
+          "domain": "exact"
+        }
+      }
+    }
+  },
+  "clc_revision": "CLC-1.19",
+  "declaration_id": "std/payments-v1:declaration:1",
+  "digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+  "scheme": "std/payments-v1"
+}

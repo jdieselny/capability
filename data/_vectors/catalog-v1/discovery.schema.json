@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.org/schemas/clc-catalog-discovery-v1",
+  "title": "CLC-CATALOG-DISCOVERY-v1",
+  "description": "A provider's pointer to a catalog it publishes. This record is a candidate, never a verdict: a consumer must fetch and verify the named catalog before executing anything. Members such as verified, authorized or approved are shape errors, not ignored.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "@version",
+    "provider",
+    "catalog_id",
+    "catalog_digest",
+    "generation",
+    "issued_at",
+    "valid_until"
+  ],
+  "properties": {
+    "@version": {
+      "const": "CLC-CATALOG-DISCOVERY-v1"
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "catalog_id": {
+      "$ref": "#/$defs/name"
+    },
+    "catalog_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status_reference": {
+      "type": "string"
+    },
+    "scheme_declaration_digests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    }
+  },
+  "$defs": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]*(/[a-z0-9][a-z0-9._-]*)*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[A-Za-z0-9_-]{43}$"
+    }
+  }
+}

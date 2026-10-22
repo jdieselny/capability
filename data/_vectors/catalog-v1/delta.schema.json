@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.org/schemas/clc-capability-catalog-delta-v1",
+  "title": "CLC-CAPABILITY-CATALOG-DELTA-v1",
+  "description": "One immutable change set against an exact base generation and digest. A capability may appear on exactly one side of the delta.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "@version",
+    "domain",
+    "catalog_id",
+    "base_generation",
+    "target_generation",
+    "base_digest",
+    "target_digest",
+    "issued_at",
+    "valid_until",
+    "producer"
+  ],
+  "properties": {
+    "@version": {
+      "const": "CLC-CAPABILITY-CATALOG-DELTA-v1"
+    },
+    "domain": {
+      "$ref": "#/$defs/name"
+    },
+    "catalog_id": {
+      "$ref": "#/$defs/name"
+    },
+    "base_generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "target_generation": {
+      "type": "integer",
+      "minimum": 2,
+      "description": "Must equal base_generation + 1."
+    },
+    "base_digest": {
+      "$ref": "#/$defs/digest",
+      "description": "Digest of the exact catalog the delta applies to."
+    },
+    "target_digest": {
+      "$ref": "#/$defs/digest",
+      "description": "Digest the applied catalog must have. A mismatch refuses the delta."
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "type": "string",
+      "pattern": "^principal:[A-Za-z0-9_.:-]+$"
+    },
+    "add": {
+      "type": "array",
+      "items": {
+        "$ref": "clc-capability-catalog-v1#/$defs/entry"
+      }
+    },
+    "replace": {
+      "type": "array",
+      "items": {
+        "$ref": "clc-capability-catalog-v1#/$defs/entry"
+      }
+    },
+    "remove": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$comment": "target_generation == base_generation + 1, a non-empty effect and cross-side uniqueness are enforced by catalog.Apply/Validate, which see the base artifact; JSON Schema cannot express that relation.",
+  "$defs": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]*(/[a-z0-9][a-z0-9._-]*)*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[A-Za-z0-9_-]{43}$"
+    }
+  }
+}

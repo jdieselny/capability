@@ -1,0 +1,205 @@
+{
+  "_note": "Deployment fixture for varwof/scheme-admin-v1. root_package and root_keys are real deterministic test values; root_package_digest, root_keys and next_root_* are pinned. Replace the deterministic test keys with your bootstrap ceremony's keys before deployment.",
+  "@version": "varwof/scheme-admin-bootstrap-v1",
+  "root_package": {
+    "@version": "CLC-SCHEME-PACKAGE-v1",
+    "scheme": "varwof/scheme-admin-v1",
+    "revision": "1.0",
+    "definition_digest": "sha256:r1C37VtIUKADDel6ksVHRI8l3sXQbA5APFnlUyi2PsQ",
+    "declaration_digest": "sha256:-QFYkx3Jg5R1PqWj4BMtflxP_5rALsK6928Xtpezs4U",
+    "clc_revision": "CLC-1.19",
+    "change_class": "major",
+    "publisher": "principal:root-admin",
+    "generation": 1,
+    "issued_at": "2026-10-21T12:00:00Z"
+  },
+  "policy": {
+    "administration_declaration": {
+      "@version": "CLC-SCHEME-v1",
+      "scheme": "varwof/scheme-admin-v1",
+      "declaration_id": "varwof/scheme-admin-v1@2026-10-22",
+      "clc_revision": "CLC-1.19",
+      "capabilities": {
+        "scheme:create": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "change_class": {
+              "domain": "enum"
+            },
+            "major": {
+              "domain": "bound"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:update": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "change_class": {
+              "domain": "enum"
+            },
+            "major": {
+              "domain": "bound"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:revoke": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "package_digest": {
+              "domain": "exact"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:delegate": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "change_class": {
+              "domain": "enum"
+            },
+            "major": {
+              "domain": "bound"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:root-rotate": {
+          "params": {
+            "package_digest": {
+              "domain": "exact"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:approve": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "package_digest": {
+              "domain": "exact"
+            },
+            "transition_digest": {
+              "domain": "exact"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        }
+      },
+      "digest": "sha256:9V9aatN0s5slVB8M2rgPFryoefew7IrNgkyaKjS_gRE"
+    },
+    "root_package_digest": "sha256:uuRx6InyJ0fau1A9ajoHp98juIkFEWZ5LKfHfClF3Bo",
+    "root_key_seeds": [
+      "payments-admin"
+    ],
+    "root_threshold": 1,
+    "root_grants": [
+      {
+        "id": "varwof/scheme-admin-v1:scheme:create",
+        "params": {
+          "namespace": "/",
+          "change_class": [
+            "patch",
+            "minor",
+            "major"
+          ],
+          "major": 10,
+          "clc_revision": [
+            "CLC-1.19"
+          ]
+        }
+      },
+      {
+        "id": "varwof/scheme-admin-v1:scheme:update",
+        "params": {
+          "namespace": "/",
+          "change_class": [
+            "patch",
+            "minor",
+            "major"
+          ],
+          "major": 10,
+          "clc_revision": [
+            "CLC-1.19"
+          ]
+        }
+      },
+      {
+        "id": "varwof/scheme-admin-v1:scheme:revoke",
+        "params": {
+          "namespace": "/",
+          "package_digest": "sha256:uuRx6InyJ0fau1A9ajoHp98juIkFEWZ5LKfHfClF3Bo",
+          "clc_revision": [
+            "CLC-1.19"
+          ]
+        }
+      },
+      {
+        "id": "varwof/scheme-admin-v1:scheme:delegate",
+        "params": {
+          "namespace": "/",
+          "change_class": [
+            "patch",
+            "minor",
+            "major"
+          ],
+          "major": 10,
+          "clc_revision": [
+            "CLC-1.19"
+          ]
+        }
+      },
+      {
+        "id": "varwof/scheme-admin-v1:scheme:root-rotate",
+        "params": {
+          "package_digest": "sha256:uuRx6InyJ0fau1A9ajoHp98juIkFEWZ5LKfHfClF3Bo",
+          "clc_revision": [
+            "CLC-1.19"
+          ]
+        }
+      }
+    ],
+    "supported_clc_revisions": [
+      "CLC-1.19"
+    ],
+    "namespace_prefixes": [
+      "/"
+    ],
+    "max_major": 10,
+    "observed_at": "2026-10-22T00:00:00Z",
+    "max_staleness_seconds": 86400,
+    "root_keys": [
+      "sha256:0_slIaCK6vLwO6K6vEP-wwgUbZqt_Ems0cPH1CARkuc"
+    ],
+    "next_root_key_seeds": [
+      "payments-admin-next"
+    ],
+    "next_root_package_digest": "sha256:Q46GHs6F7Rw_F60_IP6GRVxCe8s0HoMcVUVTO5jGxZs",
+    "next_root_keys": [
+      "sha256:pSTSB8cZsDlxerMV42bQ18XWbwdepfc0PCjFPMSIjiY"
+    ],
+    "next_root_threshold": 1
+  }
+}

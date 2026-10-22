@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.com/schemas/scheme-admin-v1/package.schema.json",
+  "title": "CLC Scheme Package v1",
+  "description": "Immutable, content-addressed scheme package. Closed object: undeclared members are refused. The object deliberately has no trusted `authorized`, `verified` or `approved` member; a deployer recomputes authority from the publisher's AIC grant, this package, the matching transition and its own trust policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "@version",
+    "scheme",
+    "revision",
+    "definition_digest",
+    "declaration_digest",
+    "clc_revision",
+    "change_class",
+    "publisher",
+    "generation"
+  ],
+  "properties": {
+    "@version": {
+      "const": "CLC-SCHEME-PACKAGE-v1"
+    },
+    "scheme": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_.-]*-v[0-9]+$",
+      "description": "Scheme the package governs. Must equal the CLC-SCHEME-v1 declaration's `scheme`."
+    },
+    "revision": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Two-component scheme revision `major.minor`. `patch` keeps it, `minor` advances the minor component, `major` advances the major component and resets minor to 0."
+    },
+    "definition_digest": {
+      "$ref": "#/$defs/digest",
+      "description": "Digest of the exact definition payload bytes pinned by the deployment fixture."
+    },
+    "declaration_digest": {
+      "$ref": "#/$defs/digest",
+      "description": "Digest of the exact CLC-SCHEME-v1 declaration payload bytes pinned by the deployment fixture, and equal to the declaration's own `digest`."
+    },
+    "clc_revision": {
+      "type": "string",
+      "pattern": "^CLC-[0-9]+\\.[0-9]+$"
+    },
+    "change_class": {
+      "enum": ["patch", "minor", "major"],
+      "description": "Semantic change class relative to `previous_package_digest`. A first package uses `major`."
+    },
+    "previous_package_digest": {
+      "$ref": "#/$defs/digest",
+      "description": "Digest of the package this one replaces. Absent only for the first package of a namespace."
+    },
+    "publisher": {
+      "type": "string",
+      "pattern": "^principal:[A-Za-z0-9_.:-]+$",
+      "description": "Principal the signing certificate's AIC must name. This is a binding to be checked, never an assertion of authority."
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Monotonic package generation within the scheme namespace. The first package is generation 1."
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional issue time. When the deployer's policy sets max_staleness_seconds, a package older than that window is refused."
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional expiry. A deployer whose observed_at is later than this instant refuses the package."
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[A-Za-z0-9_-]{43}$"
+    }
+  },
+  "examples": [
+    {
+      "@version": "CLC-SCHEME-PACKAGE-v1",
+      "scheme": "std/payments-v1",
+      "revision": "1.2",
+      "definition_digest": "sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "declaration_digest": "sha256:BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+      "clc_revision": "CLC-1.19",
+      "change_class": "minor",
+      "previous_package_digest": "sha256:CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+      "publisher": "principal:payments-scheme-admin",
+      "generation": 7
+    }
+  ]
+}

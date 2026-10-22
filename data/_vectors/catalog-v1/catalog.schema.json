@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.org/schemas/clc-capability-catalog-v1",
+  "title": "CLC-CAPABILITY-CATALOG-v1",
+  "description": "An immutable, generation-addressed snapshot of the capabilities one producer publishes. The signature is detached; the object never carries a signature, status boolean or verdict.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "@version",
+    "domain",
+    "catalog_id",
+    "generation",
+    "issued_at",
+    "valid_until",
+    "producer",
+    "entries"
+  ],
+  "properties": {
+    "@version": {
+      "const": "CLC-CAPABILITY-CATALOG-v1"
+    },
+    "domain": {
+      "$ref": "#/$defs/name",
+      "description": "Catalog domain, for example example.org/payments."
+    },
+    "catalog_id": {
+      "$ref": "#/$defs/name",
+      "description": "Identity of this catalog series; unique inside the domain."
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Monotonically increasing generation. Generation 1 has no predecessor."
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Hard expiry. A deployer refuses the catalog at or after this instant."
+    },
+    "previous_digest": {
+      "$ref": "#/$defs/digest",
+      "description": "Required for generation > 1 and must name the accepted predecessor; forbidden at generation 1."
+    },
+    "producer": {
+      "type": "string",
+      "pattern": "^principal:[A-Za-z0-9_.:-]+$",
+      "description": "Principal named by the producer's AIC. The signing certificate must carry the matching AIC."
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "generation": {
+            "const": 1
+          }
+        },
+        "required": [
+          "generation"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "previous_digest"
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "previous_digest"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]*(/[a-z0-9][a-z0-9._-]*)*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[A-Za-z0-9_-]{43}$"
+    },
+    "scheme": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_.-]*-v[0-9]+$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability",
+        "provider",
+        "scheme",
+        "scheme_declaration_digest",
+        "operations"
+      ],
+      "properties": {
+        "capability": {
+          "type": "string",
+          "description": "Full capability id: <scheme>:<capability>."
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Provider identity, for example a SPIFFE ID."
+        },
+        "scheme": {
+          "$ref": "#/$defs/scheme"
+        },
+        "scheme_declaration_digest": {
+          "$ref": "#/$defs/digest",
+          "description": "Digest of the CLC-SCHEME-v1 declaration that defines the capability's parameter domains."
+        },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/operation"
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation"
+      ],
+      "properties": {
+        "operation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "params": {
+          "type": "object",
+          "description": "CLC parameter object. A JSON array is an enum constraint, not a list of independent values."
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference",
+        "checked_at"
+      ],
+      "properties": {
+        "reference": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

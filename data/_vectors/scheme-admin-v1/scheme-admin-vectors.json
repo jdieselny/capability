@@ -1,0 +1,2230 @@
+{
+  "_meta": {
+    "@version": "varwof/scheme-admin-vectors-v1",
+    "generated_by": "scripts/gen-scheme-admin-vectors.py",
+    "spec": "analysis/2026-10-22-authority-bounded-capability-publication-architecture.md §4.9, §9",
+    "digest_rule": "sha256:<base64url-unpadded> over the JCS encoding; package and transition digest members are content addresses of their own object.",
+    "key_rule": "publisher.seed, policy.root_key_seeds and *_next_root_key_seeds name deterministic fixture keys. The Go runner materialises them into certificates and fills root_keys/next_root_keys/next_root_keys, because ECDSA key generation is not reproducible in this generator.",
+    "payload_rule": "Definitions and declarations are pinned as their JCS encoding. A deployer that receives a differently formatted file canonicalises before hashing."
+  },
+  "definitions": {
+    "payments-v1": {
+      "scheme_id": "std/payments-v1",
+      "name": "Standard Payments Capabilities (v1)",
+      "version": "1.0.0",
+      "description": "Minimal payments scheme used by the scheme-admin conformance corpus.",
+      "vendor": "std",
+      "product": "payments-v1",
+      "author": "varwof",
+      "license": "Apache-2.0",
+      "capabilities": [
+        {
+          "id": "transfer",
+          "description": "Transfer funds"
+        },
+        {
+          "id": "refund",
+          "description": "Refund a transfer"
+        }
+      ]
+    },
+    "scheme-admin-v1": {
+      "scheme_id": "varwof/scheme-admin-v1",
+      "name": "Varwof Scheme Administration (v1)",
+      "version": "1.0.0",
+      "description": "Provisional project-local scheme that states who may create, update, revoke, delegate and root-rotate a capability scheme package. This identifier is a project-local reference name, not a registered IETF or CLC namespace. The scheme defines management authority only; it adds no CLC grammar and no CLC verdict. A deployer recomputes authority from the publisher's AIC grant, the scheme package, the scheme transition and its own trust policy. See docs/scheme-admin-v1.md.",
+      "vendor": "varwof",
+      "product": "scheme-admin-v1",
+      "author": "varwof",
+      "license": "Apache-2.0",
+      "homepage": "https://varwof.com/register/docs/scheme-admin-v1",
+      "note": "scheme:verify is deliberately absent. Schema, digest and compatibility verification is unprivileged and MAY be performed by any party. A signed verification result is governance evidence only when an explicit approval profile says so.",
+      "capabilities": [
+        {
+          "id": "scheme:create",
+          "description": "Create the first package in an authorized namespace",
+          "summary": "Create generation 1 of a scheme package under a namespace the publisher administers",
+          "usage": "Used once per namespace, when the first immutable scheme package is proposed to a deployer.",
+          "when_not": "Not used to replace or amend an existing package; use scheme:update. Not used to re-create a revoked namespace without a new tombstone-aware decision.",
+          "examples": [
+            "Publish std/payments-v1 generation 1",
+            "Bootstrap a new vendor scheme namespace"
+          ],
+          "related": [
+            "scheme:update",
+            "scheme:revoke",
+            "scheme:delegate"
+          ],
+          "parameters": {
+            "namespace": {
+              "type": "string",
+              "description": "Absolute path-prefix namespace the package belongs to, e.g. /std/payments-v1",
+              "required": true
+            },
+            "change_class": {
+              "type": "list",
+              "description": "Single change class of this transition",
+              "enum": [
+                "patch",
+                "minor",
+                "major"
+              ],
+              "required": true
+            },
+            "major": {
+              "type": "int",
+              "description": "Numeric major version of the package revision",
+              "min": 0,
+              "max": 99,
+              "required": true
+            },
+            "clc_revision": {
+              "type": "list",
+              "description": "CLC revision the package requires",
+              "enum": [
+                "CLC-1.19"
+              ],
+              "required": true
+            }
+          }
+        },
+        {
+          "id": "scheme:update",
+          "description": "Transition from one package digest/generation to another",
+          "summary": "Replace the active package of a namespace with a strictly newer generation",
+          "usage": "Used for every patch, minor or major change after generation 1.",
+          "when_not": "Not used to move to the same generation, to roll back, or to resurrect a revoked digest.",
+          "examples": [
+            "Advance std/payments-v1 from generation 6 to 7",
+            "Apply a major version bump under an explicit major grant"
+          ],
+          "related": [
+            "scheme:create",
+            "scheme:revoke",
+            "scheme:approve"
+          ],
+          "parameters": {
+            "namespace": {
+              "type": "string",
+              "description": "Absolute path-prefix namespace the package belongs to",
+              "required": true
+            },
+            "change_class": {
+              "type": "list",
+              "description": "Single change class of this transition",
+              "enum": [
+                "patch",
+                "minor",
+                "major"
+              ],
+              "required": true
+            },
+            "major": {
+              "type": "int",
+              "description": "Numeric major version of the target package revision",
+              "min": 0,
+              "max": 99,
+              "required": true
+            },
+            "clc_revision": {
+              "type": "list",
+              "description": "CLC revision the target package requires",
+              "enum": [
+                "CLC-1.19"
+              ],
+              "required": true
+            }
+          }
+        },
+        {
+          "id": "scheme:revoke",
+          "description": "Revoke a package digest and create a tombstone",
+          "summary": "Publish a signed tombstone for an existing package digest",
+          "usage": "Used when a package must no longer be adopted. The tombstone names the revoked digest, the revocation generation, an effective time, a stable reason code and a replacement digest when known.",
+          "when_not": "Never used to physically delete an artifact. Public artifacts may already exist in caches, mirrors and audit logs.",
+          "examples": [
+            "Revoke a package after a specification defect",
+            "Tombstone a superseded major line"
+          ],
+          "related": [
+            "scheme:create",
+            "scheme:update"
+          ],
+          "parameters": {
+            "namespace": {
+              "type": "string",
+              "description": "Absolute path-prefix namespace the revoked package belongs to",
+              "required": true
+            },
+            "package_digest": {
+              "type": "string",
+              "description": "Digest of the package being revoked",
+              "required": true
+            },
+            "clc_revision": {
+              "type": "list",
+              "description": "CLC revision of the tombstone",
+              "enum": [
+                "CLC-1.19"
+              ],
+              "required": true
+            }
+          }
+        },
+        {
+          "id": "scheme:delegate",
+          "description": "Delegate a strict subset of namespace/actions/versions",
+          "summary": "Issue a strictly narrower administration grant to another principal",
+          "usage": "Used to hand a sub-namespace, a subset of change classes, a lower major bound or a subset of CLC revisions to another administrator.",
+          "when_not": "Not used to widen a namespace, add a change class, raise a major bound or add a CLC revision. A delegation that is not strictly narrower is refused.",
+          "examples": [
+            "Delegate /std/payments-v1 to a payments team",
+            "Delegate patch-only authority below /std"
+          ],
+          "related": [
+            "scheme:create",
+            "scheme:update"
+          ],
+          "parameters": {
+            "namespace": {
+              "type": "string",
+              "description": "Absolute path-prefix namespace of the delegated authority",
+              "required": true
+            },
+            "change_class": {
+              "type": "list",
+              "description": "Change classes the delegate may use",
+              "enum": [
+                "patch",
+                "minor",
+                "major"
+              ],
+              "required": true
+            },
+            "major": {
+              "type": "int",
+              "description": "Highest major version the delegate may publish",
+              "min": 0,
+              "max": 99,
+              "required": true
+            },
+            "clc_revision": {
+              "type": "list",
+              "description": "CLC revisions the delegate may publish under",
+              "enum": [
+                "CLC-1.19"
+              ],
+              "required": true
+            }
+          }
+        },
+        {
+          "id": "scheme:root-rotate",
+          "description": "Replace the bootstrap administration root by threshold",
+          "summary": "Move the configured trust root from the current root keys to the next root keys",
+          "usage": "Used when the bootstrap root must change. The transition is authorized by the current root and satisfies the separately configured next-root threshold.",
+          "when_not": "Never accepted when the proposed next root authorizes its own installation, when the current root does not authorize it, or when the next-root threshold is not met.",
+          "examples": [
+            "Rotate the bootstrap root key after a compromise",
+            "Hand administration to a new threshold key set"
+          ],
+          "related": [
+            "scheme:approve"
+          ],
+          "parameters": {
+            "package_digest": {
+              "type": "string",
+              "description": "Digest of the root administration package being replaced",
+              "required": true
+            },
+            "clc_revision": {
+              "type": "list",
+              "description": "CLC revision of the rotation",
+              "enum": [
+                "CLC-1.19"
+              ],
+              "required": true
+            }
+          }
+        },
+        {
+          "id": "scheme:approve",
+          "description": "Optional multi-party approval action",
+          "summary": "Record an exact approval for one package and one transition digest",
+          "usage": "Used only when the deployer's trust policy requires an approval threshold. The approval pins the exact package digest and transition digest, so it cannot be replayed for another package.",
+          "when_not": "Not used as a substitute for scheme:create/update/revoke authority, and not used when the deployer requires no approval.",
+          "examples": [
+            "Second approver signs a specific transition",
+            "Release board approval for a major version"
+          ],
+          "related": [
+            "scheme:update",
+            "scheme:root-rotate"
+          ],
+          "parameters": {
+            "namespace": {
+              "type": "string",
+              "description": "Absolute path-prefix namespace of the approved package",
+              "required": true
+            },
+            "package_digest": {
+              "type": "string",
+              "description": "Exact digest of the approved package",
+              "required": true
+            },
+            "transition_digest": {
+              "type": "string",
+              "description": "Exact digest of the approved transition",
+              "required": true
+            },
+            "clc_revision": {
+              "type": "list",
+              "description": "CLC revision of the approval",
+              "enum": [
+                "CLC-1.19"
+              ],
+              "required": true
+            }
+          }
+        }
+      ],
+      "roles": {
+        "scheme-publisher": {
+          "display_name": "Scheme Publisher",
+          "grants": [
+            "scheme:create",
+            "scheme:update",
+            "scheme:revoke"
+          ]
+        },
+        "scheme-approver": {
+          "display_name": "Scheme Approver",
+          "grants": [
+            "scheme:approve"
+          ]
+        },
+        "namespace-delegator": {
+          "display_name": "Namespace Delegator",
+          "grants": [
+            "scheme:delegate"
+          ]
+        },
+        "root-administrator": {
+          "display_name": "Root Administrator",
+          "grants": [
+            "scheme:root-rotate"
+          ]
+        }
+      }
+    }
+  },
+  "declarations": {
+    "payments-v1": {
+      "@version": "CLC-SCHEME-v1",
+      "scheme": "std/payments-v1",
+      "declaration_id": "std/payments-v1@2026-10-22",
+      "clc_revision": "CLC-1.19",
+      "capabilities": {
+        "transfer": {
+          "params": {
+            "amount": {
+              "domain": "quantity",
+              "unit": "CNY"
+            },
+            "currency": {
+              "domain": "enum"
+            }
+          }
+        },
+        "refund": {
+          "params": {
+            "amount": {
+              "domain": "quantity",
+              "unit": "CNY"
+            }
+          }
+        }
+      },
+      "digest": "sha256:mRmmwumBOX5yuF8G5-7o-ZgoHkhWWewTziKDWen4eog"
+    },
+    "payments-v1-clc120": {
+      "@version": "CLC-SCHEME-v1",
+      "scheme": "std/payments-v1",
+      "declaration_id": "std/payments-v1@2026-10-22-clc120",
+      "clc_revision": "CLC-1.20",
+      "capabilities": {
+        "transfer": {
+          "params": {
+            "amount": {
+              "domain": "quantity",
+              "unit": "CNY"
+            },
+            "currency": {
+              "domain": "enum"
+            }
+          }
+        }
+      },
+      "digest": "sha256:tz3jZQdk57PPwxoZ8sn6KrbJJYRL3mFme7FCRLSl618"
+    },
+    "scheme-admin-v1": {
+      "@version": "CLC-SCHEME-v1",
+      "scheme": "varwof/scheme-admin-v1",
+      "declaration_id": "varwof/scheme-admin-v1@2026-10-22",
+      "clc_revision": "CLC-1.19",
+      "capabilities": {
+        "scheme:create": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "change_class": {
+              "domain": "enum"
+            },
+            "major": {
+              "domain": "bound"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:update": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "change_class": {
+              "domain": "enum"
+            },
+            "major": {
+              "domain": "bound"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:revoke": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "package_digest": {
+              "domain": "exact"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:delegate": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "change_class": {
+              "domain": "enum"
+            },
+            "major": {
+              "domain": "bound"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:root-rotate": {
+          "params": {
+            "package_digest": {
+              "domain": "exact"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        },
+        "scheme:approve": {
+          "params": {
+            "namespace": {
+              "domain": "path-prefix"
+            },
+            "package_digest": {
+              "domain": "exact"
+            },
+            "transition_digest": {
+              "domain": "exact"
+            },
+            "clc_revision": {
+              "domain": "enum"
+            }
+          }
+        }
+      },
+      "digest": "sha256:9V9aatN0s5slVB8M2rgPFryoefew7IrNgkyaKjS_gRE"
+    }
+  },
+  "publishers": {
+    "payments-admin": {
+      "seed": "payments-admin",
+      "principal": "principal:payments-scheme-admin",
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:create",
+          "parameters": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "major"
+            ],
+            "major": 3,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        },
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:update",
+          "parameters": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "patch",
+              "minor"
+            ],
+            "major": 3,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        },
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:revoke",
+          "parameters": {
+            "namespace": "/std/payments-v1",
+            "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    },
+    "payments-admin-major": {
+      "seed": "payments-admin-major",
+      "principal": "principal:payments-scheme-admin",
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:update",
+          "parameters": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "patch",
+              "minor",
+              "major"
+            ],
+            "major": 3,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    },
+    "payments-admin-patchonly": {
+      "seed": "payments-admin-patchonly",
+      "principal": "principal:payments-scheme-admin",
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:update",
+          "parameters": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "patch"
+            ],
+            "major": 3,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    },
+    "wrong-namespace": {
+      "seed": "wrong-namespace",
+      "principal": "principal:acme-scheme-admin",
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:create",
+          "parameters": {
+            "namespace": "/x-vendor/acme-v1",
+            "change_class": [
+              "major"
+            ],
+            "major": 3,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    },
+    "unbounded-major": {
+      "seed": "unbounded-major",
+      "principal": "principal:payments-scheme-admin",
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:create",
+          "parameters": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "major"
+            ],
+            "major": 10,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        },
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:update",
+          "parameters": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "major"
+            ],
+            "major": 10,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    },
+    "no-grant": {
+      "seed": "no-grant",
+      "principal": "principal:payments-scheme-admin",
+      "capabilities": []
+    },
+    "no-aic": {
+      "seed": "payments-admin",
+      "principal": "principal:payments-scheme-admin",
+      "has_aic": false,
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:update",
+          "parameters": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "patch",
+              "minor"
+            ],
+            "major": 3,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    },
+    "root-a": {
+      "seed": "root-a",
+      "principal": "principal:root-admin",
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:root-rotate",
+          "parameters": {
+            "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    },
+    "root-outsider": {
+      "seed": "root-outsider",
+      "principal": "principal:root-admin",
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:root-rotate",
+          "parameters": {
+            "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    },
+    "root-next-a": {
+      "seed": "next-a",
+      "principal": "principal:root-admin",
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:root-rotate",
+          "parameters": {
+            "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    },
+    "delegator": {
+      "seed": "delegator",
+      "principal": "principal:payments-delegator",
+      "capabilities": [
+        {
+          "scheme_id": "varwof/scheme-admin-v1",
+          "capability_id": "scheme:delegate",
+          "parameters": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "patch",
+              "minor"
+            ],
+            "major": 2,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "policies": {
+    "std": {
+      "administration_declaration": {
+        "@version": "CLC-SCHEME-v1",
+        "scheme": "varwof/scheme-admin-v1",
+        "declaration_id": "varwof/scheme-admin-v1@2026-10-22",
+        "clc_revision": "CLC-1.19",
+        "capabilities": {
+          "scheme:create": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "change_class": {
+                "domain": "enum"
+              },
+              "major": {
+                "domain": "bound"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:update": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "change_class": {
+                "domain": "enum"
+              },
+              "major": {
+                "domain": "bound"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:revoke": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "package_digest": {
+                "domain": "exact"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:delegate": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "change_class": {
+                "domain": "enum"
+              },
+              "major": {
+                "domain": "bound"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:root-rotate": {
+            "params": {
+              "package_digest": {
+                "domain": "exact"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:approve": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "package_digest": {
+                "domain": "exact"
+              },
+              "transition_digest": {
+                "domain": "exact"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          }
+        },
+        "digest": "sha256:9V9aatN0s5slVB8M2rgPFryoefew7IrNgkyaKjS_gRE"
+      },
+      "root_package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+      "root_key_seeds": [
+        "payments-admin"
+      ],
+      "root_threshold": 1,
+      "root_grants": [
+        {
+          "id": "varwof/scheme-admin-v1:scheme:create",
+          "params": {
+            "namespace": "/std",
+            "change_class": [
+              "patch",
+              "minor",
+              "major"
+            ],
+            "major": 10,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        },
+        {
+          "id": "varwof/scheme-admin-v1:scheme:update",
+          "params": {
+            "namespace": "/std",
+            "change_class": [
+              "patch",
+              "minor",
+              "major"
+            ],
+            "major": 10,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        },
+        {
+          "id": "varwof/scheme-admin-v1:scheme:revoke",
+          "params": {
+            "namespace": "/std",
+            "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        },
+        {
+          "id": "varwof/scheme-admin-v1:scheme:delegate",
+          "params": {
+            "namespace": "/std",
+            "change_class": [
+              "patch",
+              "minor",
+              "major"
+            ],
+            "major": 10,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        },
+        {
+          "id": "varwof/scheme-admin-v1:scheme:create",
+          "params": {
+            "namespace": "/x-vendor",
+            "change_class": [
+              "patch",
+              "minor",
+              "major"
+            ],
+            "major": 10,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ],
+      "supported_clc_revisions": [
+        "CLC-1.19"
+      ],
+      "namespace_prefixes": [
+        "/std"
+      ],
+      "max_major": 3,
+      "observed_at": "2026-10-22T00:00:00Z",
+      "max_staleness_seconds": 86400
+    },
+    "root": {
+      "administration_declaration": {
+        "@version": "CLC-SCHEME-v1",
+        "scheme": "varwof/scheme-admin-v1",
+        "declaration_id": "varwof/scheme-admin-v1@2026-10-22",
+        "clc_revision": "CLC-1.19",
+        "capabilities": {
+          "scheme:create": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "change_class": {
+                "domain": "enum"
+              },
+              "major": {
+                "domain": "bound"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:update": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "change_class": {
+                "domain": "enum"
+              },
+              "major": {
+                "domain": "bound"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:revoke": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "package_digest": {
+                "domain": "exact"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:delegate": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "change_class": {
+                "domain": "enum"
+              },
+              "major": {
+                "domain": "bound"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:root-rotate": {
+            "params": {
+              "package_digest": {
+                "domain": "exact"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          },
+          "scheme:approve": {
+            "params": {
+              "namespace": {
+                "domain": "path-prefix"
+              },
+              "package_digest": {
+                "domain": "exact"
+              },
+              "transition_digest": {
+                "domain": "exact"
+              },
+              "clc_revision": {
+                "domain": "enum"
+              }
+            }
+          }
+        },
+        "digest": "sha256:9V9aatN0s5slVB8M2rgPFryoefew7IrNgkyaKjS_gRE"
+      },
+      "root_package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+      "root_key_seeds": [
+        "root-a"
+      ],
+      "root_threshold": 1,
+      "root_grants": [
+        {
+          "id": "varwof/scheme-admin-v1:scheme:root-rotate",
+          "params": {
+            "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      ],
+      "supported_clc_revisions": [
+        "CLC-1.19"
+      ],
+      "namespace_prefixes": [
+        "/varwof",
+        "/std"
+      ],
+      "max_major": 3,
+      "observed_at": "2026-10-22T00:00:00Z",
+      "max_staleness_seconds": 86400,
+      "next_root_package_digest": "sha256:EVVTdBBCb4K6dJ6CZGwZggFA60zGF_H7gIWewLuhMLQ",
+      "next_root_key_seeds": [
+        "next-a",
+        "next-b"
+      ],
+      "next_root_threshold": 2
+    }
+  },
+  "states": {
+    "empty": {
+      "scheme": "std/payments-v1",
+      "generation": 0,
+      "package_digest": ""
+    },
+    "gen6": {
+      "scheme": "std/payments-v1",
+      "revision": "1.2",
+      "generation": 6,
+      "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+      "history": [
+        {
+          "generation": 6,
+          "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+        }
+      ]
+    },
+    "gen5": {
+      "scheme": "std/payments-v1",
+      "revision": "1.1",
+      "generation": 5,
+      "package_digest": "sha256:ERERERERERERERERERERERERERERERERERERERERERE",
+      "history": [
+        {
+          "generation": 5,
+          "package_digest": "sha256:ERERERERERERERERERERERERERERERERERERERERERE"
+        }
+      ]
+    },
+    "gen7": {
+      "scheme": "std/payments-v1",
+      "revision": "1.3",
+      "generation": 7,
+      "package_digest": "sha256:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM",
+      "history": [
+        {
+          "generation": 7,
+          "package_digest": "sha256:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM"
+        }
+      ]
+    }
+  },
+  "vectors": [
+    {
+      "id": "sa-001",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 lifecycle (create)",
+      "derivation": "generation 1, no previous package, publisher grant covers /std/payments-v1 create major",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": true
+      },
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.0",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "major",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 1,
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "create",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 1,
+        "to_digest": "sha256:EIOudw5X6z_ZeYKmsTtTmEGbhHnBKOFYSijkPNu1biM",
+        "change_class": "major",
+        "target_clc_revision": "CLC-1.19"
+      },
+      "state": "empty"
+    },
+    {
+      "id": "sa-002",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 step 7 (namespace ownership)",
+      "derivation": "root authority contains the /x-vendor grant, but the operation targets /std/payments-v1",
+      "publisher": "wrong-namespace",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "authority_not_authorized"
+      },
+      "failure_class": "authority",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.0",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "major",
+        "publisher": "principal:acme-scheme-admin",
+        "generation": 1,
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "create",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 1,
+        "to_digest": "sha256:RRw3Eo9L3OB5cOmwC3LqrSvcreu5fOdHYcWuz7cSvhw",
+        "change_class": "major",
+        "target_clc_revision": "CLC-1.19"
+      },
+      "state": "empty"
+    },
+    {
+      "id": "sa-003",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 step 7 (major limit)",
+      "derivation": "the grant allows major 10, so CLC admits the operation; local max_major 3 refuses it",
+      "publisher": "unbounded-major",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "major_exceeds_limit"
+      },
+      "failure_class": "authority",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "9.0",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "major",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 1,
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "create",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 1,
+        "to_digest": "sha256:jL6-b7rcj3lVjSf88pVDx2fJjA2BjRo8c3T5P8bN9oU",
+        "change_class": "major",
+        "target_clc_revision": "CLC-1.19"
+      },
+      "state": "empty"
+    },
+    {
+      "id": "sa-004",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 lifecycle (update/patch)",
+      "derivation": "patch keeps major.minor 1.2 and advances generation 6 -> 7",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": true
+      },
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.2",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "patch",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:duKUlWI3Cp2WqOcYLKVqcdVqp_TsjBxpC11S7loQWDA",
+        "change_class": "patch",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-005",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 lifecycle (update/minor)",
+      "derivation": "minor advances 1.2 -> 1.3 and generation 6 -> 7",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": true
+      },
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-006",
+      "kind": "confirm",
+      "spec_clause": "Architecture §5.1 (publication boundary)",
+      "derivation": "publisher grant permits patch/minor only; change_class major is outside the grant set",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "authority_not_authorized"
+      },
+      "failure_class": "authority",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "2.0",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "major",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:Lbo0ug_uC99gX79LHEcwTNCXkdl9ZACjvudScxcYNlY",
+        "change_class": "major",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-007",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 step 8 / §9.3",
+      "derivation": "local head is PREV6 but the transition starts from PREV7",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "state_digest_mismatch"
+      },
+      "failure_class": "state",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:9EVR3o6pjq1ooQ3zKAvEJXeXAFtIFLcthgGbKwx3RfM",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-008",
+      "kind": "confirm",
+      "spec_clause": "Architecture §9.3 (generation)",
+      "derivation": "local head is generation 5 but the transition starts from generation 6",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "state_generation_mismatch"
+      },
+      "failure_class": "state",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen5"
+    },
+    {
+      "id": "sa-009",
+      "kind": "confirm",
+      "spec_clause": "Architecture §9.3 (fork)",
+      "derivation": "generation 7 is already recorded with PREV7; this transition proposes a different content address",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "generation_fork"
+      },
+      "failure_class": "state",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": {
+        "scheme": "std/payments-v1",
+        "revision": "1.2",
+        "generation": 6,
+        "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "history": [
+          {
+            "generation": 6,
+            "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+          },
+          {
+            "generation": 7,
+            "package_digest": "sha256:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sa-010",
+      "kind": "confirm",
+      "spec_clause": "Architecture §9.3 (replay)",
+      "derivation": "generation 7 already holds this exact digest, so the transition is a replay",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "generation_rollback"
+      },
+      "failure_class": "state",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": {
+        "scheme": "std/payments-v1",
+        "revision": "1.2",
+        "generation": 6,
+        "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "history": [
+          {
+            "generation": 6,
+            "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+          },
+          {
+            "generation": 7,
+            "package_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sa-011",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 lifecycle (revoke/tombstone)",
+      "derivation": "signed tombstone for PREV6 at generation 7 with a stable reason code",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": true
+      },
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.2",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "patch",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "revoke",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:duKUlWI3Cp2WqOcYLKVqcdVqp_TsjBxpC11S7loQWDA",
+        "change_class": "patch",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "revocation_reason": "security-defect",
+        "revocation_effective_time": "2026-10-22T00:00:00Z",
+        "tombstone_generation": 7,
+        "replacement_digest": "sha256:MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-012",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 lifecycle (revocation is permanent)",
+      "derivation": "the proposed package digest is in the tombstone set, so it cannot be adopted",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "package_revoked"
+      },
+      "failure_class": "state",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": {
+        "scheme": "std/payments-v1",
+        "revision": "1.2",
+        "generation": 6,
+        "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "history": [
+          {
+            "generation": 6,
+            "package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+          }
+        ],
+        "revoked": [
+          {
+            "package_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+            "generation": 7,
+            "effective_time": "2026-10-20T00:00:00Z",
+            "reason": "security-defect"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sa-013",
+      "kind": "delegation",
+      "spec_clause": "Architecture §4.9 (scheme:delegate)",
+      "derivation": "child narrows namespace (path-prefix), change class and capability; CLC containment accepts",
+      "publisher": "delegator",
+      "policy": "std",
+      "expect": {
+        "ok": true
+      },
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "delegation": {
+        "grantee": "principal:payments-team",
+        "parent": {
+          "id": "varwof/scheme-admin-v1:scheme:update",
+          "params": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "patch",
+              "minor"
+            ],
+            "major": 2,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        },
+        "child": {
+          "id": "varwof/scheme-admin-v1:scheme:update",
+          "params": {
+            "namespace": "/std/payments-v1/refund",
+            "change_class": [
+              "patch"
+            ],
+            "major": 2,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sa-014",
+      "kind": "delegation",
+      "spec_clause": "Architecture §4.9 (scheme:delegate)",
+      "derivation": "child namespace /std/billing-v1 is not below the parent /std/payments-v1",
+      "publisher": "delegator",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "delegation_not_contained"
+      },
+      "failure_class": "authority",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "delegation": {
+        "grantee": "principal:payments-team",
+        "parent": {
+          "id": "varwof/scheme-admin-v1:scheme:update",
+          "params": {
+            "namespace": "/std/payments-v1",
+            "change_class": [
+              "patch",
+              "minor"
+            ],
+            "major": 2,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        },
+        "child": {
+          "id": "varwof/scheme-admin-v1:scheme:update",
+          "params": {
+            "namespace": "/std/billing-v1",
+            "change_class": [
+              "patch"
+            ],
+            "major": 2,
+            "clc_revision": [
+              "CLC-1.19"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sa-015",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 bootstrap (scheme:root-rotate)",
+      "derivation": "current root key authorizes, transition matches the configured next root and its threshold is met",
+      "publisher": "root-a",
+      "policy": "root",
+      "expect": {
+        "ok": true
+      },
+      "definition": "scheme-admin-v1",
+      "declaration": "scheme-admin-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "varwof/scheme-admin-v1",
+        "revision": "1.1",
+        "definition_digest": "sha256:r1C37VtIUKADDel6ksVHRI8l3sXQbA5APFnlUyi2PsQ",
+        "declaration_digest": "sha256:-QFYkx3Jg5R1PqWj4BMtflxP_5rALsK6928Xtpezs4U",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:root-admin",
+        "generation": 2,
+        "previous_package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "root-rotate",
+        "scheme": "varwof/scheme-admin-v1",
+        "namespace": "/varwof/scheme-admin-v1",
+        "to_generation": 2,
+        "to_digest": "sha256:EVVTdBBCb4K6dJ6CZGwZggFA60zGF_H7gIWewLuhMLQ",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 1,
+        "from_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+        "next_root_package_digest": "sha256:EVVTdBBCb4K6dJ6CZGwZggFA60zGF_H7gIWewLuhMLQ",
+        "next_root_key_seeds": [
+          "next-a",
+          "next-b"
+        ],
+        "next_root_threshold": 2
+      },
+      "state": {
+        "scheme": "varwof/scheme-admin-v1",
+        "revision": "1.0",
+        "generation": 1,
+        "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+        "history": [
+          {
+            "generation": 1,
+            "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sa-016",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 bootstrap",
+      "derivation": "the signer is not a configured current root key",
+      "publisher": "root-outsider",
+      "policy": "root",
+      "expect": {
+        "ok": false,
+        "reason": "root_rotate_no_current_root"
+      },
+      "failure_class": "authority",
+      "definition": "scheme-admin-v1",
+      "declaration": "scheme-admin-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "varwof/scheme-admin-v1",
+        "revision": "1.1",
+        "definition_digest": "sha256:r1C37VtIUKADDel6ksVHRI8l3sXQbA5APFnlUyi2PsQ",
+        "declaration_digest": "sha256:-QFYkx3Jg5R1PqWj4BMtflxP_5rALsK6928Xtpezs4U",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:root-admin",
+        "generation": 2,
+        "previous_package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "root-rotate",
+        "scheme": "varwof/scheme-admin-v1",
+        "namespace": "/varwof/scheme-admin-v1",
+        "to_generation": 2,
+        "to_digest": "sha256:EVVTdBBCb4K6dJ6CZGwZggFA60zGF_H7gIWewLuhMLQ",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 1,
+        "from_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+        "next_root_package_digest": "sha256:EVVTdBBCb4K6dJ6CZGwZggFA60zGF_H7gIWewLuhMLQ",
+        "next_root_key_seeds": [
+          "next-a",
+          "next-b"
+        ],
+        "next_root_threshold": 2
+      },
+      "state": {
+        "scheme": "varwof/scheme-admin-v1",
+        "revision": "1.0",
+        "generation": 1,
+        "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+        "history": [
+          {
+            "generation": 1,
+            "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sa-017",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 bootstrap (a new key cannot self-assert root)",
+      "derivation": "the signer key is only in the proposed next root, never in the current root",
+      "publisher": "root-next-a",
+      "policy": "root",
+      "expect": {
+        "ok": false,
+        "reason": "root_rotate_self_authorized"
+      },
+      "failure_class": "authority",
+      "definition": "scheme-admin-v1",
+      "declaration": "scheme-admin-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "varwof/scheme-admin-v1",
+        "revision": "1.1",
+        "definition_digest": "sha256:r1C37VtIUKADDel6ksVHRI8l3sXQbA5APFnlUyi2PsQ",
+        "declaration_digest": "sha256:-QFYkx3Jg5R1PqWj4BMtflxP_5rALsK6928Xtpezs4U",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:root-admin",
+        "generation": 2,
+        "previous_package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "root-rotate",
+        "scheme": "varwof/scheme-admin-v1",
+        "namespace": "/varwof/scheme-admin-v1",
+        "to_generation": 2,
+        "to_digest": "sha256:EVVTdBBCb4K6dJ6CZGwZggFA60zGF_H7gIWewLuhMLQ",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 1,
+        "from_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+        "next_root_package_digest": "sha256:EVVTdBBCb4K6dJ6CZGwZggFA60zGF_H7gIWewLuhMLQ",
+        "next_root_key_seeds": [
+          "next-a",
+          "next-b"
+        ],
+        "next_root_threshold": 2
+      },
+      "state": {
+        "scheme": "varwof/scheme-admin-v1",
+        "revision": "1.0",
+        "generation": 1,
+        "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU",
+        "history": [
+          {
+            "generation": 1,
+            "package_digest": "sha256:VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sa-018",
+      "kind": "confirm",
+      "spec_clause": "Architecture §5.1 (two distinct checks)",
+      "derivation": "the PKCS#7 signature verifies but the certificate carries no AIC extension",
+      "publisher": "no-aic",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "signature_no_aic"
+      },
+      "failure_class": "signature",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-019",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 step 4",
+      "derivation": "the AIC is well formed but declares no scheme:update capability",
+      "publisher": "no-grant",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "authority_no_grant"
+      },
+      "failure_class": "authority",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-020",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 step 1 / CLC §12.1",
+      "derivation": "package and declaration require CLC-1.20; the deployer supports CLC-1.19 only",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "clc_revision_unsupported"
+      },
+      "failure_class": "schema",
+      "definition": "payments-v1",
+      "declaration": "payments-v1-clc120",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:-nCv4NEsuv-P9E8JoC4cYaz4C8wS2l8hObghqiYi6jM",
+        "clc_revision": "CLC-1.20",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:uFvc6vG56pBXsGzRSDwhJUGW882LT2XBAvjQG0ENBK8",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.20",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-021",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 (transition MUST NOT carry a trusted result)",
+      "derivation": "an unrecognized `authorization` member is refused by the closed transition schema",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "transition_shape"
+      },
+      "failure_class": "schema",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "authorization": {
+          "approved": true
+        }
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-022",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 step 1",
+      "derivation": "declaration_digest does not equal the digest of the exact declaration bytes",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "package_digest_mismatch"
+      },
+      "failure_class": "schema",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:gEpBaHujBCYVWzfd8OWaDaWGUjO-jENqFyMhLubRvU4",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-023",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 step 9 / §9.3",
+      "derivation": "valid_until precedes the deployer's observed_at",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "package_expired"
+      },
+      "failure_class": "freshness",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "valid_until": "2026-10-21T00:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:sd9u72ro1de5mhq4tHQdUjJP6eHcufW5PWYzIqFwbVg",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-024",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 step 9 / §9.3",
+      "derivation": "issued_at is older than the local maximum staleness of 86400 seconds",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "package_stale"
+      },
+      "failure_class": "freshness",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-01T00:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:KLTWUVI9_nnX63PhTglpTmy5JBAjHLhhibyyE7xE1jg",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-025",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 (no trusted authorized member)",
+      "derivation": "an embedded `authorized: true` is an undeclared package member and is refused",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "package_shape"
+      },
+      "failure_class": "schema",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z",
+        "authorized": true
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:-DIDD7qyUstH7lplmZ3R4hzlR0VuFeHSjlT8LU_Snqg",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI"
+      },
+      "state": "gen6"
+    },
+    {
+      "id": "sa-026",
+      "kind": "confirm",
+      "spec_clause": "Architecture §4.9 (no trusted verified member)",
+      "derivation": "an embedded `verified: true` is an undeclared transition member and is refused",
+      "publisher": "payments-admin",
+      "policy": "std",
+      "expect": {
+        "ok": false,
+        "reason": "transition_shape"
+      },
+      "failure_class": "schema",
+      "definition": "payments-v1",
+      "declaration": "payments-v1",
+      "package": {
+        "@version": "CLC-SCHEME-PACKAGE-v1",
+        "scheme": "std/payments-v1",
+        "revision": "1.3",
+        "definition_digest": "sha256:pZZjJjRLrBOqgo1LvwveGPTLuY6UDuklDgaUNXFKmSw",
+        "declaration_digest": "sha256:HtIgowlLBlOlRF0lXNkNY7zCkkuvsrdsBUsHmQ-jbv0",
+        "clc_revision": "CLC-1.19",
+        "change_class": "minor",
+        "publisher": "principal:payments-scheme-admin",
+        "generation": 7,
+        "previous_package_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "issued_at": "2026-10-21T12:00:00Z"
+      },
+      "transition": {
+        "@version": "CLC-SCHEME-TRANSITION-v1",
+        "action": "update",
+        "scheme": "std/payments-v1",
+        "namespace": "/std/payments-v1",
+        "to_generation": 7,
+        "to_digest": "sha256:SKGUfiXC2iDDqt6IY0Egk2dAxrviP_Ck3qUHAybaVjw",
+        "change_class": "minor",
+        "target_clc_revision": "CLC-1.19",
+        "from_generation": 6,
+        "from_digest": "sha256:IiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI",
+        "verified": true
+      },
+      "state": "gen6"
+    }
+  ]
+}

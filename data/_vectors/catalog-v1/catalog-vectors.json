@@ -1,0 +1,1844 @@
+{
+  "@version": "CLC-CATALOG-VECTORS-v1",
+  "catalogs": {
+    "gen1": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-baddigest": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:short",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-declmismatch": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-duplicate": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-expired": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-21T23:00:00Z",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T00:30:00Z"
+    },
+    "gen1-foreign": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:foreign-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-high": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 6000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:capped-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-narrow": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:narrow-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-noaic": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:noaic-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-nostatus": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs"
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs"
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-orders": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/orders-v1:submit",
+          "operations": [
+            {
+              "operation": "orders.submit",
+              "params": {}
+            }
+          ],
+          "provider": "spiffe://example.org/provider/orders",
+          "scheme": "std/orders-v1",
+          "scheme_declaration_digest": "sha256:d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3c",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-stale": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-21T00:00:00Z",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-23T00:00:00Z"
+    },
+    "gen1-stalestatus": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-21T00:00:00Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-21T00:00:00Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen1-unknown": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 5000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "signature": {
+        "profile": "none",
+        "signer_hint": "principal:payments-ops"
+      },
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen2": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 7000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 2,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "previous_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen2-badprev": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 7000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 2,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "previous_digest": "sha256:ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen2-fork": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 5000
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 8000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 2,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "previous_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen3": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 2500
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 7000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 3,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "previous_digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "gen3-gap": {
+      "@version": "CLC-CAPABILITY-CATALOG-v1",
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "entries": [
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 2500
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        },
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 7000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "generation": 3,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "previous_digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "producer": "principal:payments-ops",
+      "valid_until": "2026-10-22T01:10:00Z"
+    }
+  },
+  "declaration": "declaration.json",
+  "declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+  "deltas": {
+    "d-add-existing": {
+      "@version": "CLC-CAPABILITY-CATALOG-DELTA-v1",
+      "add": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 9000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "base_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "base_generation": 1,
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "target_digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "target_generation": 2,
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "d-addback": {
+      "@version": "CLC-CAPABILITY-CATALOG-DELTA-v1",
+      "add": [
+        {
+          "capability": "std/payments-v1:refund",
+          "operations": [
+            {
+              "operation": "payments.refund",
+              "params": {
+                "amount": 2500
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "base_digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "base_generation": 2,
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "target_digest": "sha256:fEMd8XM401fdMXsPVYQ7_VvJ44OGWwBoqN_Lgj0kcKQ",
+      "target_generation": 3,
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "d-apply": {
+      "@version": "CLC-CAPABILITY-CATALOG-DELTA-v1",
+      "base_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "base_generation": 1,
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "remove": [
+        "std/payments-v1:refund"
+      ],
+      "replace": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 7000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "target_digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "target_generation": 2,
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "d-badtargetgen": {
+      "@version": "CLC-CAPABILITY-CATALOG-DELTA-v1",
+      "base_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "base_generation": 1,
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "replace": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 7000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "target_digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "target_generation": 3,
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "d-double": {
+      "@version": "CLC-CAPABILITY-CATALOG-DELTA-v1",
+      "base_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "base_generation": 1,
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "remove": [
+        "std/payments-v1:refund",
+        "std/payments-v1:transfer"
+      ],
+      "replace": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 7000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "target_digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "target_generation": 2,
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "d-remove-unknown": {
+      "@version": "CLC-CAPABILITY-CATALOG-DELTA-v1",
+      "base_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "base_generation": 1,
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "remove": [
+        "std/payments-v1:unknown"
+      ],
+      "target_digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "target_generation": 2,
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "d-wrongbase": {
+      "@version": "CLC-CAPABILITY-CATALOG-DELTA-v1",
+      "base_digest": "sha256:ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY",
+      "base_generation": 1,
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "replace": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 7000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "target_digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "target_generation": 2,
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "d-wrongtarget": {
+      "@version": "CLC-CAPABILITY-CATALOG-DELTA-v1",
+      "base_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "base_generation": 1,
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "issued_at": "2026-10-22T00:59:55Z",
+      "producer": "principal:payments-ops",
+      "remove": [
+        "std/payments-v1:refund"
+      ],
+      "replace": [
+        {
+          "capability": "std/payments-v1:transfer",
+          "operations": [
+            {
+              "operation": "payments.transfer",
+              "params": {
+                "amount": 7000,
+                "counterparty": "vendor.example",
+                "currency": "USD"
+              }
+            }
+          ],
+          "provider": "spiffe://example.org/provider/payments",
+          "scheme": "std/payments-v1",
+          "scheme_declaration_digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+          "status": {
+            "checked_at": "2026-10-22T00:59:50Z",
+            "reference": "status:provider-payments"
+          }
+        }
+      ],
+      "target_digest": "sha256:ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY",
+      "target_generation": 2,
+      "valid_until": "2026-10-22T01:10:00Z"
+    }
+  },
+  "discoveries": {
+    "disc-1": {
+      "@version": "CLC-CATALOG-DISCOVERY-v1",
+      "catalog_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "catalog_id": "example.org/payments/catalog",
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "provider": "spiffe://example.org/provider/payments",
+      "scheme_declaration_digests": [
+        "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs"
+      ],
+      "status_reference": "status:provider-payments",
+      "valid_until": "2026-10-22T01:10:00Z"
+    },
+    "disc-verdict": {
+      "@version": "CLC-CATALOG-DISCOVERY-v1",
+      "catalog_digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "catalog_id": "example.org/payments/catalog",
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "provider": "spiffe://example.org/provider/payments",
+      "scheme_declaration_digests": [
+        "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs"
+      ],
+      "status_reference": "status:provider-payments",
+      "valid_until": "2026-10-22T01:10:00Z",
+      "verified": true
+    },
+    "disc-wrongdigest": {
+      "@version": "CLC-CATALOG-DISCOVERY-v1",
+      "catalog_digest": "sha256:ZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY",
+      "catalog_id": "example.org/payments/catalog",
+      "generation": 1,
+      "issued_at": "2026-10-22T00:59:55Z",
+      "provider": "spiffe://example.org/provider/payments",
+      "scheme_declaration_digests": [
+        "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs"
+      ],
+      "status_reference": "status:provider-payments",
+      "valid_until": "2026-10-22T01:10:00Z"
+    }
+  },
+  "generated_by": "scripts/gen-catalog-vectors.py",
+  "observed_at": "2026-10-22T01:00:00Z",
+  "policies": {
+    "standard": {
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "max_staleness_seconds": 600,
+      "max_status_staleness_seconds": 120,
+      "observed_at": "2026-10-22T01:00:00Z",
+      "schemes": {
+        "std/payments-v1": {
+          "declaration": {
+            "@version": "CLC-SCHEME-v1",
+            "capabilities": {
+              "refund": {
+                "params": {
+                  "amount": {
+                    "domain": "exact"
+                  }
+                }
+              },
+              "transfer": {
+                "params": {
+                  "amount": {
+                    "domain": "exact"
+                  },
+                  "counterparty": {
+                    "domain": "exact"
+                  },
+                  "currency": {
+                    "domain": "exact"
+                  }
+                }
+              }
+            },
+            "clc_revision": "CLC-1.19",
+            "declaration_id": "std/payments-v1:declaration:1",
+            "digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+            "scheme": "std/payments-v1"
+          }
+        }
+      }
+    },
+    "strict-status": {
+      "catalog_id": "example.org/payments/catalog",
+      "domain": "example.org/payments",
+      "max_staleness_seconds": 600,
+      "max_status_staleness_seconds": 120,
+      "observed_at": "2026-10-22T01:00:00Z",
+      "require_status": true,
+      "schemes": {
+        "std/payments-v1": {
+          "declaration": {
+            "@version": "CLC-SCHEME-v1",
+            "capabilities": {
+              "refund": {
+                "params": {
+                  "amount": {
+                    "domain": "exact"
+                  }
+                }
+              },
+              "transfer": {
+                "params": {
+                  "amount": {
+                    "domain": "exact"
+                  },
+                  "counterparty": {
+                    "domain": "exact"
+                  },
+                  "currency": {
+                    "domain": "exact"
+                  }
+                }
+              }
+            },
+            "clc_revision": "CLC-1.19",
+            "declaration_id": "std/payments-v1:declaration:1",
+            "digest": "sha256:W6B5k_33D7ysNJwM4U8msHGZKK2s2gOG6QW2Sn_dofs",
+            "scheme": "std/payments-v1"
+          }
+        }
+      },
+      "status_values": {
+        "status:provider-payments": "healthy"
+      }
+    }
+  },
+  "publishers": {
+    "capped-ops": {
+      "capabilities": [
+        {
+          "capability_id": "transfer",
+          "parameters": {
+            "amount": 5000
+          },
+          "scheme_id": "std/payments-v1"
+        },
+        {
+          "capability_id": "refund",
+          "scheme_id": "std/payments-v1"
+        }
+      ],
+      "principal": "principal:capped-ops",
+      "seed": "catalog-capped-ops",
+      "trust_root": "ca"
+    },
+    "foreign-ops": {
+      "capabilities": [
+        {
+          "capability_id": "transfer",
+          "scheme_id": "std/payments-v1"
+        },
+        {
+          "capability_id": "refund",
+          "scheme_id": "std/payments-v1"
+        }
+      ],
+      "principal": "principal:foreign-ops",
+      "seed": "catalog-foreign-ops",
+      "trust_root": "foreign"
+    },
+    "narrow-ops": {
+      "capabilities": [
+        {
+          "capability_id": "refund",
+          "scheme_id": "std/payments-v1"
+        }
+      ],
+      "principal": "principal:narrow-ops",
+      "seed": "catalog-narrow-ops",
+      "trust_root": "ca"
+    },
+    "noaic-ops": {
+      "capabilities": [],
+      "has_aic": false,
+      "principal": "principal:noaic-ops",
+      "seed": "catalog-noaic-ops",
+      "trust_root": "ca"
+    },
+    "other-ops": {
+      "capabilities": [
+        {
+          "capability_id": "transfer",
+          "scheme_id": "std/payments-v1"
+        },
+        {
+          "capability_id": "refund",
+          "scheme_id": "std/payments-v1"
+        }
+      ],
+      "principal": "principal:other-ops",
+      "seed": "catalog-other-ops",
+      "trust_root": "ca"
+    },
+    "payments-ops": {
+      "capabilities": [
+        {
+          "capability_id": "transfer",
+          "scheme_id": "std/payments-v1"
+        },
+        {
+          "capability_id": "refund",
+          "scheme_id": "std/payments-v1"
+        }
+      ],
+      "principal": "principal:payments-ops",
+      "seed": "catalog-payments-ops",
+      "trust_root": "ca"
+    }
+  },
+  "roots": {
+    "ca": "catalog-root-ca",
+    "foreign": "catalog-foreign-ca"
+  },
+  "states": {
+    "empty": {
+      "generation": 0
+    },
+    "gen1": {
+      "catalog_id": "example.org/payments/catalog",
+      "digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+      "domain": "example.org/payments",
+      "generation": 1,
+      "history": [
+        {
+          "digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+          "generation": 1
+        }
+      ]
+    },
+    "gen2": {
+      "catalog_id": "example.org/payments/catalog",
+      "digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+      "domain": "example.org/payments",
+      "generation": 2,
+      "history": [
+        {
+          "digest": "sha256:eJyqUJ_NUzHFmyvDxHSco4V-bNXfNRP-o77uh-3xyz0",
+          "generation": 1
+        },
+        {
+          "digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+          "generation": 2
+        }
+      ]
+    }
+  },
+  "vectors": [
+    {
+      "catalog": "gen1",
+      "expect": {
+        "ok": true
+      },
+      "id": "cat-001",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen2",
+      "expect": {
+        "ok": true
+      },
+      "id": "cat-002",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "gen1"
+    },
+    {
+      "catalog": "gen1",
+      "expect": {
+        "note": "re-verifying an accepted generation is idempotent",
+        "ok": true
+      },
+      "id": "cat-003",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "gen1"
+    },
+    {
+      "catalog": "gen1-baddigest",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_shape"
+      },
+      "id": "cat-004",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-duplicate",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_duplicate_entry"
+      },
+      "id": "cat-005",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-unknown",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_shape"
+      },
+      "id": "cat-006",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-orders",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_scheme_unsupported"
+      },
+      "id": "cat-007",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-declmismatch",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_declaration_mismatch"
+      },
+      "id": "cat-008",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_generation_rollback"
+      },
+      "id": "cat-009",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "gen2"
+    },
+    {
+      "catalog": "gen2-fork",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_generation_fork"
+      },
+      "id": "cat-010",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "gen2"
+    },
+    {
+      "catalog": "gen2-badprev",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_previous_digest_mismatch"
+      },
+      "id": "cat-011",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "gen1"
+    },
+    {
+      "catalog": "gen3-gap",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_generation_rollback"
+      },
+      "id": "cat-012",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "gen1"
+    },
+    {
+      "catalog": "gen2",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_bootstrap_required"
+      },
+      "id": "cat-013",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-stale",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_stale"
+      },
+      "id": "cat-014",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-expired",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_expired"
+      },
+      "id": "cat-015",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-nostatus",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_status_unavailable"
+      },
+      "id": "cat-016",
+      "kind": "snapshot",
+      "policy": "strict-status",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-stalestatus",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_status_stale"
+      },
+      "id": "cat-017",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "payments-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-narrow",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_entry_outside_authority"
+      },
+      "id": "cat-018",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "narrow-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-high",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_entry_outside_authority"
+      },
+      "id": "cat-019",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "capped-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-foreign",
+      "expect": {
+        "ok": false,
+        "reason": "signature_chain"
+      },
+      "id": "cat-020",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "foreign-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1-noaic",
+      "expect": {
+        "ok": false,
+        "reason": "signature_no_aic"
+      },
+      "id": "cat-021",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "noaic-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1",
+      "expect": {
+        "ok": false,
+        "reason": "publisher_mismatch"
+      },
+      "id": "cat-022",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": "other-ops",
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1",
+      "expect": {
+        "ok": false,
+        "reason": "signature_missing"
+      },
+      "id": "cat-023",
+      "kind": "snapshot",
+      "policy": "standard",
+      "publisher": null,
+      "roots": "ca",
+      "state": "empty"
+    },
+    {
+      "catalog": "gen1",
+      "delta": "d-apply",
+      "expect": {
+        "digest": "sha256:waf4O8YUHuNwh36s6zPxuvuuKZ41XNHRZ-IIqqpgdrM",
+        "generation": 2,
+        "ok": true
+      },
+      "id": "cat-024",
+      "kind": "delta"
+    },
+    {
+      "catalog": "gen2",
+      "delta": "d-addback",
+      "expect": {
+        "digest": "sha256:fEMd8XM401fdMXsPVYQ7_VvJ44OGWwBoqN_Lgj0kcKQ",
+        "generation": 3,
+        "ok": true
+      },
+      "id": "cat-034",
+      "kind": "delta"
+    },
+    {
+      "catalog": "gen1",
+      "delta": "d-wrongbase",
+      "expect": {
+        "ok": false,
+        "reason": "delta_base_mismatch"
+      },
+      "id": "cat-025",
+      "kind": "delta"
+    },
+    {
+      "catalog": "gen1",
+      "delta": "d-add-existing",
+      "expect": {
+        "ok": false,
+        "reason": "delta_operation_invalid"
+      },
+      "id": "cat-026",
+      "kind": "delta"
+    },
+    {
+      "catalog": "gen1",
+      "delta": "d-remove-unknown",
+      "expect": {
+        "ok": false,
+        "reason": "delta_operation_invalid"
+      },
+      "id": "cat-027",
+      "kind": "delta"
+    },
+    {
+      "catalog": "gen1",
+      "delta": "d-wrongtarget",
+      "expect": {
+        "ok": false,
+        "reason": "delta_digest_mismatch"
+      },
+      "id": "cat-028",
+      "kind": "delta"
+    },
+    {
+      "catalog": "gen1",
+      "delta": "d-badtargetgen",
+      "expect": {
+        "ok": false,
+        "reason": "delta_shape"
+      },
+      "id": "cat-029",
+      "kind": "delta"
+    },
+    {
+      "catalog": "gen1",
+      "delta": "d-double",
+      "expect": {
+        "ok": false,
+        "reason": "delta_operation_invalid"
+      },
+      "id": "cat-030",
+      "kind": "delta"
+    },
+    {
+      "catalog": "gen1",
+      "discovery": "disc-1",
+      "expect": {
+        "ok": true
+      },
+      "id": "cat-031",
+      "kind": "discovery"
+    },
+    {
+      "catalog": "gen1",
+      "discovery": "disc-verdict",
+      "expect": {
+        "ok": false,
+        "reason": "discovery_verdict_member"
+      },
+      "id": "cat-032",
+      "kind": "discovery"
+    },
+    {
+      "catalog": "gen1",
+      "discovery": "disc-wrongdigest",
+      "expect": {
+        "ok": false,
+        "reason": "catalog_digest_mismatch"
+      },
+      "id": "cat-033",
+      "kind": "discovery"
+    }
+  ]
+}

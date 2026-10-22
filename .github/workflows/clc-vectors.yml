@@ -230,11 +230,18 @@ jobs:
         with:
           repository: varwof/register
           path: register
+          ref: 3e863151f00f92bd0b02a94a8f34720524d0c81d
+
+      - uses: actions/checkout@v4
+        with:
+          repository: varwof/aic-capability-demo
+          path: aic-capability-demo
+          ref: 117998bfe3d671e08fdc0e0fa4dc5d302fe52453
 
       - name: Projection probes reproduce from pinned source files
         run: python3 tools/check_projection_cases.py --register-dir register
 
-      # contrib/ 的门：两个探针必须能被两个独立实现跑出**逐字节相同**的输出。
+      # contrib/ 的门：同一管治下的两个探针必须对匹配输入跑出**逐字节相同**的输出。
       # 门是"两实现一致"，不是与提交时的 out-*.txt 逐字节比——实现升版时
       # 打印的 CLC_REVISION 行会变，而判定与 reason 应当不变。
       - uses: actions/setup-node@v4
@@ -244,9 +251,8 @@ jobs:
       - name: Contributed probes agree across implementations
         run: |
           set -e
-          git clone --depth 1 https://github.com/varwof/aic-capability-demo.git ../aic-capability-demo
-          export CLC_PY_DIR=../aic-capability-demo
-          export CLC_TS_FILE="file://$PWD/../aic-capability-demo/ts/clc_semantics.ts"
+          export CLC_PY_DIR="$PWD/aic-capability-demo"
+          export CLC_TS_FILE="file://$PWD/aic-capability-demo/ts/clc_semantics.ts"
           for d in contrib/clc-unit-encoding contrib/iicp-touchpoint; do
             python3 "$d/probe.py" > /tmp/probe-py.txt
             node --disable-warning=ExperimentalWarning --experimental-strip-types "$d/probe.mjs" > /tmp/probe-ts.txt
@@ -258,4 +264,23 @@ jobs:
         run: |
           python3 tools/check_projection_cases.py \
             --register-dir register \
-            --demo-dir ../aic-capability-demo
+            --demo-dir aic-capability-demo
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: register/go.mod
+          cache-dependency-path: register/go.sum
+
+      - name: Install catalog probe dependency
+        run: pip install --quiet cryptography
+
+      - name: Scheme-admin and catalog corpora are reproducible
+        env:
+          REGISTER_DIR: ${{ github.workspace }}/register
+          CLC_PY_DIR: ${{ github.workspace }}/aic-capability-demo
+          CLC_TS_DIR: ${{ github.workspace }}/aic-capability-demo/ts
+        run: |
+          python3 scripts/gen-scheme-admin-vectors.py --check
+          python3 scripts/gen-catalog-vectors.py --check
+          python3 tools/check_catalog_cases.py
+          python3 contrib/scheme-admin/run.py --check

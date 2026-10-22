@@ -1,0 +1,96 @@
+{
+  "@version": "CLC-SCHEME-v1",
+  "scheme": "varwof/scheme-admin-v1",
+  "declaration_id": "varwof/scheme-admin-v1@2026-10-22",
+  "clc_revision": "CLC-1.19",
+  "capabilities": {
+    "scheme:create": {
+      "params": {
+        "namespace": {
+          "domain": "path-prefix"
+        },
+        "change_class": {
+          "domain": "enum"
+        },
+        "major": {
+          "domain": "bound"
+        },
+        "clc_revision": {
+          "domain": "enum"
+        }
+      }
+    },
+    "scheme:update": {
+      "params": {
+        "namespace": {
+          "domain": "path-prefix"
+        },
+        "change_class": {
+          "domain": "enum"
+        },
+        "major": {
+          "domain": "bound"
+        },
+        "clc_revision": {
+          "domain": "enum"
+        }
+      }
+    },
+    "scheme:revoke": {
+      "params": {
+        "namespace": {
+          "domain": "path-prefix"
+        },
+        "package_digest": {
+          "domain": "exact"
+        },
+        "clc_revision": {
+          "domain": "enum"
+        }
+      }
+    },
+    "scheme:delegate": {
+      "params": {
+        "namespace": {
+          "domain": "path-prefix"
+        },
+        "change_class": {
+          "domain": "enum"
+        },
+        "major": {
+          "domain": "bound"
+        },
+        "clc_revision": {
+          "domain": "enum"
+        }
+      }
+    },
+    "scheme:root-rotate": {
+      "params": {
+        "package_digest": {
+          "domain": "exact"
+        },
+        "clc_revision": {
+          "domain": "enum"
+        }
+      }
+    },
+    "scheme:approve": {
+      "params": {
+        "namespace": {
+          "domain": "path-prefix"
+        },
+        "package_digest": {
+          "domain": "exact"
+        },
+        "transition_digest": {
+          "domain": "exact"
+        },
+        "clc_revision": {
+          "domain": "enum"
+        }
+      }
+    }
+  },
+  "digest": "sha256:9V9aatN0s5slVB8M2rgPFryoefew7IrNgkyaKjS_gRE"
+}
