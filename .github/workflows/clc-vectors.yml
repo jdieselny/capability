@@ -230,7 +230,7 @@ jobs:
         with:
           repository: varwof/register
           path: register
-          ref: 3e863151f00f92bd0b02a94a8f34720524d0c81d
+          ref: 7519250decb8c917e3c8e4e8e7246d610a3b861e
 
       - uses: actions/checkout@v4
         with:

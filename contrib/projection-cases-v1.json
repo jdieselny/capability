@@ -4,7 +4,7 @@
   "corpus_base_revision_note": "This manifest, corrected example and regenerated outputs are working-tree changes based on this revision; the resulting capability commit is the corpus revision to cite after publication.",
   "probe_repository": "https://github.com/varwof/register",
   "probe_base_revision": "c4cbc53f117e7e7dc3eae980267c5b6e12f08e50",
-  "probe_revision": "01a606da0a51057b14a6652f73447bbe3a9bc99e",
+  "probe_revision": "7519250decb8c917e3c8e4e8e7246d610a3b861e",
   "probe_source_sha256": {
     "cmd/asor-projection-probe/main.go": "c86579790062a74af25d673bae0287be4e1fdc558d27f6893bde17d6e3b99088",
     "cmd/emilia-projection-probe/main.go": "49e80c5ce6b8a404082ba750c053d4653402973a5d5be6de7091def9a9ab444e",
