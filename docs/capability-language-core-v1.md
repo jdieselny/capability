@@ -4,7 +4,7 @@
 
 > **Preview** — Not for production use. APIs and features may change before official release.
 
-**Category**: Experimental | **Status**: Working Draft | **Date**: 2026-09-10 | **Last amended**: 2026-10-16
+**Category**: Experimental | **Status**: Working Draft | **Date**: 2026-09-10 | **Last amended**: 2026-10-23
 
 ## Abstract
 
@@ -2372,6 +2372,13 @@ verdict and changes no relation.
    needs only the pairwise judgement (every hop inside its own parent) needs no
    basis and MUST NOT claim one.
 
+   This distinction is also applied to inter-domain agent delegation chains in
+   [AHUJA-ROUTING] §8: per-hop comparisons support a chain-wide statement only
+   when the shared intermediate value is authenticated and all hops use the same
+   immutable profile and basis.  That requirement is informative and
+   routing-layer-specific here; it neither changes `Contains` nor supplies the
+   authenticated adjacency it requires.
+
 7. **Never report a union axis as a containment result.**  A carrier field that
    is conjunctive over a chain — accumulated `constraints`, ATN
    `preconditions`, AAE `CONSTRAINTS`, a `requires` precondition list — is a
@@ -3345,6 +3352,12 @@ adjacent capability drafts (ATN, AAT, AIP, AAE, AOA, AEGIS) reviewed on
   Progress.
 - [BCR] "Bounded Capability Receipts and Durable Spend Control for Agent
   Actions", draft-schrock-ep-bounded-capability-receipts-06, Work in Progress.
+- [AHUJA-ROUTING] S. P. Ahuja, "A Policy Grammar for Inter-Domain Agent
+  Routing", draft-ahuja-agent-routing-policy-03, Work in Progress, October
+  2026.  §8 applies the transitivity-basis requirement to inter-domain agent
+  delegation chains; §9 separates per-hop attenuation from chain validity and
+  requires the authenticated relation between adjacent hops to be supplied by
+  another layer.
 - [PAP] "Principal Agent Protocol (PAP)", draft-baur-pap-02, Work in Progress.
 - [ATN] "Agent Trust Negotiation", draft-somoza-dmsc-atn-agent-trust-negotiation-00,
   Work in Progress.  §9 defines a capability intersection algebra; §5.1/§9.1 an
