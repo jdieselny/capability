@@ -12,7 +12,7 @@
 |---|---|---|
 | `EP-AEC-REQUIREMENT-v1` 示例（`treasury-wire-evidence@7`） | `draft-schrock-ep-authorization-evidence-chain-08` §4 | 2026-10-17 |
 | 证据事实的形态（verified / subject / issued_at） | `draft-schrock-action-evidence-boundary-07` §5.2、§5.6 | 2026-10-17 |
-| 动作身份（`tool.call.1`，`occurrence_id` 可选） | `draft-schrock-canonical-action-identifier-05` §4.7 | 2026-10-17 |
+| 动作形态（`tool.call.1`，`occurrence_id` 可选；只测 CLC material projection，不解析 CAID wire identifier） | `draft-schrock-canonical-action-identifier-05` §4.7 | 2026-10-17 |
 
 运行：
 
@@ -24,15 +24,15 @@
 
 | AEC 字段 | CLC | 说明 |
 |---|---|---|
-| `expression` | `expression` | 文法兼容（AND/OR/括号/identifier），直接沿用 |
-| `freshness_sec[role]` | `constraints += {role, varwof/evidence-v1:freshness:sec:<n>}` | 每角色一条 |
-| `role_constraints[type=distinct-subject-quorum]` | `constraints += {role, quorum:distinct:<threshold>}` | 角色取 `component_type`（见下方残差 1） |
+| `expression` | `"(<expression>) AND <binding-role>…"` | 原表达式整体加括号，再与派生 binding 角色合取 |
+| `freshness_sec[role]` | `constraints += {role, varwof/evidence-v1:freshness:sec:<n>}` | 每角色一条；角色必须通过 pinned RoleMap |
+| `role_constraints[type=distinct-subject-quorum]` | `constraints += {role, quorum:distinct:<threshold>}` | `component_type` 必须通过 pinned RoleMap |
 | `requirement_id` | `requirement_id` | 原样 |
 | `@version` | `CLC-REQUIREMENT-v1` | 版本改写 |
-| `purpose` | — | 描述性，丢弃 |
-| `status_required` | — | 载体负责（AEB 的状态查询），CLC 无对应 |
-| `required_bindings` | 新角色 `ep:binding:permits` | native verifier 输出派生事实；原 `ep-quorum` 和 `policy-permit` 均保留 |
-| `subject_id_source` | — | 载体负责（谁提供主体标识） |
+| `purpose` | `purpose` | 保留为描述性字段，不参与求值 |
+| `status_required` | `RequiredNativeChecks` | AEB/载体负责状态查询，不作为证据 Fact |
+| `required_bindings` | 新角色 `ep:binding:<relation>:<SHA-256(triple)>` | native verifier 输出派生事实；原 `ep-quorum` 和 `policy-permit` 均保留 |
+| `subject_id_source` | `RequiredNativeChecks` | AEC-08 要求值为 `native-verifier`；CLC 不自行推断 |
 
 ## 实际求值结果（`out-probe.txt`，13/13 PASS）
 
@@ -44,31 +44,32 @@
 | 4 | 原 quorum/permit 都在，但没有派生 binding 事实 | UNSATISFIED | UNSATISFIED（`requirement:expression_false`） |
 | 5 | 事实按 `component_type` 字面标注为 `ep-human-authorization` | UNSATISFIED | UNSATISFIED（`requirement:expression_false`） |
 
-动作身份（CAID → CLC §4.2）：
+CLC 动作身份（CAID 的 `tool.call.1` 形态 → CLC §4.2；不解析 CAID wire identifier）：
 
 | 场景 | 期望 | 实际 |
 |---|---|---|
 | 同 tool+args，观测里多一个 `occurrence_id` | MATCH | MATCH（非 material 字段不携带身份） |
 | args 的 amount 改成 3001 | NOT_EQUIVALENT | NOT_EQUIVALENT |
 
-## 探针暴露的五个残差（binding profile 必须表态）
+## 探针暴露的跨层义务
 
 1. **角色命名不一致**：表达式用的是 `ep-quorum`，而 `role_constraints.component_type`
    写的是 `ep-human-authorization`。草案没有说明"哪个事实类型填充 `ep-quorum`
    这个表达式角色"；探针把 quorum 约束挂到 `ep-quorum` 上，并把这一假设列出来。
    ⇒ binding profile 必须给出角色映射表，不能留给实现猜。
 2. **`status_required`**：要求"新鲜的状态结果"，CLC 没有对应约束类型；只能由
-   AEB/载体执行，并作为残差上报。
+   AEB/载体执行，并作为 `RequiredNativeChecks` 返回。该检查不能由证据 Fact
+   代替。
 3. **`required_bindings`**（`policy-permit -permits-> ep-quorum`）：CLC
    不直接比较事实间关系，因此由 native verifier 把它归一化为
-   `ep:binding:permits` 派生事实。requirement 保留原始
-   `ep-quorum AND policy-permit`，再与派生角色做 AND；关系事实只补充，不替代
-   quorum。若 verifier 不输出该事实，表达式为假。
+   一个由三元组稳定派生的角色。requirement 改写为
+   `(ep-quorum AND policy-permit) AND <binding-role>`；关系事实只补充，
+   不替代 quorum。若 verifier 不输出该事实，表达式为假。
    - 派生事实绑定 source/target artifact 摘要、action、verifier/trust 结果、
      distinct subjects、原始证据时间和 status 快照。
    - freshness 取原始证据和状态，而不是关系重算时间；重算关系不能刷新旧批准。
-4. **`subject_id_source`**：主体标识由谁提供属于载体语义，CLC 只消费 `subject`。
-5. **`purpose`**：描述性字段，丢弃（不应影响求值，AEC 自己也这么写）。
+4. **`subject_id_source`**：AEC-08 要求主体标识来自 `native-verifier`；CLC
+   只消费受保护事实中的 `subject`，不自行推断。
 
 ### binding identity 派生检查
 

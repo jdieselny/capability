@@ -4,11 +4,11 @@
   "corpus_base_revision_note": "This manifest, corrected example and regenerated outputs are working-tree changes based on this revision; the resulting capability commit is the corpus revision to cite after publication.",
   "probe_repository": "https://github.com/varwof/register",
   "probe_base_revision": "c4cbc53f117e7e7dc3eae980267c5b6e12f08e50",
-  "probe_revision": "ccd49cd5aefdd125116a0d1a87d079ddf9fa1ce7",
+  "probe_revision": "01a606da0a51057b14a6652f73447bbe3a9bc99e",
   "probe_source_sha256": {
     "cmd/asor-projection-probe/main.go": "c86579790062a74af25d673bae0287be4e1fdc558d27f6893bde17d6e3b99088",
-    "cmd/emilia-projection-probe/main.go": "eaca2c5c28e3aada1925098adda1fa10cd55f0479d5405da03a5c5d800629d4b",
-    "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json": "431ad466bf12ffcb542fa52235d60af5629c6e6f58d2def2baf8ef8c18080df9",
+    "cmd/emilia-projection-probe/main.go": "49e80c5ce6b8a404082ba750c053d4653402973a5d5be6de7091def9a9ab444e",
+    "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json": "e7b2389342b5dbccc1967292bf71e72e917909c36d764ce4a091340273692d70",
     "cmd/gilda-projection-probe/main.go": "ee22fe91ac42999514509336db470b9864ab631541a971b97ea4beffd2c87ffb",
     "cmd/oasnt-projection-probe/main.go": "70a89c94cc6d80b307042a91197891a97f450b7c82ddc0f5d4542189dbb6a9fd",
     "cmd/rar-projection-probe/main.go": "a4251020dd7de8c99c1466962d3dbcc1c5ed1c1942761e2cab02ef3189c39b6a"
@@ -17,7 +17,7 @@
   "cross_language_binding": {
     "case_set": "emilia-projection",
     "fixture": "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json",
-    "fixture_sha256": "431ad466bf12ffcb542fa52235d60af5629c6e6f58d2def2baf8ef8c18080df9",
+    "fixture_sha256": "e7b2389342b5dbccc1967292bf71e72e917909c36d764ce4a091340273692d70",
     "demo_repository": "https://github.com/varwof/aic-capability-demo",
     "demo_base_revision": "117998bfe3d671e08fdc0e0fa4dc5d302fe52453",
     "demo_source_sha256": {
@@ -28,23 +28,23 @@
     },
     "python": {
       "source": "contrib/emilia-projection/probe.py",
-      "source_sha256": "107f80fc1735da1cd2442daaca08b4169e3df022cf4e47d106b1f4aef11eb5db",
+      "source_sha256": "ca4783df826bcb937b780e9ded017e10a999f8006259c24684482d1151b8437a",
       "output": "contrib/emilia-projection/out-python.txt",
-      "output_sha256": "c0efadaad7639b75822f971e95db7dbe7a51cf837abf68b11619e7fb03a9631a",
+      "output_sha256": "ee3a9d1439045da65acb64b31cbe4ff05d6e769ad35a3c1665230ed5148a9263",
       "command": "python3 contrib/emilia-projection/probe.py"
     },
     "typescript": {
       "source": "contrib/emilia-projection/probe.mjs",
-      "source_sha256": "10055f1ea76a87157d9f462e0411fb93c4765216954edc3cf87c1ab6f1674316",
+      "source_sha256": "6f27e44fd01dfc09bc9dbd62ae803f83f15880179f9d8e29272054612025c63e",
       "output": "contrib/emilia-projection/out-typescript.txt",
-      "output_sha256": "6a580c9cbf6a748e2e3932567c40373a1bf3f9f3f2a2d09ca2bb6c934470c64b",
+      "output_sha256": "3235df940a92adf47a148f481aaecadd38422b46c53d6aa5bcba7367f782a080",
       "command": "node --disable-warning=ExperimentalWarning --experimental-strip-types contrib/emilia-projection/probe.mjs"
     }
   },
   "probes": {
     "emilia-projection": {
       "output": "contrib/emilia-projection/out-probe.txt",
-      "output_sha256": "699e83c1721d27bb09d1afe3794c71658378e9e4147121f2bbe0121fda59472e",
+      "output_sha256": "51aac6da6c0ecca0f8126be344aab1d8c3ecd6117f4a6cf95134a37c7a9b935e",
       "command": "go run ./cmd/emilia-projection-probe",
       "cases": [
         {"id": "EMI-AEC-001", "want": "SATISFIED", "got": "SATISFIED"},

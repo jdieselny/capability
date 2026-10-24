@@ -16,7 +16,7 @@ probe source is pinned at `register@ccd49cd`.
 
 | Probe | Carrier (revision) | What is projected | Cases | Main residuals |
 |---|---|---|---|---|
-| [`emilia-projection`](emilia-projection/) | `draft-schrock-ep-authorization-evidence-chain-08` §4; AEB-07 §5.2; CAID-05 §4.7 | `EP-AEC-REQUIREMENT-v1` → `CLC-REQUIREMENT-v1`; AEB facts; CAID action identity → §4.2 | 13/13 PASS | quorum role naming (`ep-quorum` vs `ep-human-authorization`), `status_required`, `subject_id_source`, `purpose`; **`required_bindings` is normalized to a derived fact without replacing the original quorum** |
+| [`emilia-projection`](emilia-projection/) | `draft-schrock-ep-authorization-evidence-chain-08` §4; AEB-07 §5.2; CAID-05 §4.7 action shape | `EP-AEC-REQUIREMENT-v1` → `CLC-REQUIREMENT-v1`; AEB facts; CLC material action identity → §4.2 | 13/13 PASS | quorum role naming (`ep-quorum` vs `ep-human-authorization`), `status_required`, `subject_id_source`; **`required_bindings` is normalized to a derived fact without replacing the original quorum**. The probe does not parse or map a CAID wire identifier. |
 | [`gilda-projection`](gilda-projection/) | checked against `draft-gilda-wimse-agent-audit-record-02` §5.3/§6.5 (now renamed `draft-gilda-audit-agent-audit-record-00`) | `decision.reported` × `evaluation.status` → CLC verdict; `unavailableInput` → residual | 6/6 PASS | conditions; `unavailableInput`; **`agreement` is a relation** between decision and effect |
 | [`oasnt-projection`](oasnt-projection/) | `draft-thallapelly-oasnt-02` §5.3, §6.2 | approval token → one Fact + an action binding (`adg`) | 6/6 PASS | `dsp`, `rqf`, `asl`, `int` (only via eligibility), `jti`, `exp`, nested parameters |
 

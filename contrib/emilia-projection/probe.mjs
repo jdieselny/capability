@@ -85,6 +85,7 @@ function printCase(id, name, want, got, expectedGot = want) {
 
 const fixture = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
 const subject = bindingSubject(fixture.binding);
+const bindingRole = fixture.binding_role;
 
 console.log('EMILIA → CLC evidence projection probe (TypeScript)');
 console.log('fixture: register/cmd/emilia-projection-probe/testdata/'
@@ -135,7 +136,7 @@ const opaqueCase = {
       { subject: 'bob', verified: true, age_sec: 20 },
     ],
     'policy-permit': [{ subject: 'policy', verified: true, age_sec: 60 }],
-    'ep:binding:permits': [
+    [bindingRole]: [
       { subject: 'arbitrary-unbound-subject', verified: true, age_sec: 60 },
     ],
   },

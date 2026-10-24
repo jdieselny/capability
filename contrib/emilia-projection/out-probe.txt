@@ -5,7 +5,8 @@ AEC requirement: draft-schrock-ep-authorization-evidence-chain-08 §4
 {
   "@version": "CLC-REQUIREMENT-v1",
   "requirement_id": "treasury-wire-evidence@7",
-  "expression": "ep-quorum AND policy-permit AND ep:binding:permits",
+  "purpose": "pre-execution evidence check",
+  "expression": "(ep-quorum AND policy-permit) AND ep:binding:permits:f4457486553c090095ca81e334af8c9a9e1cff794a0e6403431a7349d68af3c1",
   "constraints": [
     {
       "role": "ep-quorum",
@@ -22,12 +23,11 @@ AEC requirement: draft-schrock-ep-authorization-evidence-chain-08 §4
   ]
 }
    residuals:
-   - quorum role mapped from component_type "ep-human-authorization", but the expression names "ep-quorum"
-   - subject_id_source=native-verifier: carrier-owned
-   - status_required[ep-quorum]: carrier-owned, no CLC constraint
-   - required_binding policy-permit -permits-> ep-quorum: native verifier must emit derived role ep:binding:permits; the projection does not satisfy it
-   - purpose: descriptive, dropped
-   derived binding role: ep:binding:permits
+   - required_binding policy-permit -permits-> ep-quorum: native verifier must emit derived role ep:binding:permits:f4457486553c090095ca81e334af8c9a9e1cff794a0e6403431a7349d68af3c1
+   required native checks:
+   - status_required:ep-quorum
+   - required_binding:policy-permit:permits:ep-quorum
+   derived binding role: ep:binding:permits:f4457486553c090095ca81e334af8c9a9e1cff794a0e6403431a7349d68af3c1
    relation tuple (JCS): {"action_digest":"sha256:237ef7005db5bbd92fcd757bf35a236201da27c888fc146316bd3863288b4c9f","evidence_issued_at":["2026-09-13T11:59:00Z","2026-09-13T11:59:30Z","2026-09-13T11:59:40Z"],"from":{"artifact_digest":"sha256:6e15e531407d7017f90c4bc9fdb9e07044cfe7562425aa727d46bdba89c4ee7f","type":"policy-permit"},"policy_generation":"policy-7","relation":"permits","requirement_id":"treasury-wire-evidence@7","status_digest":"sha256:51c1a2c30efef1a2d1256fed51b46075e77d97d3b092ba1032fca1d3fbc1204d","status_snapshot":{"checked_at":"2026-09-13T12:00:00Z","outcome":"valid","revocation_generation":"rev-42","source":"aeb-status","valid_until":"2026-09-13T12:01:00Z"},"subjects":["alice","bob"],"to":{"artifact_set_digest":"sha256:f5e567508f9578ad89e38148a60c582dc96dda7f0884d594cebbd4f3e902edcd","type":"ep-quorum"},"trust":{"result":"verified","verifier":"native-verifier"}}
    derived binding subject: qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s
 
@@ -38,9 +38,9 @@ PASS EMI-AEC-003 fresh binding does not refresh an old approval       want=UNSAT
 PASS EMI-AEC-004 missing derived binding fact                         want=UNSATISFIED got=UNSATISFIED/requirement:expression_false
 PASS EMI-AEC-005 facts typed ep-human-authorization (literal component_type) want=UNSATISFIED got=UNSATISFIED/requirement:expression_false
 
-3. CAID action identity → CLC §4.2 projection
-PASS EMI-CAID-001 same tool+args, extra occurrence_id      want=MATCH got=MATCH
-PASS EMI-CAID-002 args amount changed                      want=NOT_EQUIVALENT got=NOT_EQUIVALENT
+3. CLC material action identity (CAID parser/mapping not exercised)
+PASS EMI-CAID-001 CLC projection: extra non-material occurrence_id want=MATCH got=MATCH
+PASS EMI-CAID-002 CLC projection: material args amount changed want=NOT_EQUIVALENT got=NOT_EQUIVALENT
 
 4. Binding identity derivation and boundary
 Fixtures: synthetic AEC-shaped artifacts, not production bytes

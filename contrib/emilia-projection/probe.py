@@ -113,6 +113,7 @@ def main():
     fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
     now = parse_instant(fixture["now"])
     subject = binding_subject(fixture["binding"])
+    binding_role = fixture["binding_role"]
 
     print("EMILIA → CLC evidence projection probe (Python)")
     print("fixture: register/cmd/emilia-projection-probe/testdata/"
@@ -177,7 +178,7 @@ def main():
             "policy-permit": [
                 {"subject": "policy", "verified": True, "age_sec": 60},
             ],
-            "ep:binding:permits": [
+            binding_role: [
                 {"subject": "arbitrary-unbound-subject",
                  "verified": True, "age_sec": 60},
             ],
