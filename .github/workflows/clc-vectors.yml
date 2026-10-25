@@ -236,7 +236,7 @@ jobs:
         with:
           repository: varwof/aic-capability-demo
           path: aic-capability-demo
-          ref: 117998bfe3d671e08fdc0e0fa4dc5d302fe52453
+          ref: 533641638ac3dd6c8a0bbb797d0eb3bd9c337431
 
       - name: Projection probes reproduce from pinned source files
         run: python3 tools/check_projection_cases.py --register-dir register
