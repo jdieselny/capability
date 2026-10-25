@@ -31,8 +31,24 @@
 | `@version` | `CLC-REQUIREMENT-v1` | 版本改写 |
 | `purpose` | `purpose` | 保留为描述性字段，不参与求值 |
 | `status_required` | `RequiredNativeChecks` | AEB/载体负责状态查询，不作为证据 Fact |
-| `required_bindings` | 新角色 `ep:binding:<relation>:<SHA-256(triple)>` | native verifier 输出派生事实；原 `ep-quorum` 和 `policy-permit` 均保留 |
+| `required_bindings` | 新角色 `clc:evidence-binding:<base64url(uint32be(len)||part…)>` | native verifier 输出派生事实；原 `ep-quorum` 和 `policy-permit` 均保留 |
 | `subject_id_source` | `RequiredNativeChecks` | AEC-08 要求值为 `native-verifier`；CLC 不自行推断 |
+
+派生 binding 角色不是哈希，而是完整有序三元组
+`(from_type, relation, to_type)` 的可逆、带长度前缀编码：命名空间
+`clc:evidence-binding:`，payload 为三个 `uint32be(len) || utf8` 片段，再做
+无填充 base64url。三元组各段必须非空、合法 UTF-8、且落在 AEC 标识符字符集
+`1*( ALPHA / DIGIT / "." / ":" / "-" / "_" )` 内；编码后超过 256 字节直接
+拒绝，不截断。长度前缀保证即使 `:` 出现在分量内也不会产生歧义碰撞。
+
+`out-probe.txt` 同时打印两个 requirement digest：
+
+- `source requirement digest`：投影前完整 AEC 对象（严格 JSON、拒绝重复成员）
+  的 JCS SHA-256；
+- `projected requirement digest`：改写并验证后的最终 `CLC-REQUIREMENT-v1`
+  对象的 CLC digest。
+
+两者都是 report 字段，不是 `CLC Requirement` 或 `Satisfaction` 的成员。
 
 ## 实际求值结果（`out-probe.txt`，13/13 PASS）
 
@@ -78,10 +94,16 @@ subject 一致，并分别修改 source artifact、target artifact、action 和 
 快照，确认四种修改都会改变 subject。
 
 CLC core 把 binding subject 当作不透明值：只要 native verifier 给出
-`verified=true` 的 `ep:binding:permits` fact，CLC 就接受该 role。因此
+`verified=true` 的 `clc:evidence-binding:…` fact，CLC 就接受该 role。因此
 source/target/action/status 的实际绑定由 native verifier 负责，不由 CLC
 重新计算。probe 用 `EMI-BIND-006` 明确记录这条边界，避免把 role 在场误写成
 CLC 已验证关系内容。
+
+不可用（unavailable）与失败（failed）在报告中保持区分：不可用的分量不产生
+eligible Fact，其 native 原因保留在 report 中；在 `A OR B` 下，若 B 可用且
+满足表达式，结果仍可为 `SATISFIED`，但 A 的不可用原因不会消失。显式声明的
+role constraint 失败或 required binding 无法建立时，整个 requirement 仍为
+`UNSATISFIED`。证据侧不产生 `allow_unresolved`；该 verdict 只属于授权侧。
 
 Python 和 TypeScript runner（`probe.py`、`probe.mjs`）读取 register 仓库中的
 同一 `emilia-binding-fixture-v1.json`，并输出同样的 13 个 case ID、

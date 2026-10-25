@@ -4,11 +4,11 @@
   "corpus_base_revision_note": "This manifest, corrected example and regenerated outputs are working-tree changes based on this revision; the resulting capability commit is the corpus revision to cite after publication.",
   "probe_repository": "https://github.com/varwof/register",
   "probe_base_revision": "c4cbc53f117e7e7dc3eae980267c5b6e12f08e50",
-  "probe_revision": "7519250decb8c917e3c8e4e8e7246d610a3b861e",
+  "probe_revision": "5a77ff55e6bf94b7adb0124b49db04d62bd9e976",
   "probe_source_sha256": {
     "cmd/asor-projection-probe/main.go": "c86579790062a74af25d673bae0287be4e1fdc558d27f6893bde17d6e3b99088",
-    "cmd/emilia-projection-probe/main.go": "49e80c5ce6b8a404082ba750c053d4653402973a5d5be6de7091def9a9ab444e",
-    "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json": "e7b2389342b5dbccc1967292bf71e72e917909c36d764ce4a091340273692d70",
+    "cmd/emilia-projection-probe/main.go": "f95c768dd71eef6ebc22b7ed939879c9d4263a1ab4c95097a519b09ab3f02a04",
+    "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json": "ae7365d9cef819f3af9b26869dd313d4357298b44c1ae2908106fcbb3781e70a",
     "cmd/gilda-projection-probe/main.go": "ee22fe91ac42999514509336db470b9864ab631541a971b97ea4beffd2c87ffb",
     "cmd/oasnt-projection-probe/main.go": "70a89c94cc6d80b307042a91197891a97f450b7c82ddc0f5d4542189dbb6a9fd",
     "cmd/rar-projection-probe/main.go": "a4251020dd7de8c99c1466962d3dbcc1c5ed1c1942761e2cab02ef3189c39b6a"
@@ -17,13 +17,13 @@
   "cross_language_binding": {
     "case_set": "emilia-projection",
     "fixture": "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json",
-    "fixture_sha256": "e7b2389342b5dbccc1967292bf71e72e917909c36d764ce4a091340273692d70",
+    "fixture_sha256": "ae7365d9cef819f3af9b26869dd313d4357298b44c1ae2908106fcbb3781e70a",
     "demo_repository": "https://github.com/varwof/aic-capability-demo",
-    "demo_base_revision": "117998bfe3d671e08fdc0e0fa4dc5d302fe52453",
+    "demo_base_revision": "533641638ac3dd6c8a0bbb797d0eb3bd9c337431",
     "demo_source_sha256": {
       "clc_semantics.py": "0b894fe83d250fa15d7ded1a3d6eab397895b90000f434b73a7dde07b5e6662b",
       "evidence_semantics.py": "02d5c8de1fdb6c093e711ea0d20bd6e252eb2942a77723e2e3dd028f9ea0977d",
-      "ts/clc_semantics.ts": "e812bc56cfb42712957f0d223eaf1d52646efc74f25f37021cf7984a9dfe44a7",
+      "ts/clc_semantics.ts": "ffc94dfeea4454ead9e8b1162edfc8639647b0eefcc04ca76e76dac26214b123",
       "ts/evidence_semantics.ts": "ac20074ecfa10fd80569bedc4a1225b2c4f4f1681013574e32942ee53b2b77b6"
     },
     "python": {
@@ -44,7 +44,7 @@
   "probes": {
     "emilia-projection": {
       "output": "contrib/emilia-projection/out-probe.txt",
-      "output_sha256": "51aac6da6c0ecca0f8126be344aab1d8c3ecd6117f4a6cf95134a37c7a9b935e",
+      "output_sha256": "6a0023c3d3cbd8ccac95d51e6dcb9981a676aba22145b4ce59b17d069c75b0a2",
       "command": "go run ./cmd/emilia-projection-probe",
       "cases": [
         {"id": "EMI-AEC-001", "want": "SATISFIED", "got": "SATISFIED"},
