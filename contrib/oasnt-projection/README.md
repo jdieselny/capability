@@ -50,29 +50,12 @@ OASNT 不引入任何 carrier-specific 分支，只填同一组 report 类型：
 `success` 时才产生 eligible Fact。`jti` 未消费、`rqf` 未比对都不会被写成
 "证据检查成功"——它们属于 enforcement point。
 
-## 报告校验（M1/M2）
+## 内部测试（不属于本 profile）
 
-OASNT 探针同时演示 report 层的两道校验：
-
-- **typed 值与 schema**：digest 统一为 `sha-256:<64 hex>`；freshness 是封闭
-  的 `fresh | cached | stale`（`success` 只接受前两者）；结构由
-  `register/docs/schemas/clc-evidence-report-v1.schema.json` 描述。
-- **profile 与 lineage**：fixture 声明 `statusModel: required`、
-  `requiredChecks` 和期望清单；report 内嵌该 profile。每个 Fact 必须恰好有一
-  条 `ProjectedEvidenceRecord`，且记录里的 `nativeCheckIds` 必须在**同一个
-  artifact digest** 上真有结果。`VerifyEvidenceReport` 对
-  `statusModel=required` 且 incomplete 的报告直接拒绝；不完整报告仍可生成并
-  查看（`OAS-NCHECK-006`）。
-- **生命周期**：已检查的分量声明 `statusSnapshotSource` 与
-  `statusSnapshotGeneration`，部署方可用 `SnapshotState` 拒绝回滚与 fork；
-  `ReplayEvidence` 的 JCS digest 即 `aecReplayDigest`，可按 artifact 逐字段
-  复现结果。探针只生成声明，不持有部署方状态。
-- **签名（已实现，探针未用）**：`SignEvidenceReport` /
-  `VerifySignedEvidenceReport` 把 JCS(report) 放进 DSSE envelope，每个签名是
-  PKCS#7 detached over `PAE(payloadType, payload)`；signer 的 AIC principal
-  与 key-hash 必须匹配报告声明的 `verifier`，最后在报告的 `appraisalTime`
-  重算 `Satisfaction`。探针使用合成证据、没有私钥，因此不生成签名；签名路径由
-  Go 单元测试覆盖。
+OASNT 探针还会运行参考实现内部的 report/lineage 检查（typed digest、profile
+一致性、snapshot/replay、签名路径）。这些是**内部测试件**，不是 CLC-E 的
+交付物，也不是本 projection profile 的一部分；这里只用它们验证 native
+check 结果在内部表示中一致。签名路径仍由 Go 单元测试覆盖。
 
 ## 实跑（`out-probe.txt`，13/13 PASS）
 

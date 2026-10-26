@@ -26,7 +26,7 @@ Ed25519 或 ML-DSA，每个 native check 的 outcome 是"真实 verifier 已经�
 
 ## 为什么选它
 
-§10.1 的“三个答案”和 CLC-E report 模型几乎一一对应：
+§10.1 的“三个答案”和 CLC-E 证据模型（native check 结果）几乎一一对应：
 
 | Izmaylov | 本探针输出 |
 |---|---|

@@ -1,16 +1,21 @@
-# CLC-E report vectors
+# Internal evidence-report test vectors
 
-`report-vectors.json` holds report-layer regression vectors for the CLC
-Evidence Projection (M1–M4): shape validation, inventory/lineage consistency,
-completeness, snapshot lifecycle and replay comparison.
+**Internal test artifacts.** These vectors exercise the reference
+implementation's experimental report layer. They are not a CLC-E deliverable,
+not a published protocol, and not a conformance suite. CLC-E remains the
+projection/evidence view and makes no report-layer claim.
+
+`report-vectors.json` holds internal regression vectors for shape validation,
+inventory/lineage consistency, completeness, snapshot lifecycle and replay
+comparison.
 
 Scope and limits:
 
 - **Data only.** No private keys and no signatures are stored here; signed
   report behaviour is covered by `register/projection` unit tests, which
   generate a certificate at run time.
-- **Not a conformance suite.** This file is regression evidence. It does not
-  claim CLC-E conformance and does not freeze a conformance revision.
+- **Not a conformance suite.** This file is internal regression evidence. It
+  does not claim conformance and does not freeze a conformance revision.
 - The assessment parity corpus lives separately in
   `contrib/native-check-assessment/cases-v1.json`.
 
@@ -34,8 +39,8 @@ Scope and limits:
 ## Run
 
 ```sh
-CLC_E_VECTORS=/path/to/capability/data/_vectors/clc-e/report-vectors.json \
-  go run ./cmd/clc-e-vectors-run
+EVIDENCE_REPORT_VECTORS=/path/to/capability/contrib/internal/evidence-report/report-vectors.json \
+  go run ./cmd/internal/report-vectors-run
 ```
 
 Every runner exits non-zero on any mismatch. A vector whose report cannot be
