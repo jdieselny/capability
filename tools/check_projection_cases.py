@@ -163,6 +163,11 @@ def check_cross_language(manifest, outputs):
                 continue
             if result["status"] != "PASS":
                 failures.append(f"{language}: {case_id} did not PASS")
+            elif result["want"] != result["got"]:
+                failures.append(
+                    f"{language}: {case_id} printed PASS but want != got: "
+                    f"want={result['want']} got={result['got']}"
+                )
             if result["want"] != expected["want"]:
                 failures.append(f"{language}: {case_id} want mismatch")
             if result["got"] != expected["got"]:
@@ -193,6 +198,11 @@ def check(manifest, outputs):
                 continue
             if result["status"] != "PASS":
                 failures.append(f"{probe}: {case_id} did not PASS")
+            elif result["want"] != result["got"]:
+                failures.append(
+                    f"{probe}: {case_id} printed PASS but want != got: "
+                    f"want={result['want']} got={result['got']}"
+                )
             if result["want"] != expected["want"]:
                 failures.append(
                     f"{probe}: {case_id} want mismatch: "
@@ -210,6 +220,91 @@ def check(manifest, outputs):
             f"checked={checked_total}"
         )
     return checked_total, failures
+
+
+def load_assessment_outputs(spec, root, register_dir):
+    """Load the language-neutral native-check assessment outputs.
+
+    The checked-in output is always verified; when a register checkout is given,
+    each runner is re-executed and its fresh output must match byte for byte.
+    """
+    if not spec:
+        return {}
+
+    corpus = root / spec["corpus"]
+    verify_sha256(corpus.read_bytes(), spec["corpus_sha256"], spec["corpus"])
+
+    outputs = {}
+    for language, runner in spec["runners"].items():
+        checked = root / runner["output"]
+        checked_raw = checked.read_bytes()
+        verify_sha256(checked_raw, runner["output_sha256"], runner["output"])
+        outputs[language] = checked_raw.decode("utf-8")
+
+        if register_dir is None:
+            continue
+
+        base = register_dir if runner.get("in_register") else root
+        for relative_path, expected in runner.get("source_sha256", {}).items():
+            path = base / relative_path
+            verify_sha256(path.read_bytes(), expected, str(path))
+
+        env = os.environ.copy()
+        env["CLC_NATIVE_CHECK_CASES"] = str(corpus.resolve())
+        command = shlex.split(runner["command"])
+        run = subprocess.run(
+            command,
+            cwd=base,
+            check=False,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+        if run.returncode != 0:
+            raise RuntimeError(
+                f"{language} assessment probe failed ({run.returncode}): "
+                f"{' '.join(command)}\n{run.stderr}"
+            )
+        fresh_raw = run.stdout.encode("utf-8")
+        verify_sha256(fresh_raw, runner["output_sha256"], f"{language} fresh output")
+        outputs[language] = run.stdout
+    return outputs
+
+
+def check_assessment(spec, outputs):
+    if not spec:
+        return 0, []
+
+    declared = {case["id"]: case for case in spec["cases"]}
+    failures = []
+    for language, text in outputs.items():
+        actual = parse_cases(text, f"{language} assessment")
+        missing = sorted(set(declared) - set(actual))
+        extra = sorted(set(actual) - set(declared))
+        if missing:
+            failures.append(
+                f"{language}: missing assessment cases {', '.join(missing)}"
+            )
+        if extra:
+            failures.append(
+                f"{language}: undeclared assessment cases {', '.join(extra)}"
+            )
+        for case_id, expected in declared.items():
+            result = actual.get(case_id)
+            if result is None:
+                continue
+            if result["status"] != "PASS":
+                failures.append(f"{language}: {case_id} did not PASS")
+            elif result["want"] != result["got"]:
+                failures.append(
+                    f"{language}: {case_id} printed PASS but want != got: "
+                    f"want={result['want']} got={result['got']}"
+                )
+            if result["want"] != expected["want"]:
+                failures.append(f"{language}: {case_id} want mismatch")
+            if result["got"] != expected["got"]:
+                failures.append(f"{language}: {case_id} got mismatch")
+    return len(declared), failures
 
 
 def main():
@@ -242,12 +337,27 @@ def main():
     )
     cross_total, cross_failures = check_cross_language(manifest, cross_outputs)
     failures.extend(cross_failures)
+
+    assessment_spec = manifest.get("native_check_assessment")
+    assessment_outputs = load_assessment_outputs(
+        assessment_spec, root, args.register_dir
+    )
+    assessment_total, assessment_failures = check_assessment(
+        assessment_spec, assessment_outputs
+    )
+    failures.extend(assessment_failures)
+
     if failures:
         for failure in failures:
             print(f"FAIL {failure}", file=sys.stderr)
         return 1
     print(f"PASS {checked_total} projection cases")
     print(f"PASS {cross_total} cross-language binding cases x2")
+    if assessment_spec:
+        print(
+            f"PASS {assessment_total} native-check assessment cases "
+            f"x{len(assessment_outputs)}"
+        )
     return 0
 
 

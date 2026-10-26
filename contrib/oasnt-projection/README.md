@@ -1,28 +1,80 @@
-# OASNT approval → CLC evidence projection（2026-10-17）
+# OASNT approval → CLC evidence projection（2026-10-25 更新）
 
-第三个投影探针，来自一个与 EMILIA 无关的体系：
-`draft-thallapelly-oasnt-02`（OASNT，一次性人工批准令牌）。
-前两个分别测了 Requirement 侧（AEC）与 Result 侧（Gilda）；这一个测
-**Fact + 动作绑定**侧。
+来自一个与 EMILIA 独立的体系：`draft-thallapelly-oasnt-02`（OASNT，一次性
+人工批准令牌）。它把"人类批准了哪个动作"绑定在令牌里，而不是用两个证据
+artifact 之间的关系来表达。
 
-输入字段核对自 OASNT-02 §5.3（claims）与 §6.2（canonical action），
-检查日期 2026-10-17。
+字段核对自 OASNT-02：§5.3（claims）、§6.2（canonical action 与 `adg`）、
+§7（验证步骤）。检查日期 2026-10-25。
+
+**输入是合成的 OASNT 形态证据，不是生产 JWT 字节。** 探针不实现 JWT 解析或
+签名验证，只演示"native verifier 已完成验证之后"如何把结果投影成 CLC 报告。
 
 ## 映射
 
-| OASNT | CLC | 说明 |
+| OASNT | CLC / report | 说明 |
 |---|---|---|
-| `sub` | Fact.subject | 谁的批准 |
-| `adg`（canonical action 的 SHA-256） | Observation 的动作绑定 | 验证方用呈现的动作重算 adg 并比对 |
-| `iat` / `exp` | Fact.issued_at / — | `iat` 驱动 freshness；`exp` 是有效期截止，与"年龄界"不同类 |
-| `int` | Fact.verified 的输入 | 只有它对 eligibility 的影响可表达；`compromised/unknown` → 不合格 |
+| `sub` | `Fact.subject` | 谁的批准 |
+| `adg`（canonical action 的 SHA-256） | `Observation.nativeActionDigest` | verifier 用自己呈现的动作重算；**`adg` 不是 CLC `ActionId`** |
+| 动作 → CLC 动作 | `Observation.clcActionId` + `mappingProfileDigest` | 只有 pinned action-mapping profile 才能建立关系；action mismatch 时不写 CLC `ActionId` |
+| `iat` | `Fact.issuedAt` | 驱动 freshness |
+| `exp` | — | 有效期截止，不是年龄界；CLC freshness 按年龄 |
+| `int=clean` | `oasnt:device-integrity` = `success` | 设备自述，不是证明 |
+| `int=compromised` | `oasnt:device-integrity` = `failed` | 构件不合格，不产生 eligible Fact |
+| `int=unknown` | `oasnt:device-integrity` = `unavailable` | 结果不可得，不推断 |
+| 令牌结构/签名/期限 + enrolled-key lookup | `oasnt:token-validity` = `success|failed|unavailable` | profile 自有 check ID |
 | `dsp` | — | 人类看到的披露内容，CLC 无此轴 |
-| `rqf` | — | 绑定到某一次具体请求；CLC 的身份是动作，不是请求实例 |
-| `asl` | — | 保证等级，载体所有 |
+| `rqf` | — | 绑定到某一次具体请求；CLC 身份是动作，不是请求实例 |
+| `asl` | — | 保证等级，载体与 relying-party policy 所有 |
 | `jti` | — | 一次性 nonce，消费归执行点（AEB/BCR） |
-| 嵌套参数 | — | OASNT 的 canonical action 是扁平表；嵌套需映射（其自身已知限制） |
+| 嵌套参数 | — | OASNT 的 canonical action 是扁平表；嵌套需显式映射 |
 
-## 实跑（`out-probe.txt`，6/6 PASS）
+`not_applicable` 不为 OASNT 虚构：OASNT-02 要求 `int`，正常情况下
+device-integrity 检查总是适用。四值中的 `not_applicable` 由 EMILIA/通用
+单元测试覆盖。
+
+## 与 EMILIA 共用同一套机制
+
+OASNT 不引入任何 carrier-specific 分支，只填同一组 report 类型：
+
+| 机制 | OASNT 的实例 |
+|---|---|
+| `NativeCheckExpectation`（期望清单） | `oasnt:token-validity`、`oasnt:device-integrity`，组件类型 `oasnt:approval-token`，组件身份为 artifact digest |
+| `NativeCheckResult`（显式结果） | 每条结果绑定 check、component、artifact digest、verifier 与 profile digest、核验时间；`success`/`failed` 另带 trust/status snapshot 与 freshness 决策 |
+| `NativeCheckAssessment` | 期望与结果比对：missing / unexpected / conflicting；空清单不算 complete |
+| `ProjectedObservation` | 同时记录 `adg` 与 pinned 映射后的 CLC `ActionId` |
+| `ProjectedEvidenceRecord` | artifact digest → Observation → Fact 的血缘；未产生 Fact 时 `fact` 为空 |
+| `Report.NativeChecksComplete` | 期望清单齐全且所需检查都有显式结果时才为 true |
+
+判定规则：只有 action match、期望清单完整、且每个 required gate 都是
+`success` 时才产生 eligible Fact。`jti` 未消费、`rqf` 未比对都不会被写成
+"证据检查成功"——它们属于 enforcement point。
+
+## 报告校验（M1/M2）
+
+OASNT 探针同时演示 report 层的两道校验：
+
+- **typed 值与 schema**：digest 统一为 `sha-256:<64 hex>`；freshness 是封闭
+  的 `fresh | cached | stale`（`success` 只接受前两者）；结构由
+  `register/docs/schemas/clc-evidence-report-v1.schema.json` 描述。
+- **profile 与 lineage**：fixture 声明 `statusModel: required`、
+  `requiredChecks` 和期望清单；report 内嵌该 profile。每个 Fact 必须恰好有一
+  条 `ProjectedEvidenceRecord`，且记录里的 `nativeCheckIds` 必须在**同一个
+  artifact digest** 上真有结果。`VerifyEvidenceReport` 对
+  `statusModel=required` 且 incomplete 的报告直接拒绝；不完整报告仍可生成并
+  查看（`OAS-NCHECK-006`）。
+- **生命周期**：已检查的分量声明 `statusSnapshotSource` 与
+  `statusSnapshotGeneration`，部署方可用 `SnapshotState` 拒绝回滚与 fork；
+  `ReplayEvidence` 的 JCS digest 即 `aecReplayDigest`，可按 artifact 逐字段
+  复现结果。探针只生成声明，不持有部署方状态。
+- **签名（已实现，探针未用）**：`SignEvidenceReport` /
+  `VerifySignedEvidenceReport` 把 JCS(report) 放进 DSSE envelope，每个签名是
+  PKCS#7 detached over `PAE(payloadType, payload)`；signer 的 AIC principal
+  与 key-hash 必须匹配报告声明的 `verifier`，最后在报告的 `appraisalTime`
+  重算 `Satisfaction`。探针使用合成证据、没有私钥，因此不生成签名；签名路径由
+  Go 单元测试覆盖。
+
+## 实跑（`out-probe.txt`，13/13 PASS）
 
 动作绑定：
 
@@ -32,6 +84,18 @@
 | amount 改为 3001 | NOT_EQUIVALENT |
 | 多加一个参数 | NOT_EQUIVALENT |
 
+native check 与报告：
+
+| case | 场景 | 结果 |
+|---|---|---|
+| `OAS-NCHECK-001` | 有效、`int=clean`、action match | 两个 success，报告完整，eligible，`SATISFIED` |
+| `OAS-NCHECK-002` | `int=compromised` | integrity `failed`，报告完整，无 eligible Fact |
+| `OAS-NCHECK-003` | `int=unknown` | integrity `unavailable`，报告完整，无 eligible Fact |
+| `OAS-NCHECK-004` | 令牌过期 | validity `failed`，报告完整，无 eligible Fact |
+| `OAS-NCHECK-005` | enrolled-key lookup 不可用 | validity `unavailable`，报告完整，无 eligible Fact |
+| `OAS-NCHECK-006` | 缺少 integrity 结果 | 不推断；assessment 报 missing，`complete=false` |
+| `OAS-NCHECK-007` | `adg` 与呈现动作不一致 | 两个检查 success、报告完整，但 action mismatch，无 eligible Fact，原因保留 |
+
 批准作为 CLC 事实（requirement：`human-authorization` + `freshness:sec:300`）：
 
 | 场景 | 结果 |
@@ -40,21 +104,17 @@
 | `int=compromised`（不合格） | UNSATISFIED |
 | 301 秒前 | UNSATISFIED |
 
-## 结论：关系型缺口是**精确**的，不是普遍的
+## 这证明了什么、不证明什么
 
-OASNT **没有**出现 `required_bindings` / `agreement` 那类缺口——因为它是用
-**身份**（adg）把批准绑到动作，而不是用**关系**连接两个证据 artifact。
+- 证明：同一套 Observation / Expectation / Result / Assessment / Lineage 机制
+  可以服务两个互不相关的载体，且没有按载体分支；缺失结果和同类型多构件漏报
+  都能被期望清单发现。
+- 不证明：CLC-E 一致性。OASNT 探针是回归与互操作证据；没有跨语言 native-check
+  语料，没有正式 report schema，没有 report 自身的签名/认证模型，报文的真实
+  性和 AEC replay 重放也未实现。CLC-E 仍未声明。
+- OASNT 不是 EMILIA 的 profile，本文也不表示 OASNT 得到 IETF 背书。
 
-这正好校准了通用规则：
-
-> 关系型缺口只在载体包含"artifact 之间关系"时出现（AEC 的 `required_bindings`、
-> Gilda 的 `agreement`）；用身份/摘要绑定的载体（OASNT）不需要任何额外机制。
-> binding profile 只需在遇到关系型成员时声明"归一化为事实或外部执行"。
-
-三个探针合起来覆盖了投影模型的三个面：**Requirement（AEC）**、
-**Result（Gilda）**、**Fact + 身份（OASNT）**。
-
-运行：
+## 运行
 
 ```sh
 (cd ../register && go run ./cmd/oasnt-projection-probe)

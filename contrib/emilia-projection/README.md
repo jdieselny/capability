@@ -30,7 +30,7 @@
 | `requirement_id` | `requirement_id` | 原样 |
 | `@version` | `CLC-REQUIREMENT-v1` | 版本改写 |
 | `purpose` | `purpose` | 保留为描述性字段，不参与求值 |
-| `status_required` | `RequiredNativeChecks` | AEB/载体负责状态查询，不作为证据 Fact |
+| `status_required` | `RequiredNativeChecks` + `NativeCheckResults` | AEB/载体负责状态查询，不作为证据 Fact；role 必须通过 pinned RoleMap，每一项检查、每一个分量都必须有一条显式结果记录 |
 | `required_bindings` | 新角色 `clc:evidence-binding:<base64url(uint32be(len)||part…)>` | native verifier 输出派生事实；原 `ep-quorum` 和 `policy-permit` 均保留 |
 | `subject_id_source` | `RequiredNativeChecks` | AEC-08 要求值为 `native-verifier`；CLC 不自行推断 |
 
@@ -50,7 +50,40 @@
 
 两者都是 report 字段，不是 `CLC Requirement` 或 `Satisfaction` 的成员。
 
-## 实际求值结果（`out-probe.txt`，13/13 PASS）
+## 投影本身的三语言一致性（`EMI-PROJ-*`，19/19 PASS）
+
+`probe.py`、`probe.mjs` 现在**自己实现** AEC → CLC-REQUIREMENT-v1 的投影
+（freshness/quorum 约束、binding 角色编码、JCS 摘要），并与 Go 及共享 fixture
+比对：
+
+| case | 内容 |
+|---|---|
+| `EMI-PROJ-001` | 投影出的 CLC requirement 与 fixture 逐字节 JCS 一致 |
+| `EMI-PROJ-002` | source requirement digest 一致 |
+| `EMI-PROJ-003` | projected requirement digest 一致 |
+| `EMI-PROJ-004` | 未知 AEC 成员被拒绝 |
+| `EMI-PROJ-005` | 未 pin 的 role 被拒绝 |
+| `EMI-PROJ-006` | 投影后表达式超过 CLC 512 字节被拒绝 |
+| `EMI-PROJ-007` | 未知 role constraint 类型被拒绝 |
+| `EMI-PROJ-008` | `subject_id_source=presenter` 被拒绝 |
+| `EMI-PROJ-009` | binding 分量为空被拒绝 |
+| `EMI-PROJ-010` | quorum 阈值 < 2 被拒绝 |
+| `EMI-PROJ-011` | 非法表达式语法被拒绝 |
+| `EMI-PROJ-012` | role_constraints 内未知成员被拒绝 |
+| `EMI-PROJ-013` | 负 freshness 被拒绝 |
+| `EMI-PROJ-014` | 未知 AEC `@version` 被拒绝 |
+| `EMI-PROJ-015` | 缺少 `requirement_id` 被拒绝 |
+| `EMI-PROJ-016` | binding 标识符含非法字符被拒绝 |
+| `EMI-PROJ-017` | binding 编码后角色超过 256 字节被拒绝 |
+| `EMI-PROJ-018` | `required_bindings` 内未知成员被拒绝 |
+| `EMI-PROJ-019` | 未 pin 的 `status_required` role 被拒绝 |
+
+这是“投影规则”而不是“求值结果”的跨语言证据：三份实现独立生成同一个
+canonical requirement 与两个 digest，并对未知成员、未 pin role、超长表达式
+做出相同的拒绝。Python/TS 的实现也做了 AEC 成员闭合检查、标识符字符集检查和
+UTF-8 字节序排序。
+
+## 实际求值结果（`out-probe.txt`，32/32 PASS）
 
 | # | 事实 | 期望 | 实际 |
 |---|---|---|---|
@@ -75,7 +108,27 @@ CLC 动作身份（CAID 的 `tool.call.1` 形态 → CLC §4.2；不解析 CAID 
    ⇒ binding profile 必须给出角色映射表，不能留给实现猜。
 2. **`status_required`**：要求"新鲜的状态结果"，CLC 没有对应约束类型；只能由
    AEB/载体执行，并作为 `RequiredNativeChecks` 返回。该检查不能由证据 Fact
-   代替。
+   代替。`RequiredNativeChecks` 只说明**应该跑什么**，不说明跑过没有；report
+   必须为每项必需检查、每个分量给出一条显式 `NativeCheckResult`，成功的检查
+   也要有记录。空的不可用列表不构成任何证明。结果使用封闭的四种 outcome：
+
+   | outcome | 含义 |
+   |---|---|
+   | `success` | 检查已执行且通过；只有它可能先于 eligible Fact |
+   | `failed` | 检查已执行且该构件不合格；**已核实的 revoked 状态是 `failed`** |
+   | `unavailable` | 必需的来源或结果无法取得或求值 |
+   | `not_applicable` | profile 明确认定该检查不适用 |
+
+   四者必须保持区分。每条记录都绑定 check ID、native component type、构件证据
+   摘要（同一类型有多个构件时用于区分）、verifier 与其 profile 摘要、核验
+   时间；即使检查不可用或不适用，也不能丢掉构件身份。`success` 和 `failed`
+   还必须绑定 trust snapshot 摘要、status snapshot 摘要与 freshness 决策。
+   `unavailable` 或 `not_applicable` 必须给出稳定原因；实际取得的 trust、status
+   或 freshness 材料应保留，但不得为不存在的快照编造摘要。记录可用时还携带
+   AEC replay 摘要。report 级的 `NativeChecksComplete` 只在 `status_required`
+   的每项检查都有可归属结果时为 true；它是 report 元数据，不是 CLC verdict，
+   且只证明调用方提交的构件结果完整，native profile 仍须对未提交的漏项负责。
+   CLC 不做任何状态查询或刷新。
 3. **`required_bindings`**（`policy-permit -permits-> ep-quorum`）：CLC
    不直接比较事实间关系，因此由 native verifier 把它归一化为
    一个由三元组稳定派生的角色。requirement 改写为
@@ -99,15 +152,21 @@ source/target/action/status 的实际绑定由 native verifier 负责，不由 C
 重新计算。probe 用 `EMI-BIND-006` 明确记录这条边界，避免把 role 在场误写成
 CLC 已验证关系内容。
 
-不可用（unavailable）与失败（failed）在报告中保持区分：不可用的分量不产生
-eligible Fact，其 native 原因保留在 report 中；在 `A OR B` 下，若 B 可用且
-满足表达式，结果仍可为 `SATISFIED`，但 A 的不可用原因不会消失。显式声明的
-role constraint 失败或 required binding 无法建立时，整个 requirement 仍为
-`UNSATISFIED`。证据侧不产生 `allow_unresolved`；该 verdict 只属于授权侧。
+`failed`、`unavailable` 与 `not_applicable` 在报告中保持区分，且不会因为某个
+`OR` 分支已满足而消失：不合格的分量不产生 eligible Fact，其 native 原因保留在
+report 中；在 `A OR B` 下，若 B 可用且满足表达式，结果仍可为 `SATISFIED`，但 A
+的结果（不可用，或已核实的 revoked 记为 `failed`）不会消失。显式声明的 role
+constraint 失败或 required binding 无法建立时，整个 requirement 仍为
+`UNSATISFIED`。若 `status_required` 的某项检查没有结果，report 表达式仍可能由
+其余 eligible facts 满足，但该 `Satisfaction` 不得表述为最终 native 校验，
+且 `NativeChecksComplete` 为 false。证据侧不产生 `allow_unresolved`；该 verdict
+只属于授权侧。
 
 Python 和 TypeScript runner（`probe.py`、`probe.mjs`）读取 register 仓库中的
-同一 `emilia-binding-fixture-v1.json`，并输出同样的 13 个 case ID、
-`want` 和 `got`。Go 通过 `go:embed` 读取该 fixture。
+同一 `emilia-binding-fixture-v1.json`，输出同样的 32 个 case ID、
+`want` 和 `got`。Go 通过 `go:embed` 读取该 fixture；求值事实也来自
+fixture 的 `evidence_cases`，三份实现不再各留一份。每个 case 行都满足
+`want == got`（`want` 是完整期望，而不是只写 verdict 前缀）。
 
 ## 结论
 

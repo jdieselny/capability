@@ -21,20 +21,23 @@ const digestObject = (value) =>
     .update(Buffer.from(clc.canonicalJSON(value), 'utf8'))
     .digest('hex');
 
+const utf8Compare = (a, b) =>
+  Buffer.compare(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'));
+
 function relationTuple(binding) {
-  const subjects = binding.targets.map((target) => target.subject).sort();
+  const subjects = binding.targets.map((target) => target.subject).sort(utf8Compare);
   const issuedAt = [binding.source.issued_at,
-    ...binding.targets.map((target) => target.issued_at)].sort();
+    ...binding.targets.map((target) => target.issued_at)].sort(utf8Compare);
   return {
-    requirement_id: 'treasury-wire-evidence@7',
+    requirement_id: binding.requirement_id,
     policy_generation: binding.source.policy_generation,
     from: {
-      type: 'policy-permit',
+      type: binding.source.type,
       artifact_digest: digestObject(binding.source),
     },
-    relation: 'permits',
+    relation: binding.relation,
     to: {
-      type: 'ep-quorum',
+      type: binding.targets[0].type,
       artifact_set_digest: digestObject(binding.targets),
     },
     action_digest: digestObject(binding.action),
@@ -61,8 +64,9 @@ function mutate(binding, mutation) {
 
 function evidenceFacts(testCase, now, subject) {
   const facts = [];
-  for (const [role, entries] of Object.entries(testCase.facts)) {
-    for (const entry of entries) {
+  const roles = Object.keys(testCase.facts).sort(utf8Compare);
+  for (const role of roles) {
+    for (const entry of testCase.facts[role]) {
       facts.push({
         type: role,
         subject: entry.subject === '$binding' ? subject : entry.subject,
@@ -83,14 +87,227 @@ function printCase(id, name, want, got, expectedGot = want) {
   console.log(`${status} ${id} ${name.padEnd(55)} want=${want} got=${got}`);
 }
 
+const ROLE_MAP = {
+  'ep-human-authorization': 'ep-quorum',
+  'ep-quorum': 'ep-quorum',
+  'policy-permit': 'policy-permit',
+};
+
+const AEC_VERSION = 'EP-AEC-REQUIREMENT-v1';
+const AEC_TOP = new Set([
+  '@version', 'requirement_id', 'purpose', 'expression', 'freshness_sec',
+  'status_required', 'role_constraints', 'required_bindings',
+]);
+const AEC_ROLE_CONSTRAINT = new Set([
+  'type', 'component_type', 'threshold', 'subject_id_source',
+]);
+const AEC_BINDING = new Set(['from_type', 'relation', 'to_type']);
+const AEC_IDENT = /^[A-Za-z0-9._:-]+$/;
+
+function checkAecMembers(source) {
+  for (const key of Object.keys(source)) {
+    if (!AEC_TOP.has(key)) throw new Error(`unknown AEC member ${key}`);
+  }
+  for (const [index, rc] of (source.role_constraints ?? []).entries()) {
+    for (const key of Object.keys(rc)) {
+      if (!AEC_ROLE_CONSTRAINT.has(key)) {
+        throw new Error(`role_constraints[${index}] unknown member ${key}`);
+      }
+    }
+  }
+  for (const [index, binding] of (source.required_bindings ?? []).entries()) {
+    for (const key of Object.keys(binding)) {
+      if (!AEC_BINDING.has(key)) {
+        throw new Error(`required_bindings[${index}] unknown member ${key}`);
+      }
+    }
+  }
+}
+
+function checkAecIdentifier(field, value) {
+  if (typeof value !== 'string' || !AEC_IDENT.test(value)) {
+    throw new Error(`AEC ${field} is outside the identifier set`);
+  }
+}
+
+function mapRole(role) {
+  if (!Object.prototype.hasOwnProperty.call(ROLE_MAP, role)) {
+    throw new Error(`AEC role ${role} has no pinned CLC mapping`);
+  }
+  return ROLE_MAP[role];
+}
+
+function bindingRoleName(fromType, relation, toType) {
+  const parts = [fromType, relation, toType].map((part) => {
+    const bytes = Buffer.from(part, 'utf8');
+    if (bytes.length > 256) {
+      throw new Error('AEC required_bindings part is too long');
+    }
+    const len = Buffer.alloc(4);
+    len.writeUInt32BE(bytes.length);
+    return Buffer.concat([len, bytes]);
+  });
+  const role = 'clc:evidence-binding:'
+    + Buffer.concat(parts).toString('base64url');
+  if (role.length > 256) {
+    throw new Error('encoded binding role exceeds 256 bytes');
+  }
+  return role;
+}
+
+function projectAec(source) {
+  if (source['@version'] !== AEC_VERSION) {
+    throw new Error(`unsupported AEC version ${source['@version']}`);
+  }
+  checkAecMembers(source);
+  if (!source.requirement_id) throw new Error('AEC requirement_id is required');
+  const constraints = [];
+  const freshness = source.freshness_sec ?? {};
+  const roles = Object.keys(freshness).sort(
+    (a, b) => Buffer.compare(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8')),
+  );
+  for (const role of roles) {
+    constraints.push({
+      role: mapRole(role),
+      constraint: `varwof/evidence-v1:freshness:sec:${freshness[role]}`,
+    });
+  }
+  for (const rc of source.role_constraints ?? []) {
+    if (rc.type !== 'distinct-subject-quorum') {
+      throw new Error(`unsupported role constraint ${rc.type}`);
+    }
+    if (rc.subject_id_source !== 'native-verifier') {
+      throw new Error('subject_id_source must be native-verifier');
+    }
+    constraints.push({
+      role: mapRole(rc.component_type),
+      constraint: `varwof/evidence-v1:quorum:distinct:${rc.threshold}`,
+    });
+  }
+
+  for (const role of source.status_required ?? []) {
+    if (!role || !Object.prototype.hasOwnProperty.call(ROLE_MAP, role)) {
+      throw new Error(`AEC status_required role ${role} has no pinned mapping`);
+    }
+  }
+
+  const parts = [`(${source.expression})`];
+  const seen = new Set();
+  for (const binding of source.required_bindings ?? []) {
+    for (const field of ['from_type', 'relation', 'to_type']) {
+      checkAecIdentifier(field, binding[field]);
+    }
+    const role = bindingRoleName(
+      binding.from_type, binding.relation, binding.to_type,
+    );
+    if (!seen.has(role)) {
+      parts.push(role);
+      seen.add(role);
+    }
+  }
+
+  const out = {
+    '@version': 'CLC-REQUIREMENT-v1',
+    requirement_id: source.requirement_id,
+  };
+  if (source.purpose) out.purpose = source.purpose;
+  out.expression = parts.join(' AND ');
+  if (Buffer.byteLength(out.expression, 'utf8') > 512) {
+    throw new Error('projected expression exceeds the CLC 512-byte limit');
+  }
+  if (constraints.length > 0) out.constraints = constraints;
+  return out;
+}
+
+function requirementDigest(value) {
+  return 'sha-256:'
+    + createHash('sha256')
+      .update(Buffer.from(clc.canonicalJSON(value), 'utf8'))
+      .digest('hex');
+}
+
 const fixture = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
 const subject = bindingSubject(fixture.binding);
 const bindingRole = fixture.binding_role;
+{
+  const required = fixture.source_requirement.required_bindings[0];
+  if (bindingRoleName(required.from_type, required.relation, required.to_type)
+      !== bindingRole) throw new Error('required binding role drifted');
+  const endpoints = fixture.binding;
+  if (bindingRoleName(
+    endpoints.source.type, endpoints.relation, endpoints.targets[0].type,
+  ) !== bindingRole) throw new Error('binding tuple endpoints drifted');
+}
 
 console.log('EMILIA → CLC evidence projection probe (TypeScript)');
 console.log('fixture: register/cmd/emilia-projection-probe/testdata/'
   + 'emilia-binding-fixture-v1.json');
 console.log();
+
+{
+  const source = fixture.source_requirement;
+  const projected = projectAec(source);
+  const expected = fixture.mapped_requirement;
+  printCase('EMI-PROJ-001', 'AEC projects to the pinned CLC requirement',
+    'match',
+    clc.canonicalJSON(projected) === clc.canonicalJSON(expected)
+      ? 'match' : 'different');
+  printCase('EMI-PROJ-002', 'source requirement digest',
+    fixture.requirement_digests.source, requirementDigest(source));
+  printCase('EMI-PROJ-003', 'projected requirement digest',
+    fixture.requirement_digests.projected, requirementDigest(projected));
+}
+
+{
+  const negativeSource = fixture.source_requirement;
+  const negative = [
+    ['EMI-PROJ-004', 'unknown AEC member rejected',
+      (doc) => { doc.authorized = true; }],
+    ['EMI-PROJ-005', 'unpinned role rejected',
+      (doc) => { doc.freshness_sec = { unpinned: 30 }; }],
+    ['EMI-PROJ-006', 'over-long projected expression rejected',
+      (doc) => { doc.expression = 'a'.repeat(520); }],
+    ['EMI-PROJ-007', 'unknown role constraint rejected',
+      (doc) => { doc.role_constraints[0].type = 'new-constraint'; }],
+    ['EMI-PROJ-008', 'presenter-supplied subject rejected',
+      (doc) => { doc.role_constraints[0].subject_id_source = 'presenter'; }],
+    ['EMI-PROJ-009', 'empty binding part rejected',
+      (doc) => { doc.required_bindings[0].from_type = ''; }],
+    ['EMI-PROJ-010', 'quorum below two rejected',
+      (doc) => { doc.role_constraints[0].threshold = 1; }],
+    ['EMI-PROJ-011', 'invalid expression grammar rejected',
+      (doc) => { doc.expression = 'ep-quorum AND'; }],
+    ['EMI-PROJ-012', 'unknown nested role-constraint member rejected',
+      (doc) => { doc.role_constraints[0].note = 'x'; }],
+    ['EMI-PROJ-013', 'negative freshness rejected',
+      (doc) => { doc.freshness_sec['ep-quorum'] = -1; }],
+    ['EMI-PROJ-014', 'unknown AEC version rejected',
+      (doc) => { doc['@version'] = 'EP-AEC-REQUIREMENT-v2'; }],
+    ['EMI-PROJ-015', 'missing requirement id rejected',
+      (doc) => { delete doc.requirement_id; }],
+    ['EMI-PROJ-016', 'invalid binding identifier rejected',
+      (doc) => { doc.required_bindings[0].from_type = 'policy permit'; }],
+    ['EMI-PROJ-017', 'over-long binding role rejected',
+      (doc) => { doc.required_bindings[0].from_type = 'a'.repeat(200); }],
+    ['EMI-PROJ-018', 'unknown nested binding member rejected',
+      (doc) => { doc.required_bindings[0].note = 'x'; }],
+    ['EMI-PROJ-019', 'unpinned status_required role rejected',
+      (doc) => { doc.status_required = ['unpinned']; }],
+  ];
+  for (const [id, name, mutate] of negative) {
+    const candidate = JSON.parse(JSON.stringify(negativeSource));
+    mutate(candidate);
+    let got = 'rejected';
+    try {
+      const projected = projectAec(candidate);
+      evidence.evaluateRequirement(projected, [], { now: fixture.now });
+      got = 'accepted';
+    } catch {
+      // expected
+    }
+    printCase(id, name, 'rejected', got);
+  }
+}
 
 printCase('EMI-BIND-001', 'base relation tuple has the pinned subject',
   fixture.expected_subject, subject);
@@ -101,8 +318,8 @@ for (const testCase of fixture.evidence_cases) {
     evidenceFacts(testCase, fixture.now, subject),
     { now: fixture.now },
   );
-  printCase(testCase.id, testCase.name, testCase.want,
-    verdictString(verdict, reason), testCase.expected_got);
+  printCase(testCase.id, testCase.name, testCase.expected_got,
+    verdictString(verdict, reason));
 }
 
 const caid = fixture.caid;

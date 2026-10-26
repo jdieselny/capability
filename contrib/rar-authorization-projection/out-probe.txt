@@ -8,8 +8,8 @@ Members: RFC 9396 §2/§3 (checked 2026-10-17)
 
 2. Operations
 PASS RAR-001 transfer 3000 CNY                    want=allow got=allow
-PASS RAR-002 transfer 6000 CNY (above bound)      want=deny got=deny/params_exceed_grant
-PASS RAR-003 transfer 3000 USD (not the enum)     want=deny got=deny/not_in_enum
+PASS RAR-002 transfer 6000 CNY (above bound)      want=deny/params_exceed_grant got=deny/params_exceed_grant
+PASS RAR-003 transfer 3000 USD (not the enum)     want=deny/not_in_enum got=deny/not_in_enum
 PASS RAR-004 refund 1000 CNY (second action)      want=allow got=allow
 
 Reading: actions multiply into grants, type-specific fields become params,

@@ -2,8 +2,8 @@ ASOR delegation chain → CLC authorization projection
 Fields: draft-asor-wimse-agent-delegation-chain-02 §3/§4.1/§4.2 (checked 2026-10-17)
 
 1. Mapping
-PASS ASOR-001 root token maps to three grants        want=mapping-exact got=grants=3
-PASS ASOR-002 leaf token maps to one grant           want=mapping-exact got=grants=1
+PASS ASOR-001 root token maps to three grants        want=grants=3,exact=true got=grants=3,exact=true
+PASS ASOR-002 leaf token maps to one grant           want=grants=1,exact=true got=grants=1,exact=true
    asor/agent-delegation-v1:crm:customer:read params=map[max_rows:5000]
    asor/agent-delegation-v1:crm:customer:write params=map[max_rows:5000]
    asor/agent-delegation-v1:crm:* params=map[max_rows:5000]
@@ -21,7 +21,7 @@ PASS ASOR-003 every leaf grant is contained          want=contains=true got=cont
 3. Chain authorization for an operation
 PASS ASOR-004 read, max_rows 2000 (inside leaf)      want=allow got=allow
 PASS ASOR-005 read, max_rows 3000 (at leaf bound)    want=allow got=allow
-PASS ASOR-006 read, max_rows 3001 (above leaf)       want=deny got=deny/params_exceed_grant
+PASS ASOR-006 read, max_rows 3001 (above leaf)       want=deny/params_exceed_grant got=deny/params_exceed_grant
 PASS ASOR-007 write (root only, leaf lacks it)       want=no-chain got=no-chain
 
 Reading: CLC decides the scope/constraint subset steps; par_hash, depth,

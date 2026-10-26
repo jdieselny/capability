@@ -1,12 +1,31 @@
 EMILIA → CLC evidence projection probe (TypeScript)
 fixture: register/cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json
 
+PASS EMI-PROJ-001 AEC projects to the pinned CLC requirement              want=match got=match
+PASS EMI-PROJ-002 source requirement digest                               want=sha-256:c55a4dae12bfdc8e283d0006ee71cedf5acf04447380b628af490f8f66d3c3fc got=sha-256:c55a4dae12bfdc8e283d0006ee71cedf5acf04447380b628af490f8f66d3c3fc
+PASS EMI-PROJ-003 projected requirement digest                            want=sha-256:90da16ad7e18f56fa5c4978f8e66a8f6249b7d3084ea93e8765a5ac763b3325c got=sha-256:90da16ad7e18f56fa5c4978f8e66a8f6249b7d3084ea93e8765a5ac763b3325c
+PASS EMI-PROJ-004 unknown AEC member rejected                             want=rejected got=rejected
+PASS EMI-PROJ-005 unpinned role rejected                                  want=rejected got=rejected
+PASS EMI-PROJ-006 over-long projected expression rejected                 want=rejected got=rejected
+PASS EMI-PROJ-007 unknown role constraint rejected                        want=rejected got=rejected
+PASS EMI-PROJ-008 presenter-supplied subject rejected                     want=rejected got=rejected
+PASS EMI-PROJ-009 empty binding part rejected                             want=rejected got=rejected
+PASS EMI-PROJ-010 quorum below two rejected                               want=rejected got=rejected
+PASS EMI-PROJ-011 invalid expression grammar rejected                     want=rejected got=rejected
+PASS EMI-PROJ-012 unknown nested role-constraint member rejected          want=rejected got=rejected
+PASS EMI-PROJ-013 negative freshness rejected                             want=rejected got=rejected
+PASS EMI-PROJ-014 unknown AEC version rejected                            want=rejected got=rejected
+PASS EMI-PROJ-015 missing requirement id rejected                         want=rejected got=rejected
+PASS EMI-PROJ-016 invalid binding identifier rejected                     want=rejected got=rejected
+PASS EMI-PROJ-017 over-long binding role rejected                         want=rejected got=rejected
+PASS EMI-PROJ-018 unknown nested binding member rejected                  want=rejected got=rejected
+PASS EMI-PROJ-019 unpinned status_required role rejected                  want=rejected got=rejected
 PASS EMI-BIND-001 base relation tuple has the pinned subject              want=qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s got=qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s
 PASS EMI-AEC-001 two verified approvals, permit and binding              want=SATISFIED got=SATISFIED
-PASS EMI-AEC-002 one approval unverified                                 want=UNSATISFIED got=UNSATISFIED/quorum:distinct_subjects=1<threshold=2
-PASS EMI-AEC-003 fresh binding does not refresh an old approval          want=UNSATISFIED got=UNSATISFIED/freshness:stale
-PASS EMI-AEC-004 missing derived binding fact                            want=UNSATISFIED got=UNSATISFIED/requirement:expression_false
-PASS EMI-AEC-005 facts typed ep-human-authorization (literal component_type) want=UNSATISFIED got=UNSATISFIED/requirement:expression_false
+PASS EMI-AEC-002 one approval unverified                                 want=UNSATISFIED/quorum:distinct_subjects=1<threshold=2 got=UNSATISFIED/quorum:distinct_subjects=1<threshold=2
+PASS EMI-AEC-003 fresh binding does not refresh an old approval          want=UNSATISFIED/freshness:stale got=UNSATISFIED/freshness:stale
+PASS EMI-AEC-004 missing derived binding fact                            want=UNSATISFIED/requirement:expression_false got=UNSATISFIED/requirement:expression_false
+PASS EMI-AEC-005 facts typed ep-human-authorization (literal component_type) want=UNSATISFIED/requirement:expression_false got=UNSATISFIED/requirement:expression_false
 PASS EMI-CAID-001 CLC projection: extra non-material occurrence_id        want=MATCH got=MATCH
 PASS EMI-CAID-002 CLC projection: material args amount changed            want=NOT_EQUIVALENT got=NOT_EQUIVALENT
 PASS EMI-BIND-002 source mutation changes the relation subject            want=different got=different

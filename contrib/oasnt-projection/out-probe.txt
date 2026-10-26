@@ -1,6 +1,7 @@
 OASNT approval → CLC evidence projection
-Fields: draft-thallapelly-oasnt-02 §5.3/§6.2 (checked 2026-10-17)
-
+Fields: draft-thallapelly-oasnt-02 §5.3/§6.2/§7 (checked 2026-10-25)
+fixture: synthetic OASNT-shaped evidence, not production JWT bytes
+subject: user:alice@example.org
 canonical action: payments.transfer|amount=3000&currency=CNY
 adg: 0MRb5YozGHPT71GiH-DSFLJm1s2G4ZDLfiBE_CD_UzE
 
@@ -9,21 +10,29 @@ PASS OAS-ADG-001 same action                  want=MATCH got=MATCH
 PASS OAS-ADG-002 amount 3001                  want=NOT_EQUIVALENT got=NOT_EQUIVALENT
 PASS OAS-ADG-003 extra parameter added        want=NOT_EQUIVALENT got=NOT_EQUIVALENT
 
-2. Approval as a CLC fact (§10 requirement over one role)
+2. Explicit native-check results and the fact-lineage report
+PASS OAS-NCHECK-001 valid token, int=clean, action match         req=SATISFIED want=validity=success,integrity=success,action=MATCH,complete=true,eligible=true got=validity=success,integrity=success,action=MATCH,complete=true,eligible=true
+PASS OAS-NCHECK-002 int=compromised                              req=UNSATISFIED/requirement:expression_false want=validity=success,integrity=failed,action=MATCH,complete=true,eligible=false got=validity=success,integrity=failed,action=MATCH,complete=true,eligible=false
+PASS OAS-NCHECK-003 int=unknown                                  req=UNSATISFIED/requirement:expression_false want=validity=success,integrity=unavailable,action=MATCH,complete=true,eligible=false got=validity=success,integrity=unavailable,action=MATCH,complete=true,eligible=false
+PASS OAS-NCHECK-004 expired token                                req=UNSATISFIED/requirement:expression_false want=validity=failed,integrity=success,action=MATCH,complete=true,eligible=false got=validity=failed,integrity=success,action=MATCH,complete=true,eligible=false
+PASS OAS-NCHECK-005 enrolled-key lookup unavailable              req=UNSATISFIED/requirement:expression_false want=validity=unavailable,integrity=success,action=MATCH,complete=true,eligible=false got=validity=unavailable,integrity=success,action=MATCH,complete=true,eligible=false
+PASS OAS-NCHECK-006 integrity result omitted                     req=UNSATISFIED/requirement:expression_false missing=1 want=validity=success,integrity=missing,action=MATCH,complete=false,eligible=false got=validity=success,integrity=missing,action=MATCH,complete=false,eligible=false
+PASS OAS-NCHECK-007 adg mismatch against the presented action    req=UNSATISFIED/requirement:expression_false reason=oasnt:action-mismatch want=validity=success,integrity=success,action=MISMATCH,complete=true,eligible=false got=validity=success,integrity=success,action=MISMATCH,complete=true,eligible=false
+
+3. Approval as a CLC fact (§10 requirement over one role)
 PASS OAS-FACT-001 int=clean, approved 30s ago      want=SATISFIED got=SATISFIED
 PASS OAS-FACT-002 int=compromised (not eligible)   want=UNSATISFIED got=UNSATISFIED
 PASS OAS-FACT-003 approved 301s ago                want=UNSATISFIED got=UNSATISFIED
 
-3. Members with no CLC axis (residual, carrier or enforcement point)
-   - dsp: what the human read; CLC has no disclosure axis
-   - rqf: one concrete request; CLC identity is the action, not the request instance
-   - asl: assurance level; carrier-owned
-   - int: device integrity; only its effect on eligibility is expressible (verified)
-   - jti: single-use nonce; consumption is the enforcement point's (AEB/BCR)
+4. Members with no CLC axis (residual, carrier or enforcement point)
+   - jti: single-use nonce; consumption belongs to the enforcement point, never reported as evidence success
+   - dsp: disclosure the human read; CLC has no disclosure axis
+   - rqf: one concrete request fingerprint; CLC identity is the action, not the request instance
+   - asl: assurance level; carrier-owned and relying-party-policy-owned
    - exp: validity deadline, not an age bound; CLC freshness is age-based
-   - nested parameters: the canonical action is flat; nested args need a mapping
+   - int is device-asserted, not proven by the token; the report records the asserted result and its gating effect only
+   - nested parameters: the OASNT canonical action is flat; nested arguments need an explicit mapping
 
-Reading: OASNT projects cleanly onto one Fact plus an action binding; the
-rest are carrier or enforcement members.  The relation-shaped gap does not
-appear here because OASNT binds approval to an action by identity, not by a
-relation between two evidence artifacts.
+Reading: the same expectation inventory, closed outcomes and Fact lineage
+serve OASNT without a carrier-specific branch.  adg is not a CLC ActionId;
+the observation records both and the pinned mapping profile relates them.

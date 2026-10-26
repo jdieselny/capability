@@ -1,23 +1,30 @@
 {
   "@version": "clc-projection-cases-v1",
-  "corpus_base_revision": "260dc231c5244e7ee328aa3a0ae335c8a634a78d",
-  "corpus_base_revision_note": "This manifest, corrected example and regenerated outputs are working-tree changes based on this revision; the resulting capability commit is the corpus revision to cite after publication.",
+  "corpus_base_revision": "4872e3a000575daba5bbfd4ef4ec6a8ae535c433",
+  "corpus_base_revision_note": "Committed on top of this revision; the commit that introduces this manifest is the corpus revision to cite after publication.",
   "probe_repository": "https://github.com/varwof/register",
   "probe_base_revision": "c4cbc53f117e7e7dc3eae980267c5b6e12f08e50",
-  "probe_revision": "5a77ff55e6bf94b7adb0124b49db04d62bd9e976",
+  "probe_revision": "3a2c2cbd54fbdf069b2710c0f34c7b98a4073bb6",
   "probe_source_sha256": {
-    "cmd/asor-projection-probe/main.go": "c86579790062a74af25d673bae0287be4e1fdc558d27f6893bde17d6e3b99088",
-    "cmd/emilia-projection-probe/main.go": "f95c768dd71eef6ebc22b7ed939879c9d4263a1ab4c95097a519b09ab3f02a04",
-    "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json": "ae7365d9cef819f3af9b26869dd313d4357298b44c1ae2908106fcbb3781e70a",
+    "cmd/asor-projection-probe/main.go": "871fbf53ef27ef710537b87e4240a9fbfcf170c4057a37038ce9c0673a7b1fda",
+    "cmd/emilia-projection-probe/main.go": "a4a2e7c5c1bd107d29fde6803406c96778fadfaf7514aa0b8a78e2bba74ad5b0",
+    "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json": "9e01dbf30c06dcd56beedcbc93cd09a8e4bf181f0da75fed494f5f4a24f5ba25",
     "cmd/gilda-projection-probe/main.go": "ee22fe91ac42999514509336db470b9864ab631541a971b97ea4beffd2c87ffb",
-    "cmd/oasnt-projection-probe/main.go": "70a89c94cc6d80b307042a91197891a97f450b7c82ddc0f5d4542189dbb6a9fd",
-    "cmd/rar-projection-probe/main.go": "a4251020dd7de8c99c1466962d3dbcc1c5ed1c1942761e2cab02ef3189c39b6a"
+    "cmd/oasnt-projection-probe/main.go": "7df80215f3833b4f64c3bb35ed43774c3ec448aa922defcd3acb6a56fc2ac421",
+    "cmd/rar-projection-probe/main.go": "10e13471eebe676db9294f798b1f6414c556ace1b7d9a46fc3802093414c6d86",
+    "cmd/oasnt-projection-probe/testdata/oasnt-approval-fixture-v1.json": "c167237744880b8aa2f6de1c1a15e839dd11648d7082ee2c511fa3844f922889",
+    "cmd/izmaylov-projection-probe/main.go": "02b1c2c867ae5593543623012cf4fd3a322d20928d25934679fc8e93835ac32f",
+    "cmd/izmaylov-projection-probe/testdata/izmaylov-signature-fixture-v1.json": "d779bbd676599184a261f7280e3e6f53db1671caf39a6917413de90c4f21d68c",
+    "cmd/izmaylov-projection-probe/testdata/izmaylov-containment-fixture-v1.json": "4dc54254d1f2c141e2ab31b2426656b346ce89ec8eb08993f637faa7d08a438e",
+    "cmd/izmaylov-projection-probe/testdata/izmaylov-conditions-fixture-v1.json": "2063d24834dfa8dc542fa38db033deeaf28aba88c4b73eb11c874615ea59223c",
+    "cmd/izmaylov-projection-probe/testdata/izmaylov-log-inclusion-fixture-v1.json": "178736e4a31d0d6b50e8c31a285e77597b0170109d3843b6cc8a8e0da9933f6c",
+    "cmd/izmaylov-projection-probe/testdata/izmaylov-log-consistency-fixture-v1.json": "74f70077581ba05e4cfb2fe22ae40ade7b10b9163149680162d3735c2315b262"
   },
-  "total_cases": 36,
+  "total_cases": 102,
   "cross_language_binding": {
     "case_set": "emilia-projection",
     "fixture": "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json",
-    "fixture_sha256": "ae7365d9cef819f3af9b26869dd313d4357298b44c1ae2908106fcbb3781e70a",
+    "fixture_sha256": "9e01dbf30c06dcd56beedcbc93cd09a8e4bf181f0da75fed494f5f4a24f5ba25",
     "demo_repository": "https://github.com/varwof/aic-capability-demo",
     "demo_base_revision": "533641638ac3dd6c8a0bbb797d0eb3bd9c337431",
     "demo_source_sha256": {
@@ -28,30 +35,49 @@
     },
     "python": {
       "source": "contrib/emilia-projection/probe.py",
-      "source_sha256": "ca4783df826bcb937b780e9ded017e10a999f8006259c24684482d1151b8437a",
+      "source_sha256": "26f1bef902b692dcf4e4b10f6fe169889a60fb277502902f13f545ca9b6c94bc",
       "output": "contrib/emilia-projection/out-python.txt",
-      "output_sha256": "ee3a9d1439045da65acb64b31cbe4ff05d6e769ad35a3c1665230ed5148a9263",
+      "output_sha256": "f8035c1ea247ebd41c5fcb6ffae8fb9ea5d76b59c334730983a23b460e2198c7",
       "command": "python3 contrib/emilia-projection/probe.py"
     },
     "typescript": {
       "source": "contrib/emilia-projection/probe.mjs",
-      "source_sha256": "6f27e44fd01dfc09bc9dbd62ae803f83f15880179f9d8e29272054612025c63e",
+      "source_sha256": "7b8d4933501d59ef39830c0639d8fb78bafc2a182582ea806b2fba0b8c0cd99d",
       "output": "contrib/emilia-projection/out-typescript.txt",
-      "output_sha256": "3235df940a92adf47a148f481aaecadd38422b46c53d6aa5bcba7367f782a080",
+      "output_sha256": "bb9ebe65ada5ecf3491e67a125a1799979636ffbe8a53a7e7d72a1af18ff279e",
       "command": "node --disable-warning=ExperimentalWarning --experimental-strip-types contrib/emilia-projection/probe.mjs"
     }
   },
   "probes": {
     "emilia-projection": {
       "output": "contrib/emilia-projection/out-probe.txt",
-      "output_sha256": "6a0023c3d3cbd8ccac95d51e6dcb9981a676aba22145b4ce59b17d069c75b0a2",
+      "output_sha256": "9942cd23c8d3cab210715b4dabd1674e70fa3af576affd0000f7f7191a48da66",
       "command": "go run ./cmd/emilia-projection-probe",
       "cases": [
+        {"id": "EMI-PROJ-001", "want": "match", "got": "match"},
+        {"id": "EMI-PROJ-002", "want": "sha-256:c55a4dae12bfdc8e283d0006ee71cedf5acf04447380b628af490f8f66d3c3fc", "got": "sha-256:c55a4dae12bfdc8e283d0006ee71cedf5acf04447380b628af490f8f66d3c3fc"},
+        {"id": "EMI-PROJ-003", "want": "sha-256:90da16ad7e18f56fa5c4978f8e66a8f6249b7d3084ea93e8765a5ac763b3325c", "got": "sha-256:90da16ad7e18f56fa5c4978f8e66a8f6249b7d3084ea93e8765a5ac763b3325c"},
+        {"id": "EMI-PROJ-004", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-005", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-006", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-007", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-008", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-009", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-010", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-011", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-012", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-013", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-014", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-015", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-016", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-017", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-018", "want": "rejected", "got": "rejected"},
+        {"id": "EMI-PROJ-019", "want": "rejected", "got": "rejected"},
         {"id": "EMI-AEC-001", "want": "SATISFIED", "got": "SATISFIED"},
-        {"id": "EMI-AEC-002", "want": "UNSATISFIED", "got": "UNSATISFIED/quorum:distinct_subjects=1<threshold=2"},
-        {"id": "EMI-AEC-003", "want": "UNSATISFIED", "got": "UNSATISFIED/freshness:stale"},
-        {"id": "EMI-AEC-004", "want": "UNSATISFIED", "got": "UNSATISFIED/requirement:expression_false"},
-        {"id": "EMI-AEC-005", "want": "UNSATISFIED", "got": "UNSATISFIED/requirement:expression_false"},
+        {"id": "EMI-AEC-002", "want": "UNSATISFIED/quorum:distinct_subjects=1<threshold=2", "got": "UNSATISFIED/quorum:distinct_subjects=1<threshold=2"},
+        {"id": "EMI-AEC-003", "want": "UNSATISFIED/freshness:stale", "got": "UNSATISFIED/freshness:stale"},
+        {"id": "EMI-AEC-004", "want": "UNSATISFIED/requirement:expression_false", "got": "UNSATISFIED/requirement:expression_false"},
+        {"id": "EMI-AEC-005", "want": "UNSATISFIED/requirement:expression_false", "got": "UNSATISFIED/requirement:expression_false"},
         {"id": "EMI-CAID-001", "want": "MATCH", "got": "MATCH"},
         {"id": "EMI-CAID-002", "want": "NOT_EQUIVALENT", "got": "NOT_EQUIVALENT"},
         {"id": "EMI-BIND-001", "want": "qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s", "got": "qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s"},
@@ -77,12 +103,19 @@
     },
     "oasnt-projection": {
       "output": "contrib/oasnt-projection/out-probe.txt",
-      "output_sha256": "0a9c94c9d227872381fc8b9e632dad5d09eaa7993d99ca6574cf180e8625ef94",
+      "output_sha256": "bf49cc630b75c630587d2c067de63834134b7f04d33e61d18e5a692180f3e557",
       "command": "go run ./cmd/oasnt-projection-probe",
       "cases": [
         {"id": "OAS-ADG-001", "want": "MATCH", "got": "MATCH"},
         {"id": "OAS-ADG-002", "want": "NOT_EQUIVALENT", "got": "NOT_EQUIVALENT"},
         {"id": "OAS-ADG-003", "want": "NOT_EQUIVALENT", "got": "NOT_EQUIVALENT"},
+        {"id": "OAS-NCHECK-001", "want": "validity=success,integrity=success,action=MATCH,complete=true,eligible=true", "got": "validity=success,integrity=success,action=MATCH,complete=true,eligible=true"},
+        {"id": "OAS-NCHECK-002", "want": "validity=success,integrity=failed,action=MATCH,complete=true,eligible=false", "got": "validity=success,integrity=failed,action=MATCH,complete=true,eligible=false"},
+        {"id": "OAS-NCHECK-003", "want": "validity=success,integrity=unavailable,action=MATCH,complete=true,eligible=false", "got": "validity=success,integrity=unavailable,action=MATCH,complete=true,eligible=false"},
+        {"id": "OAS-NCHECK-004", "want": "validity=failed,integrity=success,action=MATCH,complete=true,eligible=false", "got": "validity=failed,integrity=success,action=MATCH,complete=true,eligible=false"},
+        {"id": "OAS-NCHECK-005", "want": "validity=unavailable,integrity=success,action=MATCH,complete=true,eligible=false", "got": "validity=unavailable,integrity=success,action=MATCH,complete=true,eligible=false"},
+        {"id": "OAS-NCHECK-006", "want": "validity=success,integrity=missing,action=MATCH,complete=false,eligible=false", "got": "validity=success,integrity=missing,action=MATCH,complete=false,eligible=false"},
+        {"id": "OAS-NCHECK-007", "want": "validity=success,integrity=success,action=MISMATCH,complete=true,eligible=false", "got": "validity=success,integrity=success,action=MISMATCH,complete=true,eligible=false"},
         {"id": "OAS-FACT-001", "want": "SATISFIED", "got": "SATISFIED"},
         {"id": "OAS-FACT-002", "want": "UNSATISFIED", "got": "UNSATISFIED"},
         {"id": "OAS-FACT-003", "want": "UNSATISFIED", "got": "UNSATISFIED"}
@@ -90,28 +123,118 @@
     },
     "asor-authorization-projection": {
       "output": "contrib/asor-authorization-projection/out-probe.txt",
-      "output_sha256": "e0304e4cadedf7a29a2c33765a223b28939a626a0e00d94ac92eb993f86ed33b",
+      "output_sha256": "4696189de41cac200c8277b665806839792c22d2b2852ce6935da2e136e94b6a",
       "command": "go run ./cmd/asor-projection-probe",
       "cases": [
-        {"id": "ASOR-001", "want": "mapping-exact", "got": "grants=3"},
-        {"id": "ASOR-002", "want": "mapping-exact", "got": "grants=1"},
+        {"id": "ASOR-001", "want": "grants=3,exact=true", "got": "grants=3,exact=true"},
+        {"id": "ASOR-002", "want": "grants=1,exact=true", "got": "grants=1,exact=true"},
         {"id": "ASOR-003", "want": "contains=true", "got": "contains=true"},
         {"id": "ASOR-004", "want": "allow", "got": "allow"},
         {"id": "ASOR-005", "want": "allow", "got": "allow"},
-        {"id": "ASOR-006", "want": "deny", "got": "deny/params_exceed_grant"},
+        {"id": "ASOR-006", "want": "deny/params_exceed_grant", "got": "deny/params_exceed_grant"},
         {"id": "ASOR-007", "want": "no-chain", "got": "no-chain"}
       ]
     },
     "rar-authorization-projection": {
       "output": "contrib/rar-authorization-projection/out-probe.txt",
-      "output_sha256": "ee6041e6a3c27a9f31191b70615ce1022aeb1b516c2864b60c2c6cf8313f2bfb",
+      "output_sha256": "63a6bf5470970f9a3a768dc1d984e73970713cdd4c4a4d795c542d2a02973f9c",
       "command": "go run ./cmd/rar-projection-probe",
       "cases": [
         {"id": "RAR-001", "want": "allow", "got": "allow"},
-        {"id": "RAR-002", "want": "deny", "got": "deny/params_exceed_grant"},
-        {"id": "RAR-003", "want": "deny", "got": "deny/not_in_enum"},
+        {"id": "RAR-002", "want": "deny/params_exceed_grant", "got": "deny/params_exceed_grant"},
+        {"id": "RAR-003", "want": "deny/not_in_enum", "got": "deny/not_in_enum"},
         {"id": "RAR-004", "want": "allow", "got": "allow"}
       ]
+    },
+    "izmaylov-projection": {
+      "output": "contrib/izmaylov-projection/out-probe.txt",
+      "output_sha256": "23b978f5cf440cfe4718a90f30c972664b2679074df37f7a8ff4a17c4039abbb",
+      "command": "go run ./cmd/izmaylov-projection-probe",
+      "cases": [
+        {"id": "IZM-SIG-001", "want": "problem=none,verified=all,eligible=true,satisfaction=SATISFIED", "got": "problem=none,verified=all,eligible=true,satisfaction=SATISFIED"},
+        {"id": "IZM-SIG-002", "want": "problem=found,verified=all,eligible=false,satisfaction=UNSATISFIED", "got": "problem=found,verified=all,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-SIG-003", "want": "problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED", "got": "problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-SIG-004", "want": "problem=found,verified=all,eligible=false,satisfaction=UNSATISFIED", "got": "problem=found,verified=all,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-SIG-005", "want": "problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED", "got": "problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-SIG-006", "want": "problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED", "got": "problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-SIG-007", "want": "problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED", "got": "problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-PERM-001", "want": "findings=none,eligible=true,satisfaction=SATISFIED", "got": "findings=none,eligible=true,satisfaction=SATISFIED"},
+        {"id": "IZM-PERM-002", "want": "findings=over-period-limit,eligible=false,satisfaction=UNSATISFIED", "got": "findings=over-period-limit,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-PERM-003", "want": "findings=over-each-limit+over-period-limit,eligible=false,satisfaction=UNSATISFIED", "got": "findings=over-each-limit+over-period-limit,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-PERM-004", "want": "findings=over-count-limit,eligible=false,satisfaction=UNSATISFIED", "got": "findings=over-count-limit,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-PERM-005", "want": "findings=action-not-allowed,eligible=false,satisfaction=UNSATISFIED", "got": "findings=action-not-allowed,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-PERM-006", "want": "findings=action-not-allowed+prohibited,eligible=false,satisfaction=UNSATISFIED", "got": "findings=action-not-allowed+prohibited,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-PERM-007", "want": "findings=party-not-allowed,eligible=false,satisfaction=UNSATISFIED", "got": "findings=party-not-allowed,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-PERM-008", "want": "findings=outside-valid-time,eligible=false,satisfaction=UNSATISFIED", "got": "findings=outside-valid-time,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-PERM-009", "want": "findings=amount-missing,eligible=false,satisfaction=UNSATISFIED", "got": "findings=amount-missing,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-PERM-010", "want": "findings=limits-unavailable,eligible=false,satisfaction=UNSATISFIED", "got": "findings=limits-unavailable,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-001", "want": "findings=none,eligible=true,satisfaction=SATISFIED", "got": "findings=none,eligible=true,satisfaction=SATISFIED"},
+        {"id": "IZM-COND-002", "want": "findings=countersignature-missing,eligible=false,satisfaction=UNSATISFIED", "got": "findings=countersignature-missing,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-003", "want": "findings=none,eligible=true,satisfaction=SATISFIED", "got": "findings=none,eligible=true,satisfaction=SATISFIED"},
+        {"id": "IZM-COND-004", "want": "findings=countersignature-not-possible,eligible=false,satisfaction=UNSATISFIED", "got": "findings=countersignature-not-possible,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-005", "want": "findings=approval-missing,eligible=false,satisfaction=UNSATISFIED", "got": "findings=approval-missing,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-006", "want": "findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED", "got": "findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-007", "want": "findings=approval-reused,eligible=false,satisfaction=UNSATISFIED", "got": "findings=approval-reused,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-008", "want": "findings=approval-dated-after-stub,eligible=false,satisfaction=UNSATISFIED", "got": "findings=approval-dated-after-stub,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-009", "want": "findings=approval-unavailable,eligible=false,satisfaction=UNSATISFIED", "got": "findings=approval-unavailable,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-010", "want": "findings=after-cancellation,eligible=false,satisfaction=UNSATISFIED", "got": "findings=after-cancellation,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-011", "want": "findings=none,eligible=true,satisfaction=SATISFIED", "got": "findings=none,eligible=true,satisfaction=SATISFIED"},
+        {"id": "IZM-COND-012", "want": "findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED", "got": "findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-COND-013", "want": "findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED", "got": "findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-LOG-001", "want": "findings=none,eligible=true,satisfaction=SATISFIED", "got": "findings=none,eligible=true,satisfaction=SATISFIED"},
+        {"id": "IZM-LOG-002", "want": "findings=inclusion-mismatch,eligible=false,satisfaction=UNSATISFIED", "got": "findings=inclusion-mismatch,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-LOG-003", "want": "findings=inclusion-mismatch,eligible=false,satisfaction=UNSATISFIED", "got": "findings=inclusion-mismatch,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-LOG-004", "want": "findings=inclusion-unavailable,eligible=false,satisfaction=UNSATISFIED", "got": "findings=inclusion-unavailable,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-LOG-005", "want": "findings=inclusion-invalid,eligible=false,satisfaction=UNSATISFIED", "got": "findings=inclusion-invalid,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-APPEND-001", "want": "findings=none,eligible=true,satisfaction=SATISFIED", "got": "findings=none,eligible=true,satisfaction=SATISFIED"},
+        {"id": "IZM-APPEND-002", "want": "findings=consistency-mismatch,eligible=false,satisfaction=UNSATISFIED", "got": "findings=consistency-mismatch,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-APPEND-003", "want": "findings=consistency-truncated,eligible=false,satisfaction=UNSATISFIED", "got": "findings=consistency-truncated,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-APPEND-004", "want": "findings=consistency-unavailable,eligible=false,satisfaction=UNSATISFIED", "got": "findings=consistency-unavailable,eligible=false,satisfaction=UNSATISFIED"},
+        {"id": "IZM-APPEND-005", "want": "findings=consistency-mismatch,eligible=false,satisfaction=UNSATISFIED", "got": "findings=consistency-mismatch,eligible=false,satisfaction=UNSATISFIED"}
+      ]
     }
+  },
+  "probe_source_note": "These source and output hashes describe register at probe_revision (committed 2026-10-26). Replace the hashes and advance probe_revision when the probes change.",
+  "native_check_assessment": {
+    "corpus": "contrib/native-check-assessment/cases-v1.json",
+    "corpus_sha256": "14ab79de5fa6dff8ff5c4075946425c2a8224370de84b81886f585940f1011b8",
+    "runners": {
+      "go": {
+        "command": "go run ./cmd/native-check-vectors-run",
+        "in_register": true,
+        "source_sha256": {
+          "cmd/native-check-vectors-run/main.go": "10598fe233e0e92862a5c22197045b1cdfe3c13107c25fea7a4fbf86df8e2eec"
+        },
+        "output": "contrib/native-check-assessment/out-go.txt",
+        "output_sha256": "d9b2c21db6f80f3624bf935e929a9f540f404a3babbc285fbf80467e1de8f8bc"
+      },
+      "python": {
+        "command": "python3 contrib/native-check-assessment/probe.py",
+        "source_sha256": {
+          "contrib/native-check-assessment/probe.py": "4ebfed681bf5942487bffd9f277291a3c967e5df89485ae681201ed8849f50ca"
+        },
+        "output": "contrib/native-check-assessment/out-python.txt",
+        "output_sha256": "d9b2c21db6f80f3624bf935e929a9f540f404a3babbc285fbf80467e1de8f8bc"
+      },
+      "typescript": {
+        "command": "node contrib/native-check-assessment/probe.mjs",
+        "source_sha256": {
+          "contrib/native-check-assessment/probe.mjs": "d6bf2e43775e0e4d451303cd574271161be72f57ff258690c56b878ef1de868e"
+        },
+        "output": "contrib/native-check-assessment/out-typescript.txt",
+        "output_sha256": "d9b2c21db6f80f3624bf935e929a9f540f404a3babbc285fbf80467e1de8f8bc"
+      }
+    },
+    "cases": [
+      {"id": "NCA-001", "want": "complete=true,missing=0,unexpected=0,conflicting=0", "got": "complete=true,missing=0,unexpected=0,conflicting=0"},
+      {"id": "NCA-002", "want": "complete=false,missing=1,unexpected=0,conflicting=0", "got": "complete=false,missing=1,unexpected=0,conflicting=0"},
+      {"id": "NCA-003", "want": "complete=false,missing=0,unexpected=1,conflicting=0", "got": "complete=false,missing=0,unexpected=1,conflicting=0"},
+      {"id": "NCA-004", "want": "complete=false,missing=0,unexpected=0,conflicting=1", "got": "complete=false,missing=0,unexpected=0,conflicting=1"},
+      {"id": "NCA-005", "want": "complete=false,missing=0,unexpected=0,conflicting=0", "got": "complete=false,missing=0,unexpected=0,conflicting=0"},
+      {"id": "NCA-006", "want": "complete=true,missing=0,unexpected=0,conflicting=0", "got": "complete=true,missing=0,unexpected=0,conflicting=0"},
+      {"id": "NCA-007", "want": "complete=true,missing=0,unexpected=0,conflicting=0", "got": "complete=true,missing=0,unexpected=0,conflicting=0"},
+      {"id": "NCA-008", "want": "complete=true,missing=0,unexpected=0,conflicting=0", "got": "complete=true,missing=0,unexpected=0,conflicting=0"},
+      {"id": "NCA-009", "want": "complete=false,missing=1,unexpected=1,conflicting=0", "got": "complete=false,missing=1,unexpected=1,conflicting=0"}
+    ]
   }
 }
