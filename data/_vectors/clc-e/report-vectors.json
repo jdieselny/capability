@@ -1,0 +1,1420 @@
+{
+  "@version": "CLC-E-REPORT-VECTORS-v1",
+  "note": "Report-layer regression vectors for CLC Evidence Projection (M1-M4). Data only: no private keys and no signatures. Signature cases are covered by projection unit tests. This is not a CLC-E conformance suite and makes no conformance claim.",
+  "cases": [
+    {
+      "id": "cle-001",
+      "name": "minimal report validates",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true
+      },
+      "want": {
+        "verdict": "accept"
+      }
+    },
+    {
+      "id": "cle-002",
+      "name": "missing appraisal time",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "nativeChecksComplete": true
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_shape"
+      }
+    },
+    {
+      "id": "cle-003",
+      "name": "non-canonical digest",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": false,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:short",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_digest_invalid"
+      }
+    },
+    {
+      "id": "cle-004",
+      "name": "unknown outcome",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": false,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "ok",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_shape"
+      }
+    },
+    {
+      "id": "cle-005",
+      "name": "success with a stale snapshot",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": false,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "stale"
+            }
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_shape"
+      }
+    },
+    {
+      "id": "cle-006",
+      "name": "required profile without checks",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/bad",
+          "statusModel": "required",
+          "requiredChecks": []
+        }
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_profile_invalid"
+      }
+    },
+    {
+      "id": "cle-007",
+      "name": "assessment does not match the inventory",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": false
+        }
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_inventory_mismatch"
+      }
+    },
+    {
+      "id": "cle-008",
+      "name": "profile report with an unbound fact",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": true
+        },
+        "facts": [
+          {
+            "Type": "human-authorization",
+            "Subject": "user:alice",
+            "IssuedAt": "2026-10-25T00:59:00Z",
+            "Verified": true
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_fact_unbound"
+      }
+    },
+    {
+      "id": "cle-009",
+      "name": "lineage record points at another artifact",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": true
+        },
+        "facts": [
+          {
+            "Type": "human-authorization",
+            "Subject": "user:alice",
+            "IssuedAt": "2026-10-25T00:59:00Z",
+            "Verified": true
+          }
+        ],
+        "evidenceRecords": [
+          {
+            "artifactDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "fact": {
+              "Type": "human-authorization",
+              "Subject": "user:alice",
+              "IssuedAt": "2026-10-25T00:59:00Z",
+              "Verified": true
+            },
+            "nativeCheckIds": [
+              "native:validity"
+            ],
+            "factIndex": 0
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_check_binding"
+      }
+    },
+    {
+      "id": "cle-010",
+      "name": "not_applicable without profile authority",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "not_applicable",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            },
+            "reason": "native:no-status-material"
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": true
+        }
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_not_applicable_unauthorized"
+      }
+    },
+    {
+      "id": "cle-011",
+      "name": "required profile with a missing result fails verification",
+      "kind": "verify",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": false,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [],
+        "nativeCheckAssessment": {
+          "complete": false,
+          "missingExpectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        }
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_incomplete"
+      }
+    },
+    {
+      "id": "cle-012",
+      "name": "snapshot rollback",
+      "kind": "lifecycle",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            },
+            "statusSnapshotSource": "aeb-status",
+            "statusSnapshotGeneration": 4
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_snapshot_rollback"
+      },
+      "policy": {
+        "snapshots": [
+          {
+            "source": "aeb-status",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "generation": 5,
+            "digest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cle-013",
+      "name": "snapshot fork",
+      "kind": "lifecycle",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            },
+            "statusSnapshotSource": "aeb-status",
+            "statusSnapshotGeneration": 5
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_snapshot_fork"
+      },
+      "policy": {
+        "snapshots": [
+          {
+            "source": "aeb-status",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "generation": 5,
+            "digest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cle-014",
+      "name": "snapshot advance",
+      "kind": "lifecycle",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            },
+            "statusSnapshotSource": "aeb-status",
+            "statusSnapshotGeneration": 6
+          }
+        ]
+      },
+      "want": {
+        "verdict": "accept"
+      },
+      "policy": {
+        "snapshots": [
+          {
+            "source": "aeb-status",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "generation": 5,
+            "digest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cle-015",
+      "name": "required snapshot coordinate missing",
+      "kind": "lifecycle",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_snapshot_missing"
+      },
+      "policy": {
+        "requireSnapshotBinding": true
+      }
+    },
+    {
+      "id": "cle-016",
+      "name": "required replay digest missing",
+      "kind": "lifecycle",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_replay_missing"
+      },
+      "policy": {
+        "requireReplay": true
+      }
+    },
+    {
+      "id": "cle-017",
+      "name": "replay artifact does not hash to the declared digest",
+      "kind": "lifecycle",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            },
+            "replayDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_replay_mismatch"
+      },
+      "policy": {
+        "replayArtifacts": [
+          {
+            "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "bytes": "{\"x\":1}"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cle-018",
+      "name": "complete required-profile report verifies",
+      "kind": "verify",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": true
+        },
+        "facts": [
+          {
+            "Type": "human-authorization",
+            "Subject": "user:alice",
+            "IssuedAt": "2026-10-25T00:59:00Z",
+            "Verified": true
+          }
+        ],
+        "evidenceRecords": [
+          {
+            "artifactDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "fact": {
+              "Type": "human-authorization",
+              "Subject": "user:alice",
+              "IssuedAt": "2026-10-25T00:59:00Z",
+              "Verified": true
+            },
+            "nativeCheckIds": [
+              "native:validity"
+            ],
+            "factIndex": 0
+          }
+        ]
+      },
+      "want": {
+        "verdict": "accept"
+      }
+    },
+    {
+      "id": "cle-019",
+      "name": "profile digest does not match its content",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/bad-digest",
+          "statusModel": "none",
+          "profileDigest": "sha-256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_profile_invalid"
+      }
+    },
+    {
+      "id": "cle-020",
+      "name": "two records bind the same fact index",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": true
+        },
+        "facts": [
+          {
+            "Type": "human-authorization",
+            "Subject": "user:alice",
+            "IssuedAt": "2026-10-25T00:59:00Z",
+            "Verified": true
+          },
+          {
+            "Type": "human-authorization",
+            "Subject": "user:alice",
+            "IssuedAt": "2026-10-25T00:59:00Z",
+            "Verified": true
+          }
+        ],
+        "evidenceRecords": [
+          {
+            "artifactDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "fact": {
+              "Type": "human-authorization",
+              "Subject": "user:alice",
+              "IssuedAt": "2026-10-25T00:59:00Z",
+              "Verified": true
+            },
+            "factIndex": 0,
+            "nativeCheckIds": [
+              "native:validity"
+            ]
+          },
+          {
+            "artifactDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "fact": {
+              "Type": "human-authorization",
+              "Subject": "user:alice",
+              "IssuedAt": "2026-10-25T00:59:00Z",
+              "Verified": true
+            },
+            "factIndex": 0,
+            "nativeCheckIds": [
+              "native:validity"
+            ]
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_fact_unbound"
+      }
+    },
+    {
+      "id": "cle-021",
+      "name": "record names an observation the report does not carry",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ],
+        "evidenceRecords": [
+          {
+            "artifactDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "observationId": "obs",
+            "nativeCheckIds": [
+              "native:validity"
+            ]
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_check_binding"
+      }
+    },
+    {
+      "id": "cle-022",
+      "name": "snapshot source outside the allowlist",
+      "kind": "lifecycle",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            },
+            "statusSnapshotSource": "aeb-status",
+            "statusSnapshotGeneration": 5
+          }
+        ]
+      },
+      "policy": {
+        "snapshotSources": [
+          "other-source"
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_snapshot_source"
+      }
+    },
+    {
+      "id": "cle-023",
+      "name": "completeness flag contradicts the reported results",
+      "kind": "verify",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": false,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": true
+        }
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_incomplete"
+      }
+    },
+    {
+      "id": "cle-024",
+      "name": "unknown report version",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v2",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_shape"
+      }
+    },
+    {
+      "id": "cle-025",
+      "name": "unknown assurance level",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E4",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_shape"
+      }
+    },
+    {
+      "id": "cle-026",
+      "name": "E2 without derivation records",
+      "kind": "verify",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E2",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_policy_violation"
+      }
+    },
+    {
+      "id": "cle-027",
+      "name": "E3 with derivations but no verified attestation",
+      "kind": "verify",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E3",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": true
+        },
+        "facts": [
+          {
+            "Type": "human-authorization",
+            "Subject": "user:alice",
+            "IssuedAt": "2026-10-25T00:59:00Z",
+            "Verified": true
+          }
+        ],
+        "evidenceRecords": [
+          {
+            "artifactDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "fact": {
+              "Type": "human-authorization",
+              "Subject": "user:alice",
+              "IssuedAt": "2026-10-25T00:59:00Z",
+              "Verified": true
+            },
+            "nativeCheckIds": [
+              "native:validity"
+            ],
+            "factIndex": 0
+          }
+        ],
+        "derivations": [
+          {
+            "carrierId": "emilia",
+            "artifactDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "factIndex": 0,
+            "factDigest": "sha-256:79d32d9ef5b4872a9089da80c6b7b1966a523eab660ff53f811bb6d7b2d5378e",
+            "nativeCheckIds": [
+              "native:validity"
+            ]
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_policy_violation"
+      }
+    },
+    {
+      "id": "cle-028",
+      "name": "report below the deployer's minimum assurance",
+      "kind": "verify",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true
+      },
+      "policy": {
+        "minAssurance": "E2"
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_policy_violation"
+      }
+    },
+    {
+      "id": "cle-029",
+      "name": "check verifier differs from the report verifier",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "verifier": {
+          "principal": "principal:alice",
+          "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_verifier_mismatch"
+      }
+    },
+    {
+      "id": "cle-030",
+      "name": "derivation fact digest does not bind the fact",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E2",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ]
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            }
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": true
+        },
+        "facts": [
+          {
+            "Type": "human-authorization",
+            "Subject": "user:alice",
+            "IssuedAt": "2026-10-25T00:59:00Z",
+            "Verified": true
+          }
+        ],
+        "evidenceRecords": [
+          {
+            "artifactDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "fact": {
+              "Type": "human-authorization",
+              "Subject": "user:alice",
+              "IssuedAt": "2026-10-25T00:59:00Z",
+              "Verified": true
+            },
+            "nativeCheckIds": [
+              "native:validity"
+            ],
+            "factIndex": 0
+          }
+        ],
+        "derivations": [
+          {
+            "carrierId": "emilia",
+            "artifactDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "factIndex": 0,
+            "factDigest": "sha-256:4444444444444444444444444444444444444444444444444444444444444444",
+            "nativeCheckIds": [
+              "native:validity"
+            ]
+          }
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_derivation_invalid"
+      }
+    },
+    {
+      "id": "cle-031",
+      "name": "policy pins a required check the report omits",
+      "kind": "verify",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true
+      },
+      "policy": {
+        "requiredCheckIds": [
+          "native:validity"
+        ]
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_incomplete"
+      }
+    },
+    {
+      "id": "cle-032",
+      "name": "not_applicable with profile authority",
+      "kind": "validate",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "profile": {
+          "id": "clc-e/vectors",
+          "statusModel": "required",
+          "requiredChecks": [
+            "native:validity"
+          ],
+          "expectations": [
+            {
+              "checkId": "native:validity",
+              "componentType": "approval",
+              "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ],
+          "notApplicableAuthority": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+          "reasonNamespace": "native"
+        },
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "not_applicable",
+            "reason": "native:no-status-material",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "verificationTime": "2026-10-25T01:00:00Z"
+          }
+        ],
+        "nativeCheckAssessment": {
+          "complete": true
+        }
+      },
+      "want": {
+        "verdict": "accept"
+      }
+    },
+    {
+      "id": "cle-033",
+      "name": "unknown deployer minimum assurance",
+      "kind": "verify",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true
+      },
+      "policy": {
+        "minAssurance": "E9"
+      },
+      "want": {
+        "verdict": "reject",
+        "code": "report_policy_violation"
+      }
+    },
+    {
+      "id": "cle-034",
+      "name": "replay artifact reproduces the result",
+      "kind": "lifecycle",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            },
+            "replayDigest": "sha-256:a222a13f378cf0795f37ef68dab99871cd8b4306209cd099c8b567d7895cc0d0"
+          }
+        ]
+      },
+      "policy": {
+        "replayArtifacts": [
+          {
+            "digest": "sha-256:a222a13f378cf0795f37ef68dab99871cd8b4306209cd099c8b567d7895cc0d0",
+            "bytes": "{\"@version\":\"CLC-EVIDENCE-REPLAY-v1\",\"checkId\":\"native:validity\",\"componentType\":\"approval\",\"evidenceDigest\":\"sha-256:1111111111111111111111111111111111111111111111111111111111111111\",\"outcome\":\"success\",\"verifier\":\"verifier/1\",\"verifierProfileDigest\":\"sha-256:2222222222222222222222222222222222222222222222222222222222222222\"}"
+          }
+        ]
+      },
+      "want": {
+        "verdict": "accept"
+      }
+    },
+    {
+      "id": "cle-035",
+      "name": "same snapshot generation and digest is idempotent",
+      "kind": "lifecycle",
+      "report": {
+        "@version": "CLC-EVIDENCE-REPORT-v1",
+        "assurance": "E1",
+        "projectorId": "clc-e/vectors",
+        "appraisalTime": "2026-10-25T01:00:00Z",
+        "nativeChecksComplete": true,
+        "nativeCheckResults": [
+          {
+            "checkId": "native:validity",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "outcome": "success",
+            "verifier": "verifier/1",
+            "verifierProfileDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222",
+            "trustSnapshotDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+            "statusSnapshotDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "verificationTime": "2026-10-25T01:00:00Z",
+            "freshnessDecision": {
+              "verdict": "fresh"
+            },
+            "statusSnapshotSource": "aeb-status",
+            "statusSnapshotGeneration": 5
+          }
+        ]
+      },
+      "policy": {
+        "snapshots": [
+          {
+            "source": "aeb-status",
+            "componentType": "approval",
+            "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111",
+            "generation": 5,
+            "digest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        ]
+      },
+      "want": {
+        "verdict": "accept"
+      }
+    }
+  ]
+}

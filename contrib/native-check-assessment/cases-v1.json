@@ -1,0 +1,108 @@
+{
+  "@version": "clc-native-check-assessment-cases-v1",
+  "note": "Language-neutral cases for NativeCheckExpectation/NativeCheckAssessment. Only the inventory comparison is exercised; no CLC requirement evaluation and no carrier-specific logic. Digests are syntactic identities, not real hashes.",
+  "cases": [
+    {
+      "id": "NCA-001",
+      "name": "complete inventory, both components reported",
+      "expected": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"},
+        {"checkId": "native:integrity", "componentType": "approval", "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111"}
+      ],
+      "results": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111", "outcome": "success"},
+        {"checkId": "native:integrity", "componentType": "approval", "evidenceDigest": "sha-256:1111111111111111111111111111111111111111111111111111111111111111", "outcome": "success"}
+      ],
+      "want": "complete=true,missing=0,unexpected=0,conflicting=0"
+    },
+    {
+      "id": "NCA-002",
+      "name": "second component of the same type omitted",
+      "expected": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"},
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"}
+      ],
+      "results": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222", "outcome": "success"}
+      ],
+      "want": "complete=false,missing=1,unexpected=0,conflicting=0"
+    },
+    {
+      "id": "NCA-003",
+      "name": "undeclared component reported",
+      "expected": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:4444444444444444444444444444444444444444444444444444444444444444"}
+      ],
+      "results": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:4444444444444444444444444444444444444444444444444444444444444444", "outcome": "success"},
+        {"checkId": "native:integrity", "componentType": "approval", "evidenceDigest": "sha-256:4444444444444444444444444444444444444444444444444444444444444444", "outcome": "success"}
+      ],
+      "want": "complete=false,missing=0,unexpected=1,conflicting=0"
+    },
+    {
+      "id": "NCA-004",
+      "name": "two outcomes for one component",
+      "expected": [
+        {"checkId": "native:integrity", "componentType": "approval", "evidenceDigest": "sha-256:5555555555555555555555555555555555555555555555555555555555555555"}
+      ],
+      "results": [
+        {"checkId": "native:integrity", "componentType": "approval", "evidenceDigest": "sha-256:5555555555555555555555555555555555555555555555555555555555555555", "outcome": "success"},
+        {"checkId": "native:integrity", "componentType": "approval", "evidenceDigest": "sha-256:5555555555555555555555555555555555555555555555555555555555555555", "outcome": "failed"}
+      ],
+      "want": "complete=false,missing=0,unexpected=0,conflicting=1"
+    },
+    {
+      "id": "NCA-005",
+      "name": "empty inventory is never complete",
+      "expected": [],
+      "results": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:6666666666666666666666666666666666666666666666666666666666666666", "outcome": "success"}
+      ],
+      "want": "complete=false,missing=0,unexpected=0,conflicting=0"
+    },
+    {
+      "id": "NCA-006",
+      "name": "failed outcome still completes the report",
+      "expected": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:7777777777777777777777777777777777777777777777777777777777777777"}
+      ],
+      "results": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:7777777777777777777777777777777777777777777777777777777777777777", "outcome": "failed"}
+      ],
+      "want": "complete=true,missing=0,unexpected=0,conflicting=0"
+    },
+    {
+      "id": "NCA-007",
+      "name": "unavailable outcome still completes the report",
+      "expected": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:8888888888888888888888888888888888888888888888888888888888888888"}
+      ],
+      "results": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:8888888888888888888888888888888888888888888888888888888888888888", "outcome": "unavailable"}
+      ],
+      "want": "complete=true,missing=0,unexpected=0,conflicting=0"
+    },
+    {
+      "id": "NCA-008",
+      "name": "not_applicable outcome still completes the report",
+      "expected": [
+        {"checkId": "native:integrity", "componentType": "approval", "evidenceDigest": "sha-256:9999999999999999999999999999999999999999999999999999999999999999"}
+      ],
+      "results": [
+        {"checkId": "native:integrity", "componentType": "approval", "evidenceDigest": "sha-256:9999999999999999999999999999999999999999999999999999999999999999", "outcome": "not_applicable"}
+      ],
+      "want": "complete=true,missing=0,unexpected=0,conflicting=0"
+    },
+    {
+      "id": "NCA-009",
+      "name": "missing and unexpected at the same time",
+      "expected": [
+        {"checkId": "native:validity", "componentType": "approval", "evidenceDigest": "sha-256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
+      ],
+      "results": [
+        {"checkId": "native:integrity", "componentType": "approval", "evidenceDigest": "sha-256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "outcome": "success"}
+      ],
+      "want": "complete=false,missing=1,unexpected=1,conflicting=0"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+PASS NCA-001 complete inventory, both components reported         want=complete=true,missing=0,unexpected=0,conflicting=0 got=complete=true,missing=0,unexpected=0,conflicting=0
+PASS NCA-002 second component of the same type omitted            want=complete=false,missing=1,unexpected=0,conflicting=0 got=complete=false,missing=1,unexpected=0,conflicting=0
+PASS NCA-003 undeclared component reported                        want=complete=false,missing=0,unexpected=1,conflicting=0 got=complete=false,missing=0,unexpected=1,conflicting=0
+PASS NCA-004 two outcomes for one component                       want=complete=false,missing=0,unexpected=0,conflicting=1 got=complete=false,missing=0,unexpected=0,conflicting=1
+PASS NCA-005 empty inventory is never complete                    want=complete=false,missing=0,unexpected=0,conflicting=0 got=complete=false,missing=0,unexpected=0,conflicting=0
+PASS NCA-006 failed outcome still completes the report            want=complete=true,missing=0,unexpected=0,conflicting=0 got=complete=true,missing=0,unexpected=0,conflicting=0
+PASS NCA-007 unavailable outcome still completes the report       want=complete=true,missing=0,unexpected=0,conflicting=0 got=complete=true,missing=0,unexpected=0,conflicting=0
+PASS NCA-008 not_applicable outcome still completes the report    want=complete=true,missing=0,unexpected=0,conflicting=0 got=complete=true,missing=0,unexpected=0,conflicting=0
+PASS NCA-009 missing and unexpected at the same time              want=complete=false,missing=1,unexpected=1,conflicting=0 got=complete=false,missing=1,unexpected=1,conflicting=0

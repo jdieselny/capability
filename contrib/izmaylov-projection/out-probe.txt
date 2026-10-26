@@ -1,0 +1,85 @@
+Izmaylov permission/receipt/log → CLC evidence projection (signature stage)
+Source: draft-izmaylov-agent-permission-receipts-00 §4/§5/§6/§9/§10 (checked 2026-10-25)
+Fixture: synthetic evidence; WebAuthn, Ed25519 and ML-DSA are modelled, not executed
+subject: user:alice@example.org
+permission perm-1 → action payments.transfer (passes=1)
+receipt rcpt-1 → action payments.transfer amount 3000 CNY
+log tree_size=42 root=sha-256:1212121212121212121212121212121212121212121212121212121212121212
+
+1. Signature-stage checks and the three verification answers
+PASS IZM-SIG-001 permission and receipt signatures verified, log head verified permission=not-evaluated want=problem=none,verified=all,eligible=true,satisfaction=SATISFIED got=problem=none,verified=all,eligible=true,satisfaction=SATISFIED
+PASS IZM-SIG-002 receipt signature verified and rejected                  permission=not-evaluated want=problem=found,verified=all,eligible=false,satisfaction=UNSATISFIED got=problem=found,verified=all,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-SIG-003 ML-DSA-87 not implemented, receipt only Ed25519          permission=not-evaluated want=problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED got=problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-SIG-004 permission passkey signature rejected                    permission=not-evaluated want=problem=found,verified=all,eligible=false,satisfaction=UNSATISFIED got=problem=found,verified=all,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-SIG-005 tree-head key unavailable                                permission=not-evaluated want=problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED got=problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-SIG-006 log check omitted                                        permission=not-evaluated missing=1 want=problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED got=problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-SIG-007 permission signature not verified, receipt and log verified permission=not-evaluated want=problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED got=problem=none,verified=partial,eligible=false,satisfaction=UNSATISFIED
+
+2. Permission containment (actions / never / with / validity / limits)
+PASS IZM-PERM-001 action, party, window and limits all pass                want=findings=none,eligible=true,satisfaction=SATISFIED got=findings=none,eligible=true,satisfaction=SATISFIED
+PASS IZM-PERM-002 period total exceeds max                                 want=findings=over-period-limit,eligible=false,satisfaction=UNSATISFIED got=findings=over-period-limit,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-PERM-003 single amount exceeds each and period max                want=findings=over-each-limit+over-period-limit,eligible=false,satisfaction=UNSATISFIED got=findings=over-each-limit+over-period-limit,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-PERM-004 receipt count exceeds the period count                   want=findings=over-count-limit,eligible=false,satisfaction=UNSATISFIED got=findings=over-count-limit,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-PERM-005 action not in the permission                             want=findings=action-not-allowed,eligible=false,satisfaction=UNSATISFIED got=findings=action-not-allowed,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-PERM-006 action prohibited by never                               want=findings=action-not-allowed+prohibited,eligible=false,satisfaction=UNSATISFIED got=findings=action-not-allowed+prohibited,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-PERM-007 service not named in with                                want=findings=party-not-allowed,eligible=false,satisfaction=UNSATISFIED got=findings=party-not-allowed,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-PERM-008 receipt outside the permission validity window           want=findings=outside-valid-time,eligible=false,satisfaction=UNSATISFIED got=findings=outside-valid-time,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-PERM-009 amount missing while a unit limit applies                want=findings=amount-missing,eligible=false,satisfaction=UNSATISFIED got=findings=amount-missing,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-PERM-010 log not fully read, limits cannot be settled             want=findings=limits-unavailable,eligible=false,satisfaction=UNSATISFIED got=findings=limits-unavailable,eligible=false,satisfaction=UNSATISFIED
+
+3. Conditions: countersignature, approval and cancellation
+PASS IZM-COND-001 countersignature and approval present and matching       want=findings=none,eligible=true,satisfaction=SATISFIED got=findings=none,eligible=true,satisfaction=SATISFIED
+PASS IZM-COND-002 required countersignature omitted                        want=findings=countersignature-missing,eligible=false,satisfaction=UNSATISFIED got=findings=countersignature-missing,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-COND-003 amount below the countersignature threshold              want=findings=none,eligible=true,satisfaction=SATISFIED got=findings=none,eligible=true,satisfaction=SATISFIED
+PASS IZM-COND-004 countersignature required but the service has no keys    want=findings=countersignature-not-possible,eligible=false,satisfaction=UNSATISFIED got=findings=countersignature-not-possible,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-COND-005 required approval omitted                                want=findings=approval-missing,eligible=false,satisfaction=UNSATISFIED got=findings=approval-missing,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-COND-006 approval amount does not match the receipt               want=findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED got=findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-COND-007 approval id reused from an earlier line                  want=findings=approval-reused,eligible=false,satisfaction=UNSATISFIED got=findings=approval-reused,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-COND-008 approval dated more than 300 seconds after the receipt   want=findings=approval-dated-after-stub,eligible=false,satisfaction=UNSATISFIED got=findings=approval-dated-after-stub,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-COND-009 approval signature method not implemented                want=findings=approval-unavailable,eligible=false,satisfaction=UNSATISFIED got=findings=approval-unavailable,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-COND-010 receipt after a sound cancellation                       want=findings=after-cancellation,eligible=false,satisfaction=UNSATISFIED got=findings=after-cancellation,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-COND-011 cancellation dated after the receipt                     want=findings=none,eligible=true,satisfaction=SATISFIED got=findings=none,eligible=true,satisfaction=SATISFIED
+PASS IZM-COND-012 approval slip does not match the permission              want=findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED got=findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-COND-013 approval details do not match the receipt                want=findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED got=findings=approval-mismatch,eligible=false,satisfaction=UNSATISFIED
+
+4. Log inclusion (real SHA-256 Merkle proof verification)
+PASS IZM-LOG-001 inclusion proof verifies against the signed root         want=findings=none,eligible=true,satisfaction=SATISFIED got=findings=none,eligible=true,satisfaction=SATISFIED
+PASS IZM-LOG-002 leaf digest does not belong to this tree                 want=findings=inclusion-mismatch,eligible=false,satisfaction=UNSATISFIED got=findings=inclusion-mismatch,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-LOG-003 proof verifies but the tree-head root differs            want=findings=inclusion-mismatch,eligible=false,satisfaction=UNSATISFIED got=findings=inclusion-mismatch,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-LOG-004 inclusion proof not supplied                             want=findings=inclusion-unavailable,eligible=false,satisfaction=UNSATISFIED got=findings=inclusion-unavailable,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-LOG-005 proof path has an invalid side                           want=findings=inclusion-invalid,eligible=false,satisfaction=UNSATISFIED got=findings=inclusion-invalid,eligible=false,satisfaction=UNSATISFIED
+
+5. Log append-only consistency (roots recomputed from the leaf set)
+PASS IZM-APPEND-001 new tree extends the old one                             want=findings=none,eligible=true,satisfaction=SATISFIED got=findings=none,eligible=true,satisfaction=SATISFIED
+PASS IZM-APPEND-002 history rewritten below the old size                     want=findings=consistency-mismatch,eligible=false,satisfaction=UNSATISFIED got=findings=consistency-mismatch,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-APPEND-003 new tree claims fewer leaves than the old one            want=findings=consistency-truncated,eligible=false,satisfaction=UNSATISFIED got=findings=consistency-truncated,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-APPEND-004 leaf set not supplied                                    want=findings=consistency-unavailable,eligible=false,satisfaction=UNSATISFIED got=findings=consistency-unavailable,eligible=false,satisfaction=UNSATISFIED
+PASS IZM-APPEND-005 recomputed old root differs from the signed old head     want=findings=consistency-mismatch,eligible=false,satisfaction=UNSATISFIED got=findings=consistency-mismatch,eligible=false,satisfaction=UNSATISFIED
+
+6. Residuals (carrier, enforcement point or not yet projected)
+   - permission containment (actions, limits, requires, never, validity window) is not evaluated in the signature stage
+   - countersignature and approval conditions are carrier obligations
+   - cancellation and log append-only guarantees are outside this probe
+   - passkey origin/rpId binding is a WebAuthn verifier obligation
+   - amount and period accounting are enforcement-side and are never reported as a signature success
+   - countersignature and approval conditions are not modelled in this stage
+   - cancellation state is not modelled in this stage
+   - passkey origin/rpId binding and signature verification belong to stage 1
+   - amounts and periods are verifier arithmetic over the supplied log; the executor's reserve/commit accounting is a separate concern
+   - approval signature verification against the permission's issuer is modelled, not executed
+   - countersignature signature verification against the service's keys is modelled, not executed
+   - approval's 'slip' and 'details' matching are not modelled
+   - cancellation acknowledgement and the stricter timed-cancellation rule are not modelled
+   - log append-only proofs and signed tree heads belong to stage 1
+   - log append-only consistency proofs between tree heads are not modelled
+   - tree-head signature verification belongs to stage 1
+   - Merkle tree shape/leaf ordering is pinned by this fixture; the draft leaves the log's construction to the log operator
+   - this stage recomputes roots from the leaf set; a wire-format consistency proof (e.g. RFC 6962) is not verified
+   - tree-head signatures belong to stage 1
+   - log operator behaviour (leaf ordering, duplicate handling) is pinned by this fixture
+
+Reading: `failed` is a check that ran and rejected; `unavailable` is a check
+that could not be run.  Izmaylov's answer 2 ("was everything verified?")
+is `verified=all|partial`, answer 1 is `problem=none|found`, and answer 3
+(within permission) is deliberately reported as not evaluated until the
+permission-containment stage lands.
