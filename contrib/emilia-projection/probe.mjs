@@ -29,7 +29,7 @@ function relationTuple(binding) {
   const issuedAt = [binding.source.issued_at,
     ...binding.targets.map((target) => target.issued_at)].sort(utf8Compare);
   return {
-    requirement_id: binding.requirement_id,
+    requirement_digest: binding.requirement_digest,
     policy_generation: binding.source.policy_generation,
     from: {
       type: binding.source.type,

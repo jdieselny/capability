@@ -49,7 +49,7 @@ def relation_tuple(binding):
         + [target["issued_at"] for target in binding["targets"]]
     )
     return {
-        "requirement_id": binding["requirement_id"],
+        "requirement_digest": binding["requirement_digest"],
         "policy_generation": binding["source"]["policy_generation"],
         "from": {
             "type": binding["source"]["type"],

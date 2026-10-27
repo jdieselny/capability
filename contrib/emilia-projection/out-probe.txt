@@ -49,8 +49,8 @@ PASS EMI-PROJ-019 unpinned status_required role rejected         want=rejected g
    - status_required:ep-quorum
    - required_binding:policy-permit:permits:ep-quorum
    derived binding role: clc:evidence-binding:AAAADXBvbGljeS1wZXJtaXQAAAAHcGVybWl0cwAAAAllcC1xdW9ydW0
-   relation tuple (JCS): {"action_digest":"sha256:237ef7005db5bbd92fcd757bf35a236201da27c888fc146316bd3863288b4c9f","evidence_issued_at":["2026-09-13T11:59:00Z","2026-09-13T11:59:30Z","2026-09-13T11:59:40Z"],"from":{"artifact_digest":"sha256:6e15e531407d7017f90c4bc9fdb9e07044cfe7562425aa727d46bdba89c4ee7f","type":"policy-permit"},"policy_generation":"policy-7","relation":"permits","requirement_id":"treasury-wire-evidence@7","status_digest":"sha256:51c1a2c30efef1a2d1256fed51b46075e77d97d3b092ba1032fca1d3fbc1204d","status_snapshot":{"checked_at":"2026-09-13T12:00:00Z","outcome":"valid","revocation_generation":"rev-42","source":"aeb-status","valid_until":"2026-09-13T12:01:00Z"},"subjects":["alice","bob"],"to":{"artifact_set_digest":"sha256:f5e567508f9578ad89e38148a60c582dc96dda7f0884d594cebbd4f3e902edcd","type":"ep-quorum"},"trust":{"result":"verified","verifier":"native-verifier"}}
-   derived binding subject: qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s
+   relation tuple (JCS): {"action_digest":"sha256:237ef7005db5bbd92fcd757bf35a236201da27c888fc146316bd3863288b4c9f","evidence_issued_at":["2026-09-13T11:59:00Z","2026-09-13T11:59:30Z","2026-09-13T11:59:40Z"],"from":{"artifact_digest":"sha256:6e15e531407d7017f90c4bc9fdb9e07044cfe7562425aa727d46bdba89c4ee7f","type":"policy-permit"},"policy_generation":"policy-7","relation":"permits","requirement_digest":"sha-256:c55a4dae12bfdc8e283d0006ee71cedf5acf04447380b628af490f8f66d3c3fc","status_digest":"sha256:51c1a2c30efef1a2d1256fed51b46075e77d97d3b092ba1032fca1d3fbc1204d","status_snapshot":{"checked_at":"2026-09-13T12:00:00Z","outcome":"valid","revocation_generation":"rev-42","source":"aeb-status","valid_until":"2026-09-13T12:01:00Z"},"subjects":["alice","bob"],"to":{"artifact_set_digest":"sha256:f5e567508f9578ad89e38148a60c582dc96dda7f0884d594cebbd4f3e902edcd","type":"ep-quorum"},"trust":{"result":"verified","verifier":"native-verifier","verifier_profile_digest":"sha-256:3f1c2d6a1b0e5c9d7a4f8b2e6c1d9a3f5b7e0c2d4a6f8b1e3c5d7a9f0b2e4c6d"}}
+   derived binding subject: A6_5Bwc-GmIae26cYpJijlLIbM1UTLEtRTmMmraayUI
 
 2. CLC evaluation over projected facts (§10)
 PASS EMI-AEC-001 two verified approvals, permit and binding           want=SATISFIED got=SATISFIED
@@ -65,7 +65,7 @@ PASS EMI-CAID-002 CLC projection: material args amount changed want=NOT_EQUIVALE
 
 4. Binding identity derivation and boundary
 Fixtures: synthetic AEC-shaped artifacts, not production bytes
-PASS EMI-BIND-001 base relation tuple has the pinned subject              want=qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s got=qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s
+PASS EMI-BIND-001 base relation tuple has the pinned subject              want=A6_5Bwc-GmIae26cYpJijlLIbM1UTLEtRTmMmraayUI got=A6_5Bwc-GmIae26cYpJijlLIbM1UTLEtRTmMmraayUI
 PASS EMI-BIND-002 source mutation changes the relation subject            want=different got=different
 PASS EMI-BIND-003 target mutation changes the relation subject            want=different got=different
 PASS EMI-BIND-004 action mutation changes the relation subject            want=different got=different

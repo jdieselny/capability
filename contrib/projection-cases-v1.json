@@ -4,11 +4,11 @@
   "corpus_base_revision_note": "Committed on top of this revision; the commit that introduces this manifest is the corpus revision to cite after publication.",
   "probe_repository": "https://github.com/varwof/register",
   "probe_base_revision": "c4cbc53f117e7e7dc3eae980267c5b6e12f08e50",
-  "probe_revision": "5e843ce998a557505fc9bb3276707328a6a36a11",
+  "probe_revision": "3e70ab114a949151446083bfeefe7eb1820aea3e",
   "probe_source_sha256": {
     "cmd/asor-projection-probe/main.go": "871fbf53ef27ef710537b87e4240a9fbfcf170c4057a37038ce9c0673a7b1fda",
-    "cmd/emilia-projection-probe/main.go": "a4a2e7c5c1bd107d29fde6803406c96778fadfaf7514aa0b8a78e2bba74ad5b0",
-    "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json": "9e01dbf30c06dcd56beedcbc93cd09a8e4bf181f0da75fed494f5f4a24f5ba25",
+    "cmd/emilia-projection-probe/main.go": "512aff688cd0b593a7194d1aafecba9d357f17cd3e7675f6e97a0bd4c3decd81",
+    "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json": "33d4d56299ea3abfcc01075c5259c1b40a6985fb99f1a2874dcf26e886ee5bc2",
     "cmd/gilda-projection-probe/main.go": "ee22fe91ac42999514509336db470b9864ab631541a971b97ea4beffd2c87ffb",
     "cmd/oasnt-projection-probe/main.go": "7df80215f3833b4f64c3bb35ed43774c3ec448aa922defcd3acb6a56fc2ac421",
     "cmd/rar-projection-probe/main.go": "10e13471eebe676db9294f798b1f6414c556ace1b7d9a46fc3802093414c6d86",
@@ -24,7 +24,7 @@
   "cross_language_binding": {
     "case_set": "emilia-projection",
     "fixture": "cmd/emilia-projection-probe/testdata/emilia-binding-fixture-v1.json",
-    "fixture_sha256": "9e01dbf30c06dcd56beedcbc93cd09a8e4bf181f0da75fed494f5f4a24f5ba25",
+    "fixture_sha256": "33d4d56299ea3abfcc01075c5259c1b40a6985fb99f1a2874dcf26e886ee5bc2",
     "demo_repository": "https://github.com/varwof/aic-capability-demo",
     "demo_base_revision": "533641638ac3dd6c8a0bbb797d0eb3bd9c337431",
     "demo_source_sha256": {
@@ -35,23 +35,23 @@
     },
     "python": {
       "source": "contrib/emilia-projection/probe.py",
-      "source_sha256": "26f1bef902b692dcf4e4b10f6fe169889a60fb277502902f13f545ca9b6c94bc",
+      "source_sha256": "bdddc9d72f16f89d03bbb0f2a99949ab8118e075c2dd113a4ecf3e97f1d5c4b5",
       "output": "contrib/emilia-projection/out-python.txt",
-      "output_sha256": "f8035c1ea247ebd41c5fcb6ffae8fb9ea5d76b59c334730983a23b460e2198c7",
+      "output_sha256": "01e2bdb0ad32176db94b6107fe536afec4735e2191870ecb685b457e1b5b2e91",
       "command": "python3 contrib/emilia-projection/probe.py"
     },
     "typescript": {
       "source": "contrib/emilia-projection/probe.mjs",
-      "source_sha256": "7b8d4933501d59ef39830c0639d8fb78bafc2a182582ea806b2fba0b8c0cd99d",
+      "source_sha256": "ce07ac61f9c21cba00d491558d6da00fc2f7f8528f8284ce3a1d6ca84856ed93",
       "output": "contrib/emilia-projection/out-typescript.txt",
-      "output_sha256": "bb9ebe65ada5ecf3491e67a125a1799979636ffbe8a53a7e7d72a1af18ff279e",
+      "output_sha256": "6fbc5e9835b6c628a0118f0d33c247d07c9dd98dcce39070eb813e14814846ba",
       "command": "node --disable-warning=ExperimentalWarning --experimental-strip-types contrib/emilia-projection/probe.mjs"
     }
   },
   "probes": {
     "emilia-projection": {
       "output": "contrib/emilia-projection/out-probe.txt",
-      "output_sha256": "9942cd23c8d3cab210715b4dabd1674e70fa3af576affd0000f7f7191a48da66",
+      "output_sha256": "0d7fdaac4a9cf4b95f2b05f9f392581d3911712cd3dca61e1a074b255e794415",
       "command": "go run ./cmd/emilia-projection-probe",
       "cases": [
         {"id": "EMI-PROJ-001", "want": "match", "got": "match"},
@@ -80,7 +80,7 @@
         {"id": "EMI-AEC-005", "want": "UNSATISFIED/requirement:expression_false", "got": "UNSATISFIED/requirement:expression_false"},
         {"id": "EMI-CAID-001", "want": "MATCH", "got": "MATCH"},
         {"id": "EMI-CAID-002", "want": "NOT_EQUIVALENT", "got": "NOT_EQUIVALENT"},
-        {"id": "EMI-BIND-001", "want": "qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s", "got": "qhYb5aZfz3Gl_RpCeLk7LyW9POxu1EIC9t0z8Cif48s"},
+        {"id": "EMI-BIND-001", "want": "A6_5Bwc-GmIae26cYpJijlLIbM1UTLEtRTmMmraayUI", "got": "A6_5Bwc-GmIae26cYpJijlLIbM1UTLEtRTmMmraayUI"},
         {"id": "EMI-BIND-002", "want": "different", "got": "different"},
         {"id": "EMI-BIND-003", "want": "different", "got": "different"},
         {"id": "EMI-BIND-004", "want": "different", "got": "different"},
@@ -194,7 +194,7 @@
       ]
     }
   },
-  "probe_source_note": "These source and output hashes describe register at probe_revision (committed 2026-10-26). Replace the hashes and advance probe_revision when the probes change.",
+  "probe_source_note": "These source and output hashes describe register at probe_revision (committed 2026-10-27). Replace the hashes and advance probe_revision when the probes change.",
   "native_check_assessment": {
     "corpus": "contrib/native-check-assessment/cases-v1.json",
     "corpus_sha256": "14ab79de5fa6dff8ff5c4075946425c2a8224370de84b81886f585940f1011b8",

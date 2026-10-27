@@ -134,8 +134,9 @@ CLC 动作身份（CAID 的 `tool.call.1` 形态 → CLC §4.2；不解析 CAID 
    一个由三元组稳定派生的角色。requirement 改写为
    `(ep-quorum AND policy-permit) AND <binding-role>`；关系事实只补充，
    不替代 quorum。若 verifier 不输出该事实，表达式为假。
-   - 派生事实绑定 source/target artifact 摘要、action、verifier/trust 结果、
-     distinct subjects、原始证据时间和 status 快照。
+   - 派生事实绑定 source/target artifact 摘要、action、verifier/profile 与
+     trust 结果、distinct subjects、原始证据时间、完整原始 requirement digest、
+     policy generation 和 status 快照；verifier/profile 与 trust context 直接绑定。
    - freshness 取原始证据和状态，而不是关系重算时间；重算关系不能刷新旧批准。
 4. **`subject_id_source`**：AEC-08 要求主体标识来自 `native-verifier`；CLC
    只消费受保护事实中的 `subject`，不自行推断。
