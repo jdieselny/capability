@@ -18,9 +18,24 @@ The project is actively seeking maintainers for:
 - independent implementations;
 - carrier bindings and projection profiles;
 - security review;
-- conformance and interoperability testing.
+- conformance review (CLC-A first; CLC-D once the 64 + 15 corpora pass),
+  under `CONFORMANCE.md`.
 
 Maintainer eligibility and appointment are defined in `GOVERNANCE.md`.
+
+## Conformance reviewers
+
+| Reviewer | Scope | Since |
+|---|---|---|
+| None appointed yet | — | — |
+
+Offered, pending acceptance: `@jdieselny` — CLC-A core, provisional; offered
+2026-10-27. The role and its limits are in `GOVERNANCE.md`; activation is
+recorded here and in `.github/CODEOWNERS`.
+
+Reviewer scope, term and recusal rules are in `GOVERNANCE.md`; the procedure
+and checklist are in `CONFORMANCE.md`; verified claims are recorded in
+`conformance/registry.md`.
 
 ## Emeritus
 

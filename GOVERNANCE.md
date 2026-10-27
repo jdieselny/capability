@@ -39,6 +39,18 @@ A binding maintainer owns a carrier-specific profile or projection. A binding
 maintainer does not automatically become a core maintainer, and cannot add
 carrier semantics to the core.
 
+### Conformance Reviewer
+
+A conformance reviewer verifies an implementation report against a pinned
+corpus revision and records the outcome in the public conformance registry.
+The role is evidence review, not specification authorship: a reviewer cannot
+change normative text or vectors, create or remove a conformance class, or
+rule on two conflicting claims. Those remain maintainer decisions.
+
+A reviewer MUST recuse from any implementation they authored, employ, or
+financially depend on. The independence rule of §12 applies to the reviewer's
+own statement, not only to the implementation author's.
+
 ### Contributor
 
 Anyone who submits an issue, review, vector, implementation report or pull
@@ -118,6 +130,67 @@ Appointment requires:
 The target is at least three maintainers from at least two organizations before
 change control is transferred. Maintainers who are inactive for 12 months may
 move to emeritus status after public notice.
+
+## Conformance review
+
+Conformance claims are recorded, not remembered. Every claim names the
+implementation, the conformance class, the language revision, the corpus commit
+and file hashes, the exact commands, the results and the reviewer.
+`CONFORMANCE.md` defines the procedure and the checklist; verified claims are
+listed in `conformance/registry.md`.
+
+Appointment as a conformance reviewer requires:
+
+- a public contribution record in the relevant class or corpus;
+- consent of the candidate and consensus of current maintainers;
+- disclosure of material implementation, employment or commercial interests;
+- for each review, a short independence statement covering that implementation.
+
+Reviewers serve 12-month terms and may be renewed. A reviewer inactive for
+12 months moves to emeritus after public notice, on the same terms as a
+maintainer.
+
+Until the first conformance reviewer is appointed, the editor may perform the
+review and MUST mark the registry row as a bootstrap review. The bootstrap mark
+is removed when an appointed reviewer re-checks the claim.
+
+Reviewers do not decide:
+
+- changes to normative text, vectors or reason codes;
+- the creation or removal of a conformance class;
+- conflicting claims about the same implementation;
+- security errata, IPR, trademark or change-control transfer.
+
+Those escalate to the maintainers under the normal change process.
+
+### Reviewer authority
+
+The reviewer's authority is evidential, not editorial. A claim enters
+`conformance/registry.md` only with a review note signed by a reviewer whose
+scope covers the class.
+
+A reviewer may:
+
+- accept, reject or return a claim for a rerun;
+- require the corpus commit and file hashes to be stated;
+- record residual gaps and scope limits in the registry row;
+- ask for the commands and results to be reproduced at the same commit.
+
+A reviewer may not:
+
+- edit normative text, vectors, reason codes or schemas;
+- merge a change to `docs/`, `data/`, `scripts/` or `tools/`;
+- approve an implementation they authored, employ or depend on;
+- create, remove or reclassify a conformance class.
+
+Repository permissions implement this boundary; they do not replace it. A
+reviewer may hold `triage`, or `write` limited in practice by `CODEOWNERS` and
+branch protection to `conformance/` and `CONFORMANCE.md`. A reviewer does not
+receive merge rights over the specification or the corpora, and does not
+become a maintainer by accepting the review role.
+
+The registry row is the authority: if the row is absent or unsigned, the claim
+is not recorded, whatever a README says.
 
 ## Conflicts of interest
 

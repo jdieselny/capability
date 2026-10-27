@@ -1,0 +1,67 @@
+<!--
+SPDX-FileCopyrightText: 2026 Jijie Wei and CLC contributors
+SPDX-License-Identifier: Apache-2.0
+-->
+
+# CLC Conformance Registry
+
+Status: initial registry, effective 2026-10-27.
+
+One row per verified conformance claim. The procedure and checklist are in
+`CONFORMANCE.md`. Rows are append-only in substance: a superseded claim gets a
+new row and the old row is marked `superseded`; a wrong claim is marked
+`withdrawn` with the reason and is not deleted.
+
+CLC-E is not in this registry. It is implemented and pinned by a corpus but not
+claimed.
+
+## Verified claims
+
+| ID | Implementation | Class | Revision | Impl. commit | Corpus commit | Result | Reviewer | Date | Status |
+|---|---|---|---|---|---|---|---|---|---|
+| `reg-2026-001` | `jdieselny/ecr-wg` → `rust/clc-rust-cleanroom` | CLC-A core | CLC-1.19 (advertised) | `8db495ac68f9` | `1f3cbdf` | 44 tests; 154/154; 1,184/1,184 | Jijie Wei (editor, bootstrap) | 2026-10-27 | verified |
+
+### `reg-2026-001` — notes
+
+- Public CI: <https://github.com/jdieselny/ecr-wg/actions/runs/40503426566>
+  (success at `8db495a`).
+- Corpus hashes at `1f3cbdf`:
+  - `data/_vectors/clc-v1/vectors.json`
+    `3c1a5672d6f107444903f06c51a71ce92451f1b45ca92c5a84a345b0de5a5bbd`
+  - `data/_vectors/clc-v1/property-cases.json`
+    `f00ed1f49299293ac9fff1e10287b9642aa49d6dacf25b2b4a1be2d7103b2f07`
+- Commands: `cargo test`; `cargo run --release -- --vector
+  vectors/clc-a-core-vectors.json`; `cargo run --release -- --properties
+  vectors/property-cases.json`.
+- Bootstrap: no conformance reviewer is appointed yet; the editor performed
+  this review under the bootstrap rule in `GOVERNANCE.md`.
+- Independence: cleanroom implementation; no access to the `varwof` reference
+  implementations, stated by the author and supported by the repository's
+  cleanroom leash.
+- Residual gaps: the CLC-1.19 minor-gate corpora (`param_bounds`, §6.6 meet,
+  `Resolve`, `ConstraintUnion`, scheme declaration, declared domains) were not
+  run; no CLC-D official corpus was run. The row records the core corpus, not a
+  full CLC-1.19 or CLC-D claim.
+
+## Baseline (not a claim)
+
+The reference implementation is listed for context. It is not independent
+evidence: it shares an author with the specification, so it is a regression
+baseline, not third-party validation.
+
+| Implementation | Class | Revision | Impl. commit | Corpus commit | Evidence |
+|---|---|---|---|---|---|
+| `varwof/register` (Go) | CLC-A + CLC-D | CLC-1.19 | `145252c` | `1f3cbdf` | public CI: <https://github.com/varwof/register/actions/workflows/clc-conformance.yml> |
+
+Corpus hashes used by the baseline:
+
+- `clc-v1/vectors.json` `3c1a5672…`
+- `clc-v1/property-cases.json` `f00ed1f4…`
+- `clc-d/containment-vectors.json`
+  `3d03e5318f1e0cef07bd6cb38111cf6b7fbcc24aa13bd83fb7728ee1d4527b13`
+- `clc-d/authorize-chain-vectors.json`
+  `1ae22422c4c8632fa2d391473f1a9a244845d079baf381875134597409fcfa12`
+
+## Superseded or withdrawn
+
+None.

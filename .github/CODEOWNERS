@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 Jijie Wei and CLC contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Review ownership for the CLC repository.
+#
+# CODEOWNERS only takes effect for accounts with write access. The conformance
+# entries below activate when a conformance reviewer is appointed and given
+# access; they do not grant merge rights over the specification or corpora.
+#
+# Last matching pattern wins for a given file. Conformance artifacts are owned
+# by the reviewer; everything else stays with the editor.
+
+*                 @varwof
+/conformance/     @jdieselny
+/CONFORMANCE.md   @jdieselny

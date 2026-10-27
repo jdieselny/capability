@@ -51,6 +51,9 @@ An implementation MUST NOT claim independence merely because it uses a
 different programming language. CLC's own P12 test treats implementations with
 the same author or controlling organization as non-independent.
 
+Verified claims are recorded in [conformance/registry.md](conformance/registry.md);
+the procedure and checklist are in [CONFORMANCE.md](CONFORMANCE.md).
+
 ## Current implementation status
 
 | Implementation | Language | CLC revision | Status |
