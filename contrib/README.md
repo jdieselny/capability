@@ -16,6 +16,7 @@
 |---|---|---|
 | `clc-unit-encoding/` | experimental | 单位编码的两种写法对比 |
 | `iicp-touchpoint/` | experimental | 固定 grant/operation 对与 12 条不利用例 |
+| `iicp-evaluator-binding-v0/` | experimental | 外部授权求值器绑定草案：result schema + 11 cases |
 | `emilia-projection/` | informative | AEC requirement → CLC 的投影探针 |
 | `gilda-projection/` | informative | 审计记录 → CLC 结果的投影探针 |
 | `oasnt-projection/` | informative | 批准令牌 → Fact + 身份的投影探针 |
@@ -45,6 +46,23 @@ CLC 里如何表达**带单位的量**。结论：语言层不需要新类型—
 constraint / retry to another provider），以及"containment 之后仍未决"
 （`allow_unresolved`）。它是对 IICP 架构文档 v0.3.1 §12.3 所留
 review touchpoint 的可运行回答；**不代表对任何外部规范的采纳或互操作声明**。
+
+### `iicp-evaluator-binding-v0/`
+
+IICP 管理控制器的**外部授权求值器绑定**草案：一个可选、非激活的 result
+schema，加上 11 条 positive/negative cases 和一个本地校验器。它不改
+`management-profile-v1`，也不动 IICP 的 qualification baseline；讨论入口是
+[`RobLe3/iicp-management#168`](https://github.com/RobLe3/iicp-management/issues/168)。
+
+运行：
+
+```bash
+cd contrib/iicp-evaluator-binding-v0
+python3 validate.py     # 11/11 cases pass
+```
+
+这是对本仓之外的 contract 的提案，**不是** CLC 规范的一部分，也不构成对
+IICP 的采纳或互操作声明。
 
 ## 复现
 

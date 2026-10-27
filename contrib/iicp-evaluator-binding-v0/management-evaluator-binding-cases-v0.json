@@ -1,0 +1,705 @@
+{
+  "schema": "iicp.management-evaluator-binding.cases.v0",
+  "status": "architecture-input",
+  "profile": "iicp.management-evaluator.v0",
+  "note": "Eleven cases covering the nine groups in the issue: the allow_unresolved group is split into bound and unbound, and one case exercises a local unresolved decision. Each case carries one local decision, one evaluator result and a normative derivation, so the expectation can be checked independently of the implementation that produced it.",
+  "decision_precedence": [
+    "reject",
+    "deny",
+    "allow_unresolved",
+    "allow"
+  ],
+  "cases": [
+    {
+      "id": "eval-001-both-allow",
+      "category": "both local policy and evaluator allow",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "derivation": "Local policy allows and the evaluator result is fresh, bound to the request, and allow, so the intersection is allow. The result remains non-authorizing; the local apply gate still decides execution."
+      }
+    },
+    {
+      "id": "eval-002-evaluator-deny-wins",
+      "category": "local policy permits, external evaluator denies",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "deny",
+        "reason_codes": [
+          "IICP-EVAL-DENY"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "deny",
+        "reason_codes": [
+          "IICP-EVAL-DENY"
+        ],
+        "derivation": "Composition is by intersection and deny takes precedence. Local allow cannot override the evaluator deny."
+      }
+    },
+    {
+      "id": "eval-003-local-deny-wins",
+      "category": "local policy denies, external evaluator permits",
+      "local_decision": "deny",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "deny",
+        "reason_codes": [
+          "IICP-LOCAL-DENY"
+        ],
+        "derivation": "Local policy denies, so the intersection is deny regardless of the evaluator allow. The evaluator result never grants authority the local policy withholds."
+      }
+    },
+    {
+      "id": "eval-004-unsupported-profile-version",
+      "category": "unknown required evaluator profile version",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-PROFILE-UNSUPPORTED"
+        ],
+        "derivation": "Unknown required semantics fail profile validation. The controller cannot interpret a profile version it did not negotiate, so the result is rejected rather than read as allow."
+      }
+    },
+    {
+      "id": "eval-005-allow-unresolved-bound",
+      "category": "allow_unresolved with an identified resolver and explicit downstream outcome",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "pending"
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "derivation": "The evaluator is unresolved but names the component responsible for the remaining check, and the downstream outcome is explicit. The composed outcome stays allow_unresolved and is not execution permission."
+      }
+    },
+    {
+      "id": "eval-006-allow-unresolved-unbound",
+      "category": "allow_unresolved without an explicit downstream outcome",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED-UNBOUND"
+        ],
+        "derivation": "The evaluator names a resolver but the composed call has no explicit downstream outcome, so the unresolved obligation would become permission by default. It is rejected instead."
+      }
+    },
+    {
+      "id": "eval-007-stale-result",
+      "category": "stale or expired evaluator result",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792990000,
+          "expires_at": 1792999000
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-STALE"
+        ],
+        "derivation": "The result expired before the evaluation time. Freshness is part of the binding, so a stale allow is rejected."
+      }
+    },
+    {
+      "id": "eval-008-binding-mismatch",
+      "category": "result bound to a different action, target, audience, domain or policy generation",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-replica",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-BINDING-MISMATCH"
+        ],
+        "derivation": "The result names a different target from the request. A result for another action, target, audience, domain or policy generation cannot authorize this request."
+      }
+    },
+    {
+      "id": "eval-009-optional-extension-ignored",
+      "category": "unsupported optional extension that is safely ignored",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "understood_extensions": [],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [
+          {
+            "id": "x-vendor.trace",
+            "class": "OPTIONAL_IGNORABLE"
+          }
+        ],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW",
+          "IICP-EVAL-EXTENSION-IGNORED"
+        ],
+        "derivation": "The only ununderstood extension is declared OPTIONAL_IGNORABLE, so it may be ignored. A REQUIRED_* extension with the same id would be a rejection."
+      }
+    },
+    {
+      "id": "eval-010-evidence-preserved",
+      "category": "evidence preservation showing which decision and freshness inputs supported the outcome",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "kind": "freshness-attestation",
+            "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "evidence_digests": [
+          "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+        ],
+        "derivation": "The composed outcome preserves the evaluator evidence references. Management records the decision and freshness inputs without importing raw credentials or unrestricted policy content."
+      }
+    },
+    {
+      "id": "eval-011-local-unresolved",
+      "category": "local policy is unresolved, evaluator permits",
+      "local_decision": "allow_unresolved",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v0"
+      ],
+      "now": 1793000000,
+      "request": {
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7
+      },
+      "result": {
+        "schema_version": "iicp.management-evaluator-result.v0",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v0",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "action": "apply",
+          "target": "resource:db-primary",
+          "audience": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "policy_generation": 7
+        },
+        "policy": {
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false
+      },
+      "expected": {
+        "outcome": "allow_unresolved",
+        "reason_codes": [
+          "IICP-LOCAL-UNRESOLVED"
+        ],
+        "derivation": "The evaluator result is allow, but the local policy is unresolved. Intersection cannot raise the local decision, so the composed outcome stays allow_unresolved and is not execution permission."
+      }
+    }
+  ]
+}

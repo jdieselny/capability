@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iicp.network/schemas/management/management-evaluator-result-v0.schema.json",
+  "title": "IICP External Authorization Evaluator Result v0",
+  "description": "Bounded, non-authorizing result returned by an independently governed external authorization evaluator to an IICP management controller. It is an optional binding on management-profile-v1 and does not change the profile's authority semantics.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evaluator",
+    "decision",
+    "reason_codes",
+    "binding",
+    "policy",
+    "freshness",
+    "unresolved",
+    "evidence",
+    "extensions",
+    "authorizes_mutation"
+  ],
+  "properties": {
+    "schema_version": { "const": "iicp.management-evaluator-result.v0" },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "profile_version"],
+      "properties": {
+        "profile_id": { "$ref": "#/$defs/id" },
+        "profile_version": { "$ref": "#/$defs/id" },
+        "evaluator_id": { "$ref": "#/$defs/id" }
+      }
+    },
+    "decision": { "enum": ["allow", "deny", "allow_unresolved"] },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_digest",
+        "action",
+        "target",
+        "audience",
+        "administrative_domain",
+        "policy_generation"
+      ],
+      "properties": {
+        "request_digest": { "$ref": "#/$defs/digest" },
+        "action": { "$ref": "#/$defs/id" },
+        "target": { "$ref": "#/$defs/id" },
+        "audience": { "$ref": "#/$defs/id" },
+        "administrative_domain": { "$ref": "#/$defs/id" },
+        "policy_generation": { "$ref": "#/$defs/integer" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["digest"],
+      "properties": {
+        "digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issued_at", "expires_at"],
+      "properties": {
+        "issued_at": { "$ref": "#/$defs/integer" },
+        "expires_at": { "$ref": "#/$defs/integer" }
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["obligation_id", "responsible_component", "status"],
+        "properties": {
+          "obligation_id": { "$ref": "#/$defs/id" },
+          "responsible_component": { "$ref": "#/$defs/id" },
+          "status": { "enum": ["pending", "satisfied", "violated", "unknown"] }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "digest"],
+        "properties": {
+          "kind": { "$ref": "#/$defs/id" },
+          "digest": { "$ref": "#/$defs/digest" },
+          "uri": { "type": "string", "minLength": 1, "maxLength": 2048 }
+        }
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "maxItems": 128,
+      "items": { "$ref": "#/$defs/extension" }
+    },
+    "authorizes_mutation": { "const": false }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "decision": { "const": "allow_unresolved" } },
+        "required": ["decision"]
+      },
+      "then": {
+        "properties": { "unresolved": { "minItems": 1 } }
+      },
+      "else": {
+        "properties": { "unresolved": { "maxItems": 0 } }
+      }
+    }
+  ],
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256, "pattern": "^\\S+$" },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "integer": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+    "extension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "class"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "class": {
+          "enum": [
+            "OPTIONAL_IGNORABLE",
+            "OPTIONAL_NEGOTIABLE",
+            "REQUIRED_UNDERSTOOD",
+            "REQUIRED_SECURITY_CRITICAL"
+          ]
+        }
+      }
+    }
+  }
+}
