@@ -28,17 +28,18 @@ Maintainer eligibility and appointment are defined in `GOVERNANCE.md`.
 
 | Reviewer | Scope | Since |
 |---|---|---|
-| Justin D. Kintzele ([@jdieselny](https://github.com/jdieselny)) | CLC-A core corpus: 154 core vectors and 1,184 property cases, including verdict, reason code and the unresolved channel. Provisional: extends to the CLC-1.19 corpora and to CLC-D once the reviewer has run those corpora and published the results | 2026-10 |
+| Justin D. Kintzele ([@jdieselny](https://github.com/jdieselny)) | CLC-A core corpus: 154 core vectors and 1,184 property cases, including verdict, reason code and the unresolved channel. The same appointment covers CLC-D: that scope takes effect when the reviewer has run the 64 containment and 15 authorize-chain vectors and published the results, and the CLC-1.19 minor-gate corpora on the same terms | 2026-10 |
 
 Appointed 2026-10-27 on the reviewer's written acceptance, which carried a
 P12 independence statement and a standing commitment to rerun the corpora on
-each revision published here. Not in this appointment: CLC-1.19 minor-gate
-semantics, CLC-D, CLC-E, and governance votes. Claims authored by the reviewer
-are outside the reviewer's scope in every class: the reviewer authored
-`reg-2026-001` and recuses from it. Term 12 months, renewable. The role and
-its limits are in `GOVERNANCE.md`; review ownership is recorded in
-`.github/CODEOWNERS`, which takes effect only if the reviewer is given write
-access.
+each revision published here. The CLC-D and CLC-1.19 scopes take effect on the
+terms above, without a further appointment; the date the published results are
+verified is recorded here. CLC-E and governance votes are outside the reviewer
+role. Claims authored by the reviewer are outside the reviewer's scope in
+every class: the reviewer authored `reg-2026-001` and recuses from it. Term 12
+months, renewable. The role and its limits are in `GOVERNANCE.md`; review
+ownership is recorded in `.github/CODEOWNERS`, which takes effect only if the
+reviewer is given write access.
 
 Reviewer scope, term and recusal rules are in `GOVERNANCE.md`; the procedure
 and checklist are in `CONFORMANCE.md`; verified claims are recorded in
