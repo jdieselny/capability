@@ -19,7 +19,7 @@ claimed.
 
 | ID | Implementation | Class | Revision | Impl. commit | Corpus commit | Result | Reviewer | Date | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| `reg-2026-001` | `jdieselny/ecr-wg` → `rust/clc-rust-cleanroom` | CLC-A core | CLC-1.19 (advertised) | `8db495ac68f9` | `1f3cbdf` | 44 tests; 154/154; 1,184/1,184 | Jijie Wei (editor, bootstrap) | 2026-10-27 | verified |
+| `reg-2026-001` | `jdieselny/ecr-wg` → `rust/clc-rust-cleanroom` | CLC-A core | CLC-1.19, Section 12 core corpus | `8db495ac68f9` | `1f3cbdf` | 44 tests; 154/154; 1,184/1,184 | Jijie Wei (editor, bootstrap) | 2026-10-27 | verified |
 
 ### `reg-2026-001` — notes
 
@@ -33,8 +33,13 @@ claimed.
 - Commands: `cargo test`; `cargo run --release -- --vector
   vectors/clc-a-core-vectors.json`; `cargo run --release -- --properties
   vectors/property-cases.json`.
-- Bootstrap: no conformance reviewer is appointed yet; the editor performed
-  this review under the bootstrap rule in `GOVERNANCE.md`.
+- Bootstrap: the editor performed this review under the bootstrap rule in
+  `GOVERNANCE.md`. The implementation author was appointed provisional CLC-A
+  core reviewer on 2026-10-27 (`MAINTAINERS.md`) and recuses from this row, so
+  the bootstrap mark stands until a different appointed reviewer re-checks the
+  claim.
+- Reviewer appointment: `@jdieselny`, CLC-A core corpus, provisional, since
+  2026-10-27. The appointment does not cover this implementation.
 - Independence: cleanroom implementation; no access to the `varwof` reference
   implementations, stated by the author and supported by the repository's
   cleanroom leash.
