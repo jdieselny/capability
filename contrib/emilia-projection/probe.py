@@ -35,7 +35,7 @@ import evidence_semantics as evidence  # noqa: E402
 
 def digest_object(value):
     canonical = clc.canonical_json(value).encode("utf-8")
-    return "sha256:" + hashlib.sha256(canonical).hexdigest()
+    return "sha-256:" + hashlib.sha256(canonical).hexdigest()
 
 
 def utf8_sorted(values):
@@ -63,6 +63,7 @@ def relation_tuple(binding):
         "action_digest": digest_object(binding["action"]),
         "subjects": subjects,
         "trust": binding["trust"],
+        "trust_snapshot_digest": binding["trust_snapshot_digest"],
         "status_digest": digest_object(binding["status"]),
         "status_snapshot": binding["status"],
         "evidence_issued_at": issued_at,
@@ -229,6 +230,9 @@ def print_case(case_id, name, want, got, expected_got=None):
 
 def main():
     fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    binding = fixture["binding"]
+    if digest_object(binding["trust_inputs"]) != binding["trust_snapshot_digest"]:
+        raise SystemExit("trust_snapshot_digest does not match trust_inputs")
     now = parse_instant(fixture["now"])
     subject = binding_subject(fixture["binding"])
     binding_role = fixture["binding_role"]

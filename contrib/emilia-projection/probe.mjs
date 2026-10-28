@@ -17,7 +17,7 @@ const clc = await import(CLC_TS_URL.href);
 const evidence = await import(new URL('./evidence_semantics.ts', CLC_TS_URL).href);
 
 const digestObject = (value) =>
-  'sha256:' + createHash('sha256')
+  'sha-256:' + createHash('sha256')
     .update(Buffer.from(clc.canonicalJSON(value), 'utf8'))
     .digest('hex');
 
@@ -43,6 +43,7 @@ function relationTuple(binding) {
     action_digest: digestObject(binding.action),
     subjects,
     trust: binding.trust,
+    trust_snapshot_digest: binding.trust_snapshot_digest,
     status_digest: digestObject(binding.status),
     status_snapshot: binding.status,
     evidence_issued_at: issuedAt,
@@ -227,6 +228,9 @@ function requirementDigest(value) {
 }
 
 const fixture = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
+if (digestObject(fixture.binding.trust_inputs) !== fixture.binding.trust_snapshot_digest) {
+  throw new Error('trust_snapshot_digest does not match trust_inputs');
+}
 const subject = bindingSubject(fixture.binding);
 const bindingRole = fixture.binding_role;
 {

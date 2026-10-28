@@ -20,7 +20,7 @@ PASS EMI-PROJ-016 invalid binding identifier rejected                     want=r
 PASS EMI-PROJ-017 over-long binding role rejected                         want=rejected got=rejected
 PASS EMI-PROJ-018 unknown nested binding member rejected                  want=rejected got=rejected
 PASS EMI-PROJ-019 unpinned status_required role rejected                  want=rejected got=rejected
-PASS EMI-BIND-001 base relation tuple has the pinned subject              want=A6_5Bwc-GmIae26cYpJijlLIbM1UTLEtRTmMmraayUI got=A6_5Bwc-GmIae26cYpJijlLIbM1UTLEtRTmMmraayUI
+PASS EMI-BIND-001 base relation tuple has the pinned subject              want=wy00iyR8vT7-WXT-kVbBJjVW16FINmmvDmhy2FGO5hY got=wy00iyR8vT7-WXT-kVbBJjVW16FINmmvDmhy2FGO5hY
 PASS EMI-AEC-001 two verified approvals, permit and binding              want=SATISFIED got=SATISFIED
 PASS EMI-AEC-002 one approval unverified                                 want=UNSATISFIED/quorum:distinct_subjects=1<threshold=2 got=UNSATISFIED/quorum:distinct_subjects=1<threshold=2
 PASS EMI-AEC-003 fresh binding does not refresh an old approval          want=UNSATISFIED/freshness:stale got=UNSATISFIED/freshness:stale
