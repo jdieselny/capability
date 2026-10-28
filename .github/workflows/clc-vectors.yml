@@ -47,8 +47,20 @@ jobs:
           pd = load('profile-declarations.json')
           if pd.get('schema') != 'clc-profile-declarations-v1':
               problems.append('profile-declarations.json: schema mismatch')
-          if len(pd.get('declarations', [])) != 11:
-              problems.append('profile-declarations.json: not 11 declarations')
+          declared = [d.get('profile') for d in pd.get('declarations', [])]
+          if len(declared) != len(set(declared)):
+              problems.append('profile-declarations.json: duplicate declaration')
+          used = set()
+          for rel in ('crosswalk-vectors.json',
+                      '../clc-d/containment-crosswalk-vectors.json',
+                      '../clc-d/authorize-crosswalk-vectors.json'):
+              for e in json.load(open(base + rel, encoding='utf-8')):
+                  if e.get('profile'):
+                      used.add(e['profile'])
+          for missing in sorted(used - set(declared)):
+              problems.append(f'profile-declarations.json: no declaration for {missing}')
+          for orphan in sorted(set(declared) - used):
+              problems.append(f'profile-declarations.json: declaration for unused profile {orphan}')
           schema = load('scheme-declaration.schema.json')
           schema['required'] = [r for r in schema.get('required', []) if r != 'digest']
           for c in sdecl:
@@ -62,7 +74,17 @@ jobs:
               for p in problems:
                   print('  ' + p)
               sys.exit(1)
-          print('new corpora check OK: 50/8/24/9 + 11 declarations')
+          print(f'new corpora check OK: 50/8/24/9 + {len(declared)} declarations')
+          PY
+
+      - name: Validate the authorize cross-walk corpus against its schema
+        run: |
+          python3 - <<'PY'
+          import json, jsonschema
+          v = json.load(open("data/_vectors/clc-d/authorize-crosswalk-vectors.json"))
+          s = json.load(open("data/_vectors/clc-d/authorize-crosswalk-vectors.schema.json"))
+          jsonschema.validate(v, s)
+          print(f"schema OK, {len(v)} authorize cross-walk vectors")
           PY
 
       - name: Validate extension canonical parity fixture

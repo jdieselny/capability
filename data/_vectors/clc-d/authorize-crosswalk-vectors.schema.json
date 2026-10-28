@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://varwof.com/schemas/clc-d/authorize-crosswalk-vectors.schema.json",
+  "title": "CLC-D authorize cross-walk vectors (capability-language-core-v1 §9, §13.8)",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "kind",
+      "spec_clause",
+      "profile",
+      "grant",
+      "operation",
+      "expect",
+      "derivation"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^acx-[0-9]{3}$",
+        "description": "Unique authorize cross-walk vector identifier (e.g. acx-001)"
+      },
+      "kind": {
+        "type": "string",
+        "const": "authorize-crosswalk",
+        "description": "Each vector asserts the CLC decision for one grant projected by a pinned cross-walk profile, against one operation."
+      },
+      "spec_clause": {
+        "type": "string",
+        "description": "capability-language-core-v1 reference, §9 authorization plus §13.8 cross-walk"
+      },
+      "profile": {
+        "type": "string",
+        "pattern": "->clc-v1$",
+        "description": "Pinned cross-walk profile that maps the carrier's native representation to the grant in this vector."
+      },
+      "grant": {
+        "type": "object",
+        "required": ["id"],
+        "additionalProperties": false,
+        "description": "The CLC grant as projected by the profile. The mapping itself is the profile's responsibility and is described in derivation; the vector pins the projected form so the decision is reproducible without re-running the carrier.",
+        "properties": {
+          "id": {"type": "string"},
+          "params": {"type": "object"},
+          "param_bounds": {"type": "object"},
+          "constraints": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "operation": {
+        "type": "object",
+        "required": ["id"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string"},
+          "params": {"type": "object"}
+        }
+      },
+      "execution_checks": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "Runtime execution-boundary and trigger-lock checks the profile leaves to the carrier. These are not carrier policy dimensions, are not mapped into a CLC field, and must not be reported as part of the decision. Kept in a member of their own so that policy delegation is never conflated with physical execution containment."
+      },
+      "expect": {
+        "type": "object",
+        "required": ["verdict"],
+        "additionalProperties": false,
+        "properties": {
+          "verdict": {
+            "type": "string",
+            "enum": ["allow", "deny", "allow_unresolved"]
+          },
+          "reason": {
+            "type": ["string", "null"],
+            "description": "Expected reason on deny (or on allow_unresolved when the spec assigns one)."
+          },
+          "unresolved": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Expected residual obligations on allow_unresolved (§8.4), in the order the implementation reports them."
+          }
+        }
+      },
+      "derivation": {
+        "type": "string",
+        "description": "Who contributed the case, the native representation it came from, and how the profile produced the projected grant."
+      }
+    }
+  }
+}

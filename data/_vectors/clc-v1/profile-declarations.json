@@ -112,6 +112,16 @@
         "note": "AIAM1-CAP-011 states composition is not closed under transitivity, matching the per-pair relation"
       },
       "union_axis": { "fields": ["allowed_roles", "environment", "risk_level", "scope"], "routed_to": "carrier-enforced" }
+    },
+    {
+      "profile": "iicp->clc-v1",
+      "corpora": ["clc-d/authorize-crosswalk-vectors.json"],
+      "chain_check": {
+        "iterates_hops": true,
+        "relies_on_transitivity": false,
+        "note": "IICP monotonic trace verifies each hop's grant and composes by narrowing; the profile makes no transitivity claim and MUST NOT declare a basis"
+      },
+      "union_axis": { "fields": ["capabilities[].constraints"], "routed_to": "constraint-union" }
     }
   ],
   "examples": [

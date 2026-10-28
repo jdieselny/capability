@@ -25,6 +25,7 @@ vector.  The CLC-A corpus lives in [`../clc-v1/`](../clc-v1/).
 | `containment-crosswalk-vectors.schema.json` | JSON Schema for `containment-crosswalk-vectors.json`, including the `out_of_scope` member (§13.8.1 obligation 3) |
 | `containment-vectors.schema.json` | JSON Schema for `containment-vectors.json` (each vector carries `ext_revision` and `conformance_class: CLC-D`) |
 | `authorize-chain-vectors.json` | **15** vectors for the §13.11 fused `AuthorizeWithChain` (rev CLC-1.13/1.14): containment per hop then `Authorize(Intersect(chain))`, with `authorize-chain-vectors.schema.json`; `ac-012`/`ac-015` pin a `param_bounds` chain (§6.6 meet) |
+| `authorize-crosswalk-vectors.json` | **1** vector (`acx-001`, IICP): a carrier's native capability representation mapped to a CLC grant by a pinned profile, then decided by CLC's own `Authorize` — evidence that a foreign capability model projects into CLC without CLC growing a second authorization path. Distinct from an authorize chain (`ac`): a cross-walk is not a delegation chain, so it is not wrapped as a one-element chain. Carries `execution_checks` for runtime boundary checks the profile leaves to the carrier; these are not carrier policy dimensions and do not enter the decision. Schema: `authorize-crosswalk-vectors.schema.json` |
 | `reason-collapse-vectors.json` | **3** vectors pinning the §13.5 collapse policy — which CLC-D reason code MAY reduce to `capability_not_authorized` at a non-revealing boundary (`child_exceeds_parent` only) and which MUST stay distinguishable (`params_not_narrower`, `delegation_mode_not_narrower`), with `reason-collapse-vectors.schema.json`; the Go runner cross-checks each non-collapsible code is still surfaced by its production layer's corpus |
 | `profile-owned/aic-jwt-da-mode-lattice-vectors.json` | **5** vectors for the §13.4.5 binding-profile delegation-mode pre-check (AIC-JWT order `authorized < representative`): the aggregation point for profile-owned mode vectors, with `aic-jwt-da-mode-lattice-vectors.schema.json`.  Run by `cmd/mode-lattice-vectors-run` in `varwof/register` — the carrier's own lattice, never `Contains` |
 
@@ -37,6 +38,8 @@ CLC_D_PROPERTY_CASES=../capability/data/_vectors/clc-d/containment-property-case
   go test ./semantics/ -run TestContainsProperty -v
 CLC_D_CROSSWALK_VECTORS=../capability/data/_vectors/clc-d/containment-crosswalk-vectors.json \
   go run ./cmd/contains-crosswalk-run/
+CLC_AUTHORIZE_CROSSWALK_VECTORS=../capability/data/_vectors/clc-d/authorize-crosswalk-vectors.json \
+  go run ./cmd/authorize-crosswalk-vectors-run/
 CLC_D_REASON_COLLAPSE_VECTORS=../capability/data/_vectors/clc-d/reason-collapse-vectors.json \
 CLC_D_MODE_VECTORS=../capability/data/_vectors/clc-d/profile-owned/aic-jwt-da-mode-lattice-vectors.json \
   go run ./cmd/reason-collapse-vectors-run/
