@@ -42,11 +42,31 @@ def utf8_sorted(values):
     return sorted(values, key=lambda value: value.encode("utf-8"))
 
 
+def canonical_artifact_set(targets):
+    """Order members by their JCS bytes; duplicate members are rejected."""
+    if not targets:
+        raise ValueError("artifact set is empty")
+    encoded = [(clc.canonical_json(target).encode("utf-8"), target) for target in targets]
+    encoded.sort(key=lambda item: item[0])
+    for left, right in zip(encoded, encoded[1:]):
+        if left[0] == right[0]:
+            raise ValueError("artifact set contains duplicate members")
+    for _, target in encoded:
+        typ = target.get("type")
+        if not isinstance(typ, str) or not typ:
+            raise ValueError("artifact set member has no type")
+    types = {target["type"] for _, target in encoded}
+    if len(types) > 1:
+        raise ValueError("artifact set mixes target types")
+    return [target for _, target in encoded]
+
+
 def relation_tuple(binding):
-    subjects = utf8_sorted(target["subject"] for target in binding["targets"])
+    targets = canonical_artifact_set(binding["targets"])
+    subjects = utf8_sorted(target["subject"] for target in targets)
     issued_at = utf8_sorted(
         [binding["source"]["issued_at"]]
-        + [target["issued_at"] for target in binding["targets"]]
+        + [target["issued_at"] for target in targets]
     )
     return {
         "requirement_digest": binding["requirement_digest"],
@@ -57,8 +77,8 @@ def relation_tuple(binding):
         },
         "relation": binding["relation"],
         "to": {
-            "type": binding["targets"][0]["type"],
-            "artifact_set_digest": digest_object(binding["targets"]),
+            "type": targets[0]["type"],
+            "artifact_set_digest": digest_object(targets),
         },
         "action_digest": digest_object(binding["action"]),
         "subjects": subjects,
@@ -325,6 +345,38 @@ def main():
         fixture["expected_subject"],
         subject,
     )
+    reversed_binding = dict(binding)
+    reversed_binding["targets"] = list(reversed(binding["targets"]))
+    print_case(
+        "EMI-BIND-007",
+        "artifact set order does not change the relation subject",
+        "unchanged",
+        "unchanged" if binding_subject(reversed_binding) == subject else "different",
+    )
+    duplicated = dict(binding)
+    duplicated["targets"] = list(binding["targets"]) + [binding["targets"][0]]
+    try:
+        canonical_artifact_set(duplicated["targets"])
+        got = "accepted"
+    except ValueError:
+        got = "rejected"
+    print_case("EMI-BIND-008", "duplicate artifact member rejected", "rejected", got)
+
+    mixed = [dict(target) for target in binding["targets"]]
+    mixed[-1]["type"] = "policy-permit"
+    try:
+        canonical_artifact_set(mixed)
+        got = "accepted"
+    except ValueError:
+        got = "rejected"
+    print_case("EMI-BIND-009", "mixed target types rejected", "rejected", got)
+
+    try:
+        canonical_artifact_set([])
+        got = "accepted"
+    except ValueError:
+        got = "rejected"
+    print_case("EMI-BIND-010", "empty artifact set rejected", "rejected", got)
 
     requirement = fixture["mapped_requirement"]
     for case in fixture["evidence_cases"]:

@@ -83,7 +83,7 @@ canonical requirement 与两个 digest，并对未知成员、未 pin role、超
 做出相同的拒绝。Python/TS 的实现也做了 AEC 成员闭合检查、标识符字符集检查和
 UTF-8 字节序排序。
 
-## 实际求值结果（`out-probe.txt`，32/32 PASS）
+## 实际求值结果（`out-probe.txt`，36/36 PASS）
 
 | # | 事实 | 期望 | 实际 |
 |---|---|---|---|
@@ -148,6 +148,13 @@ CLC 动作身份（CAID 的 `tool.call.1` 形态 → CLC §4.2；不解析 CAID 
 subject 一致，并分别修改 source artifact、target artifact、action 和 status
 快照，确认四种修改都会改变 subject。
 
+目标工件集合按成员各自的 JCS 字节升序编码；到达顺序不属于编码，重复成员
+拒绝。元组只有一个 `to.type`，因此集合成员的类型必须一致——混类型集合会被
+拒绝，否则 `to.type` 只能取自某个成员，subject 又会依赖顺序。`EMI-BIND-007`
+用相反顺序重算元组，确认 subject 不变；`EMI-BIND-008` 拒绝重复成员；
+`EMI-BIND-009` 拒绝混类型集合；`EMI-BIND-010` 拒绝空集合。缺少 `type` 的成员
+同样被拒绝。三个探针实现同一规则。
+
 CLC core 把 binding subject 当作不透明值：只要 native verifier 给出
 `verified=true` 的 `clc:evidence-binding:…` fact，CLC 就接受该 role。因此
 source/target/action/status 的实际绑定由 native verifier 负责，不由 CLC
@@ -165,7 +172,7 @@ constraint 失败或 required binding 无法建立时，整个 requirement 仍�
 只属于授权侧。
 
 Python 和 TypeScript runner（`probe.py`、`probe.mjs`）读取 register 仓库中的
-同一 `emilia-binding-fixture-v1.json`，输出同样的 32 个 case ID、
+同一 `emilia-binding-fixture-v1.json`，输出同样的 36 个 case ID、
 `want` 和 `got`。Go 通过 `go:embed` 读取该 fixture；求值事实也来自
 fixture 的 `evidence_cases`，三份实现不再各留一份。每个 case 行都满足
 `want == got`（`want` 是完整期望，而不是只写 verdict 前缀）。

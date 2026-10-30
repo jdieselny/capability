@@ -24,10 +24,35 @@ const digestObject = (value) =>
 const utf8Compare = (a, b) =>
   Buffer.compare(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'));
 
+function canonicalArtifactSet(targets) {
+  if (targets.length === 0) {
+    throw new Error('artifact set is empty');
+  }
+  const encoded = targets.map((target) => (
+    [Buffer.from(clc.canonicalJSON(target), 'utf8'), target]));
+  encoded.sort((left, right) => Buffer.compare(left[0], right[0]));
+  for (let i = 1; i < encoded.length; i += 1) {
+    if (Buffer.compare(encoded[i - 1][0], encoded[i][0]) === 0) {
+      throw new Error('artifact set contains duplicate members');
+    }
+  }
+  for (const [, target] of encoded) {
+    if (typeof target.type !== 'string' || target.type.length === 0) {
+      throw new Error('artifact set member has no type');
+    }
+  }
+  const types = new Set(encoded.map(([, target]) => target.type));
+  if (types.size > 1) {
+    throw new Error('artifact set mixes target types');
+  }
+  return encoded.map(([, target]) => target);
+}
+
 function relationTuple(binding) {
-  const subjects = binding.targets.map((target) => target.subject).sort(utf8Compare);
+  const targets = canonicalArtifactSet(binding.targets);
+  const subjects = targets.map((target) => target.subject).sort(utf8Compare);
   const issuedAt = [binding.source.issued_at,
-    ...binding.targets.map((target) => target.issued_at)].sort(utf8Compare);
+    ...targets.map((target) => target.issued_at)].sort(utf8Compare);
   return {
     requirement_digest: binding.requirement_digest,
     policy_generation: binding.source.policy_generation,
@@ -37,8 +62,8 @@ function relationTuple(binding) {
     },
     relation: binding.relation,
     to: {
-      type: binding.targets[0].type,
-      artifact_set_digest: digestObject(binding.targets),
+      type: targets[0].type,
+      artifact_set_digest: digestObject(targets),
     },
     action_digest: digestObject(binding.action),
     subjects,
@@ -315,6 +340,39 @@ console.log();
 
 printCase('EMI-BIND-001', 'base relation tuple has the pinned subject',
   fixture.expected_subject, subject);
+
+const reversedBinding = { ...fixture.binding, targets: [...fixture.binding.targets].reverse() };
+printCase('EMI-BIND-007',
+  'artifact set order does not change the relation subject',
+  'unchanged',
+  bindingSubject(reversedBinding) === subject ? 'unchanged' : 'different');
+
+let duplicateVerdict = 'accepted';
+try {
+  canonicalArtifactSet([...fixture.binding.targets, fixture.binding.targets[0]]);
+} catch {
+  duplicateVerdict = 'rejected';
+}
+printCase('EMI-BIND-008', 'duplicate artifact member rejected',
+  'rejected', duplicateVerdict);
+
+let mixedVerdict = 'accepted';
+try {
+  const mixed = fixture.binding.targets.map((target) => ({ ...target }));
+  mixed[mixed.length - 1].type = 'policy-permit';
+  canonicalArtifactSet(mixed);
+} catch {
+  mixedVerdict = 'rejected';
+}
+printCase('EMI-BIND-009', 'mixed target types rejected', 'rejected', mixedVerdict);
+
+let emptyVerdict = 'accepted';
+try {
+  canonicalArtifactSet([]);
+} catch {
+  emptyVerdict = 'rejected';
+}
+printCase('EMI-BIND-010', 'empty artifact set rejected', 'rejected', emptyVerdict);
 
 for (const testCase of fixture.evidence_cases) {
   const [verdict, reason] = evidence.evaluateRequirement(
