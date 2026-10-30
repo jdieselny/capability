@@ -1091,5 +1091,62 @@
   "out_of_scope": [
    "validity"
   ]
+ },
+ {
+  "id": "ccx-046",
+  "kind": "contain-crosswalk",
+  "spec_clause": "CLC-1.15 §13.4.2 / §13.4.3",
+  "profile": "iicp->clc-v1",
+  "parent_source": {
+   "capabilities": [
+    {
+     "constraints": [
+      "varwof/constraint-v1:network:cidr:[\"10.0.0.0/16\"]",
+      "varwof/constraint-v1:time:window:[{\"end\":\"18:00\",\"start\":\"08:00\"}]"
+     ],
+     "id": "example/power-v1:curtail:*",
+     "params": {
+      "circuit_groups": [
+       1,
+       2,
+       3
+      ],
+      "duration_sec": 7200,
+      "max_shed_kw": 10
+     }
+    }
+   ],
+   "grant_id": "grant-example-curtail-001"
+  },
+  "child_source": {
+   "capabilities": [
+    {
+     "constraints": [
+      "varwof/constraint-v1:network:cidr:[\"10.0.1.0/24\"]",
+      "varwof/constraint-v1:time:window:[{\"end\":\"15:00\",\"start\":\"14:00\"}]"
+     ],
+     "id": "example/power-v1:curtail:ups-unit-01",
+     "params": {
+      "circuit_groups": [
+       2
+      ],
+      "duration_sec": 900,
+      "max_shed_kw": 2.5
+     }
+    }
+   ],
+   "parent_grant_id": "grant-example-curtail-001",
+   "workorder_id": "wo-example-curtail-082"
+  },
+  "expect": {
+   "contains": true
+  },
+  "derivation": "Contributed by Justin D. Kintzele (J Diesel NY / ECR-WG). Example macro grant (10kW/7200s/Groups 1-3) monotonically narrowed to ups-unit-01 (2.5kW/900s/Group 2). CLC-D Contains holds per §13.4.2/§13.4.3.",
+  "out_of_scope": [
+   "filesystem:path_canonicalization",
+   "filesystem:traversal",
+   "network:outbound_url_validation",
+   "system:command_injection"
+  ]
  }
 ]
