@@ -222,8 +222,12 @@
         "controller_id",
         "administrative_domain",
         "api_version",
-        "policy_evaluator",
-        "canonicalization"
+        "schema_id",
+        "canonicalization",
+        "signature_algorithm",
+        "operation",
+        "resource_kind",
+        "policy_evaluator"
       ],
       "description": "The negotiated management-profile-requirement-v1 identity; the controller pins the requirement digest and matches every member.",
       "properties": {
@@ -243,6 +247,18 @@
           "$ref": "#/$defs/id"
         },
         "canonicalization": {
+          "$ref": "#/$defs/id"
+        },
+        "schema_id": {
+          "$ref": "#/$defs/id"
+        },
+        "signature_algorithm": {
+          "$ref": "#/$defs/id"
+        },
+        "operation": {
+          "$ref": "#/$defs/id"
+        },
+        "resource_kind": {
           "$ref": "#/$defs/id"
         }
       }

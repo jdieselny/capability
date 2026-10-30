@@ -27,6 +27,28 @@ in `external-evaluator-result-v1`, `schema_version` is
 Authorization Evaluator Result". A Management policy decision never carries
 these names; an external evaluator result always does.
 
+## Negotiated management context
+
+`management_context` records the `management-profile-requirement-v1` the
+evaluator and controller agreed on, plus the values selected from it:
+
+| Member | Meaning |
+|---|---|
+| `requirement_digest` | `sha-256:` over the **complete requirement document** the controller holds |
+| `controller_id`, `administrative_domain` | must equal the requirement |
+| `api_version` | member of `requirement.api_versions` |
+| `schema_id` | member of `requirement.schema_ids` |
+| `canonicalization` | member of `requirement.canonicalization` |
+| `signature_algorithm` | member of `requirement.signature_algorithms` and the integrity format |
+| `operation` | member of `requirement.operations` and equal to the request action |
+| `resource_kind` | member of `requirement.resource_kinds` |
+| `policy_evaluator` | member of `requirement.policy_evaluators` |
+
+The controller recomputes `requirement_digest` from its own requirement
+document, pins the accepted digest, and refuses a selected value the requirement
+did not offer (`IICP-EVAL-SELECTION-NOT-OFFERED`). A selection is not a free
+string.
+
 ## Versioned request projection
 
 `binding.request_projection` is the complete, versioned, canonical input to the
@@ -124,8 +146,9 @@ only then is it composed with the local decision.
    match the request is **rejected**.
 7. An unrecognised integrity format or a mismatched integrity digest is
    **rejected**.
-8. An `allow` result must carry at least one evidence reference, and an evidence
-   URI must be `https:`; otherwise the result is refused.
+8. An `allow` or `allow_unresolved` result must carry at least one evidence
+   reference, and every evidence URI must be `https:`; otherwise the result is
+   refused.
 9. Management does not infer containment or intersection from an
    evaluator-specific language; rejection is fail-closed and maps to deny at the
    local gate, never to allow.
@@ -139,9 +162,11 @@ A controller accepts a result only when its own configuration pins:
 - `evaluator_id` (`IICP-EVAL-EVALUATOR-UNTRUSTED`);
 - the evaluator policy digest (`IICP-EVAL-POLICY-PIN-MISSING` when no set is
   configured, `IICP-EVAL-POLICY-UNTRUSTED` when the digest is absent from it);
-- the negotiated management requirement: its digest must be pinned, and the
-  controller, domain, API version, policy evaluator and canonicalization must
-  match the requirement the controller holds;
+- the negotiated management requirement: its digest must be pinned and
+  recomputed from the controller's own document; every selected value
+  (`api_version`, `schema_id`, `canonicalization`, `signature_algorithm`,
+  `operation`, `resource_kind`, `policy_evaluator`) must be offered by that
+  requirement, and the operation must equal the request action;
 - the parameter identities the controller knows (an unknown id is refused);
 - the optional extension ids the controller declares ignorable; an optional
   extension not declared by id is refused even if the result labels it
@@ -157,7 +182,7 @@ A missing pin set is a refusal, not "pinning disabled".
 | File | Purpose |
 |---|---|
 | `external-evaluator-result-v1.schema.json` | Result artifact schema (JSON Schema 2020-12) |
-| `external-evaluator-binding-cases-v1.json` | 43 cases |
+| `external-evaluator-binding-cases-v1.json` | 48 cases |
 | `validate.py` | Schema, projection digest, integrity, composition, expectations |
 
 ## Cases
@@ -207,6 +232,11 @@ A missing pin set is a refusal, not "pinning disabled".
 | `eval-041-parameter-unknown` | unknown required parameter identity | reject |
 | `eval-042-negotiation-mismatch` | management context differs from the requirement | reject |
 | `eval-043-requirement-untrusted` | requirement digest not pinned | reject |
+| `eval-044-unresolved-evidence-uri` | unresolved result with a non-https evidence URI | reject |
+| `eval-045-unresolved-evidence-missing` | unresolved result without evidence | reject |
+| `eval-046-api-version-not-offered` | selected API version not offered by the requirement | reject |
+| `eval-047-operation-not-offered` | selected operation not offered by the requirement | reject |
+| `eval-048-signature-algorithm-mismatch` | integrity format differs from the negotiated algorithm | reject |
 
 ## Running
 
@@ -218,7 +248,7 @@ python3 validate.py
 Expected:
 
 ```text
-43/43 cases pass
+48/48 cases pass
 ```
 
 `jsonschema` and `cryptography` are required (Ed25519 verification). Each case

@@ -171,12 +171,30 @@ def evaluator_verdict(case: dict) -> tuple[str, list[str], list[str]]:
         return "reject", ["IICP-EVAL-BINDING-MISMATCH"], []
     context = result["management_context"]
     requirement = case["management_requirement"]
+    if context["requirement_digest"] != digest(requirement):
+        return "reject", ["IICP-EVAL-REQUIREMENT-DIGEST"], []
     if context["requirement_digest"] not in case["accepted_requirement_digests"]:
         return "reject", ["IICP-EVAL-REQUIREMENT-UNTRUSTED"], []
-    for field in ("controller_id", "administrative_domain", "api_version",
-                  "policy_evaluator", "canonicalization"):
+    for field in ("controller_id", "administrative_domain"):
         if context[field] != requirement[field]:
             return "reject", ["IICP-EVAL-NEGOTIATION-MISMATCH"], []
+    offered = (
+        ("api_version", "api_versions"),
+        ("schema_id", "schema_ids"),
+        ("canonicalization", "canonicalization"),
+        ("signature_algorithm", "signature_algorithms"),
+        ("operation", "operations"),
+        ("resource_kind", "resource_kinds"),
+        ("policy_evaluator", "policy_evaluators"),
+    )
+    for selected, declared in offered:
+        if context[selected] not in requirement[declared]:
+            return "reject", ["IICP-EVAL-SELECTION-NOT-OFFERED"], []
+    if context["operation"] != projection["action"]:
+        return "reject", ["IICP-EVAL-NEGOTIATION-MISMATCH"], []
+    for signature in result.get("integrity", {}).get("signatures", []):
+        if signature["format"] != context["signature_algorithm"]:
+            return "reject", ["IICP-EVAL-SIGNATURE-ALGORITHM-MISMATCH"], []
 
     known_parameters = set(case.get("known_parameter_ids", []))
     for parameter in projection["parameter_ids"]:
@@ -215,6 +233,12 @@ def evaluator_verdict(case: dict) -> tuple[str, list[str], list[str]]:
 
     if result["decision"] not in {"allow", "deny", "allow_unresolved"}:
         return "reject", ["IICP-EVAL-DECISION-UNKNOWN"], []
+    for item in result["evidence"]:
+        uri = item.get("uri")
+        if uri is not None and not uri.startswith("https://"):
+            return "reject", ["IICP-EVAL-EVIDENCE-URI-UNSUPPORTED"], []
+    if result["decision"] in {"allow", "allow_unresolved"} and not result["evidence"]:
+        return "reject", ["IICP-EVAL-EVIDENCE-MISSING"], []
     if result["decision"] == "deny":
         return "deny", ["IICP-EVAL-DENY"], []
     if result["decision"] == "allow_unresolved":
@@ -247,12 +271,6 @@ def evaluator_verdict(case: dict) -> tuple[str, list[str], list[str]]:
                 return "reject", ["IICP-EVAL-UNRESOLVED-SATISFIED"], []
         return "allow_unresolved", ["IICP-EVAL-UNRESOLVED"] + extension_codes, []
 
-    if result["decision"] == "allow" and not result["evidence"]:
-        return "reject", ["IICP-EVAL-EVIDENCE-MISSING"], []
-    for item in result["evidence"]:
-        uri = item.get("uri")
-        if uri is not None and not uri.startswith("https://"):
-            return "reject", ["IICP-EVAL-EVIDENCE-URI-UNSUPPORTED"], []
     evidence = [item["digest"] for item in result["evidence"]]
     return "allow", ["IICP-EVAL-ALLOW"] + extension_codes, evidence
 
