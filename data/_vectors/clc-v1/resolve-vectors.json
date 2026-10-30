@@ -306,5 +306,17 @@
     "resolutions": [{"constraint": "varwof/constraint-v1:network:cidr:[\"192.0.2.0/24\"]", "status": "satisfied"}],
     "expect": {"verdict": "deny", "reason": "time:violated", "unresolved": []},
     "derivation": "mixed obligations: the network one is satisfied, the core clock places 09:00 outside [00:00,06:00) → deny on the time obligation (§8.5 rule 6)"
+  },
+  {
+    "id": "resolve-027",
+    "kind": "resolve",
+    "spec_clause": "CLC-1.15 §8.5",
+    "clc_revision": "CLC-1.19",
+    "conformance_class": "CLC-A",
+    "decision": {"verdict": "allow_unresolved", "reason": null, "unresolved": ["varwof/constraint-v1:network:cidr:[\"10.0.1.0/24\"]", "varwof/constraint-v1:time:window:[{\"end\":\"15:00\",\"start\":\"14:00\"}]"]},
+    "now": "2026-10-19T15:30:00Z",
+    "resolutions": [{"constraint": "varwof/constraint-v1:network:cidr:[\"10.0.1.0/24\"]", "status": "satisfied"}],
+    "expect": {"verdict": "deny", "reason": "time:violated", "unresolved": []},
+    "derivation": "Contributed by Justin D. Kintzele (J Diesel NY / ECR-WG), profile iicp->clc-v1 (out_of_scope execution checks: filesystem:path_canonicalization, filesystem:traversal, network:outbound_url_validation, system:command_injection). Resolve evaluates residual obligations from allow_unresolved. Network constraint is reported satisfied by the consumer. Core clock at now=2026-10-19T15:30:00Z evaluates outside the [14:00, 15:00) window, yielding time:violated. Per §8.5 Clause 1, any violated obligation collapses the verdict to deny."
   }
 ]
