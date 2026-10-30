@@ -1,0 +1,388 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iicp.network/schemas/management/external-evaluator-result-v1.schema.json",
+  "title": "IICP External Authorization Evaluator Result v1",
+  "description": "Optional, non-authorizing result returned by an independently governed external authorization evaluator to an IICP management controller. The artifact is explicitly external: it is not a Management policy decision and does not change management-profile-v1 authority semantics.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evaluator",
+    "decision",
+    "reason_codes",
+    "management_context",
+    "binding",
+    "policy",
+    "freshness",
+    "unresolved",
+    "evidence",
+    "extensions",
+    "authorizes_mutation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "iicp.external-management-evaluator-result.v1"
+    },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "profile_version",
+        "evaluator_id"
+      ],
+      "properties": {
+        "profile_id": {
+          "$ref": "#/$defs/id"
+        },
+        "profile_version": {
+          "$ref": "#/$defs/id"
+        },
+        "evaluator_id": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "decision": {
+      "enum": [
+        "allow",
+        "deny",
+        "allow_unresolved"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_digest",
+        "request_projection"
+      ],
+      "properties": {
+        "request_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "request_projection": {
+          "$ref": "#/$defs/requestProjection"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "digest"
+      ],
+      "properties": {
+        "digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issued_at",
+        "expires_at"
+      ],
+      "properties": {
+        "issued_at": {
+          "$ref": "#/$defs/integer"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/integer"
+        }
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "obligation_id",
+          "responsible_component",
+          "status"
+        ],
+        "properties": {
+          "obligation_id": {
+            "$ref": "#/$defs/id"
+          },
+          "responsible_component": {
+            "$ref": "#/$defs/id"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "satisfied",
+              "violated",
+              "unknown",
+              "unsupported"
+            ]
+          },
+          "reason": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "digest"
+        ],
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/id"
+          },
+          "digest": {
+            "$ref": "#/$defs/digest"
+          },
+          "uri": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/extension"
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signatures"
+      ],
+      "description": "Optional, infrastructure-neutral integrity envelope. A signature format is named, never implied; transport authentication is additional, not a substitute.",
+      "properties": {
+        "signatures": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "format",
+              "key_id",
+              "signed_digest",
+              "value"
+            ],
+            "properties": {
+              "format": {
+                "const": "ed25519"
+              },
+              "key_id": {
+                "$ref": "#/$defs/id"
+              },
+              "signed_digest": {
+                "$ref": "#/$defs/digest",
+                "description": "SHA-256 over the same canonical bytes; cross-check for humans, not the trust anchor"
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048,
+                "description": "base64url Ed25519 signature over the canonical result with the integrity member removed"
+              }
+            }
+          }
+        }
+      }
+    },
+    "authorizes_mutation": {
+      "const": false
+    },
+    "management_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement_digest",
+        "controller_id",
+        "administrative_domain",
+        "api_version",
+        "policy_evaluator",
+        "canonicalization"
+      ],
+      "description": "The negotiated management-profile-requirement-v1 identity; the controller pins the requirement digest and matches every member.",
+      "properties": {
+        "requirement_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "controller_id": {
+          "$ref": "#/$defs/id"
+        },
+        "administrative_domain": {
+          "$ref": "#/$defs/id"
+        },
+        "api_version": {
+          "$ref": "#/$defs/id"
+        },
+        "policy_evaluator": {
+          "$ref": "#/$defs/id"
+        },
+        "canonicalization": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "allow_unresolved"
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "unresolved": {
+            "minItems": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "unresolved": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^\\S+$",
+      "not": {
+        "pattern": "\\s"
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha-256:[0-9a-f]{64}$"
+    },
+    "integer": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "requestProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projection_id",
+        "projection_version",
+        "request_id",
+        "intent_digest",
+        "policy_generation",
+        "parameter_ids",
+        "action",
+        "target",
+        "audience",
+        "administrative_domain"
+      ],
+      "properties": {
+        "projection_id": {
+          "const": "iicp-request-projection"
+        },
+        "projection_version": {
+          "$ref": "#/$defs/integer"
+        },
+        "action": {
+          "$ref": "#/$defs/id"
+        },
+        "target": {
+          "$ref": "#/$defs/id"
+        },
+        "audience": {
+          "$ref": "#/$defs/id"
+        },
+        "administrative_domain": {
+          "$ref": "#/$defs/id"
+        },
+        "authority_context": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "authority_id": {
+              "$ref": "#/$defs/id"
+            },
+            "delegation_digest": {
+              "$ref": "#/$defs/digest"
+            },
+            "request_id": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        },
+        "request_id": {
+          "$ref": "#/$defs/id"
+        },
+        "intent_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "policy_generation": {
+          "$ref": "#/$defs/integer"
+        },
+        "parameter_ids": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
+    "extension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "class"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "class": {
+          "enum": [
+            "OPTIONAL_IGNORABLE",
+            "OPTIONAL_NEGOTIABLE",
+            "REQUIRED_UNDERSTOOD",
+            "REQUIRED_SECURITY_CRITICAL"
+          ]
+        }
+      }
+    }
+  }
+}

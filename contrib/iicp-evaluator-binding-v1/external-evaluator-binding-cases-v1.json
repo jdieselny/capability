@@ -1,0 +1,5092 @@
+{
+  "@version": "iicp.external-evaluator-binding-cases.v1",
+  "cases": [
+    {
+      "id": "eval-001-both-allow",
+      "category": "both local policy and evaluator allow",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:681a74d74447ff842c9f058da2096ee704ae9d46446d62ef5bbbac7d1968afa5",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "derivation": "Local policy allows and the evaluator result is fresh, bound to the request, and allow, so the intersection is allow. The result remains non-authorizing; the local apply gate still decides execution."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-002-evaluator-deny-wins",
+      "category": "local policy permits, external evaluator denies",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-002",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "deny",
+        "reason_codes": [
+          "IICP-EVAL-DENY"
+        ],
+        "binding": {
+          "request_digest": "sha-256:70caffc8cecf7b7bbe7dfad47e6a535bef363360308c45cac3a976f76c6844ae",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-002",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "deny",
+        "reason_codes": [
+          "IICP-EVAL-DENY"
+        ],
+        "derivation": "Composition is by intersection and deny takes precedence. Local allow cannot override the evaluator deny."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-003-local-deny-wins",
+      "category": "local policy denies, external evaluator permits",
+      "local_decision": "deny",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-003",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:a8604a65aa41dc0685a61e0492c9b72c8b9a718870465647573995e77e6319df",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-003",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "deny",
+        "reason_codes": [
+          "IICP-LOCAL-DENY"
+        ],
+        "derivation": "Local policy denies, so the intersection is deny regardless of the evaluator allow. The evaluator result never grants authority the local policy withholds."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-004-unsupported-profile-version",
+      "category": "unknown required evaluator profile version",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-004",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v2",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:cc5fbfd4b937df33bd8d700f413f26dbfba41a7da14d92e11c139b073bf6e005",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-004",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-PROFILE-UNSUPPORTED"
+        ],
+        "derivation": "Unknown required semantics fail profile validation. The controller cannot interpret a profile version it did not negotiate, so the result is rejected rather than read as allow."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-005-allow-unresolved-bound",
+      "category": "allow_unresolved with an identified resolver and explicit downstream outcome",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-005",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "pending"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:4df68c483fbf0c3d3636377bb69a0a48d1f533fcfa3897f9bbe579e4280047b3",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-005",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "derivation": "The evaluator is unresolved but names the component responsible for the remaining check, and the downstream outcome is explicit. The composed outcome stays allow_unresolved and is not execution permission."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-006-allow-unresolved-unbound",
+      "category": "allow_unresolved without an explicit downstream outcome",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-006",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:9a0d9a34b482ac9c18a75f4c9e28b132078b8c19ab9b8de89230968d1280934c",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-006",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED-UNBOUND"
+        ],
+        "derivation": "The evaluator names a resolver but the composed call has no explicit downstream outcome, so the unresolved obligation would become permission by default. It is rejected instead."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-007-stale-result",
+      "category": "stale or expired evaluator result",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-007",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:b435e661992d1cf5724e4895c40af85a72b554101a90ebaddbc4074e252934b0",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-007",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792990000,
+          "expires_at": 1792999000
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-STALE"
+        ],
+        "derivation": "The result expired before the evaluation time. Freshness is part of the binding, so a stale allow is rejected."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-008-binding-mismatch",
+      "category": "result bound to a different action, target, audience, domain or policy generation",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-008",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:9c64a0d40e157cdc1776899bfc68b14c173dbadea758471a9e1f23baae3b61ef",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-replica",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-008",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-REQUEST-DIGEST"
+        ],
+        "derivation": "The controller derives the projection from its own request; the carried projection names a different target, so the digest the controller expects does not match."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-009-optional-extension-ignored",
+      "category": "unsupported optional extension that is safely ignored",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "understood_extensions": [],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-009",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:d64325acebd537fc3ad3dd8e99929e001a1816aeda7c8ed9022327ca6271d3de",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-009",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [
+          {
+            "id": "x-vendor.trace",
+            "class": "OPTIONAL_IGNORABLE"
+          }
+        ],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW",
+          "IICP-EVAL-EXTENSION-IGNORED"
+        ],
+        "derivation": "The only ununderstood extension is declared OPTIONAL_IGNORABLE, so it may be ignored. A REQUIRED_* extension with the same id would be a rejection."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ],
+      "ignorable_extensions": [
+        "x-vendor.trace"
+      ]
+    },
+    {
+      "id": "eval-010-evidence-preserved",
+      "category": "evidence preservation showing which decision and freshness inputs supported the outcome",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-010",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:b574f8b7463762cd2fa393559f43cde9494a2be351b1e24b0160d3fddcb45e51",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-010",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          },
+          {
+            "kind": "freshness-attestation",
+            "digest": "sha-256:4444444444444444444444444444444444444444444444444444444444444444"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "evidence_digests": [
+          "sha-256:3333333333333333333333333333333333333333333333333333333333333333",
+          "sha-256:4444444444444444444444444444444444444444444444444444444444444444"
+        ],
+        "derivation": "The composed outcome preserves the evaluator evidence references. Management records the decision and freshness inputs without importing raw credentials or unrestricted policy content."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-011-local-unresolved",
+      "category": "local policy is unresolved, evaluator permits",
+      "local_decision": "allow_unresolved",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-011",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:fcc56b2aecb97ed133c76ea3341b7528c7c18b26b2bc7ca2db59d573eb732d51",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-011",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "allow_unresolved",
+        "reason_codes": [
+          "IICP-LOCAL-UNRESOLVED"
+        ],
+        "derivation": "The evaluator result is allow, but the local policy is unresolved. Intersection cannot raise the local decision, so the composed outcome stays allow_unresolved and is not execution permission."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-012-signed-result",
+      "category": "result with a verifiable Ed25519 integrity envelope",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:681a74d74447ff842c9f058da2096ee704ae9d46446d62ef5bbbac7d1968afa5",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        },
+        "integrity": {
+          "signatures": [
+            {
+              "format": "ed25519",
+              "key_id": "evaluator-key-1",
+              "signed_digest": "sha-256:987e8353e45d0d1ea105bbad94c86a3c0eefc05250e51435c1b344b45cb61551",
+              "value": "hCsi1_2hMNNA_SjMU_wgpK2JVu85hjDqwW9qFopQGys3U0-c2sZsP_ClWJF5XKG6yOyxxQ_wVGJRRoy1gvfEDA"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "derivation": "The result is bound to the request and fresh, and its Ed25519 signature verifies under the pinned key; the outcome remains allow and non-authorizing."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ],
+      "trusted_keys": {
+        "evaluator-key-1": "wVjYPRE5-lM6OIU5ONrPSEO14-_b1knsbs_pCfFQ4ss"
+      }
+    },
+    {
+      "id": "eval-014-unresolved-unknown-status",
+      "category": "delegated obligation whose resolver cannot determine a status",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-013",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "pending"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:150cf83fcfe4c2d896f2ecc2380ae00063d075d3e866e1c95699244427768dce",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-013",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "unknown"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED-UNKNOWN"
+        ],
+        "derivation": "A delegated obligation with an unknown resolver status cannot be relied on; the local gate must fail closed."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-015-projection-unsupported",
+      "category": "request projection version not accepted",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-014",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:3fe9410dead070abf5a3a37ea2f6f0082659e29f9f0e37cf990e991acf8c0fab",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 2,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-014",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-PROJECTION-UNSUPPORTED"
+        ],
+        "derivation": "The controller does not accept projection version 2, so it cannot interpret the binding and refuses."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-016-unresolved-violated",
+      "category": "delegated obligation resolved as violated",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-015",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "pending"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:0a447138660f0e3be5d0fafd2b7abbcf392e3651ad699995cf858f5647d76a2f",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-015",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "violated"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "deny",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED-VIOLATED"
+        ],
+        "derivation": "A violated delegated obligation denies; it is never an unresolved allow."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-017-obligation-unknown",
+      "category": "obligation identity the controller does not recognise",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-016",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "pending"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:05cabb78d45e77dfb84a529f42f081697c282270cc3f54895758c56df63ffd31",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-016",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:unknown",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-OBLIGATION-UNKNOWN"
+        ],
+        "derivation": "An obligation identity the controller does not recognise is an unknown parameter identity, not a delegated obligation; it fails validation."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-018-integrity-required-missing",
+      "category": "deployment requires integrity but the result carries none",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-017",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:1d481861713bc5eac47ffc0a3922ceb7c7d1c45c0f7b403de28a837ebad8c1a7",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-017",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-INTEGRITY-MISSING"
+        ],
+        "derivation": "The deployment requires a verifiable integrity envelope; a result without one is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "require_integrity": true,
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-019-unrequested-authority-context",
+      "category": "projection carries an authority context the controller did not request",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-018",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:c25a1c73fc0a8a461edabb95126398bb35bab463d45914a5bbadb4c0d1119e50",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:rogue"
+            },
+            "request_id": "req-018",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-REQUEST-DIGEST"
+        ],
+        "derivation": "The controller derives the projection from its own request; an evaluator-added authority context changes the digest it expects, so the result is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-020-optional-negotiable-unknown",
+      "category": "unknown optional-negotiable extension cannot be silently ignored",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-019",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:2d6f17e4a2e70244450b38f2bc9920865de39c67a842fc7c2d96a5a07ca88e09",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-019",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [
+          {
+            "id": "ext:negotiate",
+            "class": "OPTIONAL_NEGOTIABLE"
+          }
+        ],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-EXTENSION-NEGOTIATION-REQUIRED"
+        ],
+        "derivation": "Only OPTIONAL_IGNORABLE may be ignored; an unnegotiated OPTIONAL_NEGOTIABLE extension is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-021-unresolved-duplicate",
+      "category": "the same obligation appears twice in the unresolved list",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-020",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "pending"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:3d3674454fe205aca957ba7769545f2632f49c4d3f4799adb5037895d315933e",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-020",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          },
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED-DUPLICATE"
+        ],
+        "derivation": "A duplicated obligation would be counted twice; the result is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-022-resolver-mismatch",
+      "category": "named resolver is not the responsible component of the obligation",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-021",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:other",
+        "outcome": "pending"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:aaca7f9ab92ae0babf3869aed80615f9a3dcde002ffacdbc4bf388a8693b652d",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-021",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-RESOLVER-MISMATCH"
+        ],
+        "derivation": "The obligation names one resolver and the downstream outcome names another; the binding is inconsistent and refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:other"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-023-policy-untrusted",
+      "category": "evaluator policy digest is not in the controller accepted set",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-022",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:4058fc1b1bf0b98fee5876e313f3053ab70bc0f2b164f2af7af32ad382232da2",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-022",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-POLICY-UNTRUSTED"
+        ],
+        "derivation": "The controller pins the policy digests it accepts; an unpinned evaluator policy is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:9999999999999999999999999999999999999999999999999999999999999999"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-024-local-decision-unknown",
+      "category": "local decision is not one of the three defined states",
+      "local_decision": "error",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-023",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:1d2dc45a8d681d9bc4afe5e0f0838b4dccb9345adbfa19ddbfe74492f4968314",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-023",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-LOCAL-DECISION-UNKNOWN"
+        ],
+        "derivation": "An unrecognised local decision cannot compose; it is refused rather than treated as allow."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-025-unresolved-timeout",
+      "category": "downstream resolver timed out",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-024",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "timed_out"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:a9e2f1151ad27b4b90ea548906ab948f07550fb8fd6b30a01bfcb1a968dcac7a",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-024",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED-TIMEOUT"
+        ],
+        "derivation": "A timed-out resolution fails closed; it is not an unresolved allow."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-026-validity-too-long",
+      "category": "freshness window exceeds the controller maximum",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-025",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:21bc5fb2e8186bc586323be94e5064823d961c242afe0719ba8a5efefe5f8218",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-025",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793996400
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-VALIDITY-TOO-LONG"
+        ],
+        "derivation": "The controller bounds how long a result may remain valid; a longer window is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-027-request-digest-mismatch",
+      "category": "request digest does not match the controller-derived projection",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-026",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:0000000000000000000000000000000000000000000000000000000000000000",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-026",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-REQUEST-DIGEST"
+        ],
+        "derivation": "The digest is checked against the projection the controller derives from its own request."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-028-local-unresolved-violated",
+      "category": "local unresolved cannot mask a violated evaluator obligation",
+      "local_decision": "allow_unresolved",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-027",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "pending"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:72d474466ca966e2c67b218034e3119292fe8e02505990db8b9e790d1a62ae1f",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-027",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "violated"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "deny",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED-VIOLATED"
+        ],
+        "derivation": "Deny and violation take precedence over a local unresolved state."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-029-local-unresolved-required-extension",
+      "category": "local unresolved cannot skip unknown required semantics",
+      "local_decision": "allow_unresolved",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-028",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "pending"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:946ab0fcb678ef49c768c5d3c6ef94dd49eab69c58849a6841d746678f35eee0",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-028",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [
+          {
+            "id": "ext:unknown",
+            "class": "REQUIRED_SECURITY_CRITICAL"
+          }
+        ],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-EXTENSION-REQUIRED-UNKNOWN"
+        ],
+        "derivation": "Unknown required semantics are refused before any composition."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-030-not-yet-valid",
+      "category": "result issued after the controller clock",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-029",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:e6cd8ec6e223ee40fda8cdb364838bd0e3d39ff52f6029970046c1469e81d23e",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-029",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1793000100,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-NOT-YET-VALID"
+        ],
+        "derivation": "A result issued in the controller's future is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-031-extension-duplicate",
+      "category": "the same extension id appears twice",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-030",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:54b02fe1dc02e0d368d9385d255514be7063723d4bb5c5b7048668afdcac269e",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-030",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [
+          {
+            "id": "ext:x",
+            "class": "OPTIONAL_IGNORABLE"
+          },
+          {
+            "id": "ext:x",
+            "class": "OPTIONAL_IGNORABLE"
+          }
+        ],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-EXTENSION-DUPLICATE"
+        ],
+        "derivation": "Duplicate extension identities are refused instead of double-counted."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-032-evaluator-untrusted",
+      "category": "evaluator identity not in the controller accepted set",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-031",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:c8ab51796dd0e2f0305281aa989a1e4470d4ee606a2d5d4752ae702ab383eeee",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-031",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-EVALUATOR-UNTRUSTED"
+        ],
+        "derivation": "The controller pins evaluator identities; an unknown one is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "other-evaluator"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-033-policy-pin-missing",
+      "category": "controller has no accepted policy set",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-032",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:12c6ab8719d49b753ff966c6a590f6e5974e1f1a1bfd10e02379d677c32e86bd",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-032",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-POLICY-PIN-MISSING"
+        ],
+        "derivation": "A missing pin set is a refusal, not pinning disabled."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-034-profile-id-untrusted",
+      "category": "evaluator profile id not pinned",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-033",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:86d356f1f8c9b8ec5e9965bfb3b870c02d0a41cd96c8456ca2897a3f54f0ed3e",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-033",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-PROFILE-ID-UNTRUSTED"
+        ],
+        "derivation": "The controller pins the profile identity as well as its version."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "other.profile"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-013-integrity-mismatch",
+      "category": "result with a verifiable Ed25519 integrity envelope",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:681a74d74447ff842c9f058da2096ee704ae9d46446d62ef5bbbac7d1968afa5",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        },
+        "integrity": {
+          "signatures": [
+            {
+              "format": "ed25519",
+              "key_id": "evaluator-key-1",
+              "signed_digest": "sha-256:987e8353e45d0d1ea105bbad94c86a3c0eefc05250e51435c1b344b45cb61551",
+              "value": "hSsi1_2hMNNA_SjMU_wgpK2JVu85hjDqwW9qFopQGys3U0-c2sZsP_ClWJF5XKG6yOyxxQ_wVGJRRoy1gvfEDA"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-INTEGRITY-SIGNATURE-INVALID"
+        ],
+        "derivation": "The Ed25519 signature does not verify."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ],
+      "trusted_keys": {
+        "evaluator-key-1": "wVjYPRE5-lM6OIU5ONrPSEO14-_b1knsbs_pCfFQ4ss"
+      }
+    },
+    {
+      "id": "eval-035-integrity-key-unknown",
+      "category": "result with a verifiable Ed25519 integrity envelope",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:681a74d74447ff842c9f058da2096ee704ae9d46446d62ef5bbbac7d1968afa5",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        },
+        "integrity": {
+          "signatures": [
+            {
+              "format": "ed25519",
+              "key_id": "evaluator-key-1",
+              "signed_digest": "sha-256:987e8353e45d0d1ea105bbad94c86a3c0eefc05250e51435c1b344b45cb61551",
+              "value": "hCsi1_2hMNNA_SjMU_wgpK2JVu85hjDqwW9qFopQGys3U0-c2sZsP_ClWJF5XKG6yOyxxQ_wVGJRRoy1gvfEDA"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-INTEGRITY-KEY-UNKNOWN"
+        ],
+        "derivation": "A signature under an unpinned key is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-036-integrity-signature-invalid",
+      "category": "result with a verifiable Ed25519 integrity envelope",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "deny",
+        "reason_codes": [
+          "IICP-EVAL-DENY"
+        ],
+        "binding": {
+          "request_digest": "sha-256:681a74d74447ff842c9f058da2096ee704ae9d46446d62ef5bbbac7d1968afa5",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        },
+        "integrity": {
+          "signatures": [
+            {
+              "format": "ed25519",
+              "key_id": "evaluator-key-1",
+              "signed_digest": "sha-256:987e8353e45d0d1ea105bbad94c86a3c0eefc05250e51435c1b344b45cb61551",
+              "value": "hCsi1_2hMNNA_SjMU_wgpK2JVu85hjDqwW9qFopQGys3U0-c2sZsP_ClWJF5XKG6yOyxxQ_wVGJRRoy1gvfEDA"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-INTEGRITY-MISMATCH"
+        ],
+        "derivation": "Changing the decision changes the canonical bytes."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ],
+      "trusted_keys": {
+        "evaluator-key-1": "wVjYPRE5-lM6OIU5ONrPSEO14-_b1knsbs_pCfFQ4ss"
+      }
+    },
+    {
+      "id": "eval-037-intent-mismatch",
+      "category": "intent digest does not match the request body",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:816e0e01c095e849c383d51e90568294a6f45d1583b0e4fbe14f1e1f7d715fc7",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:0000000000000000000000000000000000000000000000000000000000000000",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-REQUEST-DIGEST"
+        ],
+        "derivation": "The controller recomputes the intent digest from its own request bytes; a different digest is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-038-extension-not-declared",
+      "category": "both local policy and evaluator allow",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:681a74d74447ff842c9f058da2096ee704ae9d46446d62ef5bbbac7d1968afa5",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [
+          {
+            "id": "x-vendor.trace",
+            "class": "OPTIONAL_IGNORABLE"
+          }
+        ],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-EXTENSION-NOT-DECLARED"
+        ],
+        "derivation": "An optional extension is ignorable only when the controller profile declares that id."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-039-evidence-missing",
+      "category": "both local policy and evaluator allow",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:681a74d74447ff842c9f058da2096ee704ae9d46446d62ef5bbbac7d1968afa5",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-EVIDENCE-MISSING"
+        ],
+        "derivation": "An allow must carry at least one evidence reference."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-040-unresolved-unsupported",
+      "category": "allow_unresolved with an identified resolver and explicit downstream outcome",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-005",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "downstream": {
+        "resolved_by": "sentinel:approval",
+        "outcome": "unsupported"
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow_unresolved",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED"
+        ],
+        "binding": {
+          "request_digest": "sha-256:4df68c483fbf0c3d3636377bb69a0a48d1f533fcfa3897f9bbe579e4280047b3",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-005",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [
+          {
+            "obligation_id": "approval:manager",
+            "responsible_component": "sentinel:approval",
+            "status": "pending"
+          }
+        ],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-UNRESOLVED-UNSUPPORTED"
+        ],
+        "derivation": "An unsupported resolution fails closed, distinctly from a timeout."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "known_obligations": {
+        "approval:manager": "sentinel:approval"
+      },
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-041-parameter-unknown",
+      "category": "both local policy and evaluator allow",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:unknown"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:ae09d05f641a0e9c4c11f8760a35ed6cde45a48c734ebafe89a342c34bf7fe25",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:unknown"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-PARAMETER-UNKNOWN"
+        ],
+        "derivation": "A required parameter identity the controller does not know is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-042-negotiation-mismatch",
+      "category": "both local policy and evaluator allow",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:681a74d74447ff842c9f058da2096ee704ae9d46446d62ef5bbbac7d1968afa5",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "other-controller",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-NEGOTIATION-MISMATCH"
+        ],
+        "derivation": "The result names a controller different from the negotiated requirement."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92"
+      ]
+    },
+    {
+      "id": "eval-043-requirement-untrusted",
+      "category": "both local policy and evaluator allow",
+      "local_decision": "allow",
+      "accepted_profile_versions": [
+        "iicp.management-evaluator.v1"
+      ],
+      "now": 1793000000,
+      "request": {
+        "action": "apply",
+        "target": "resource:db-primary",
+        "audience": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "policy_generation": 7,
+        "authority_context": {
+          "authority_id": "iicp:authority:treasury"
+        },
+        "request_id": "req-001",
+        "intent": "{\"operation\":\"apply\",\"parameters\":{}}",
+        "parameter_ids": [
+          "param:operation"
+        ]
+      },
+      "result": {
+        "schema_version": "iicp.external-management-evaluator-result.v1",
+        "evaluator": {
+          "profile_id": "iicp.management-evaluator",
+          "profile_version": "iicp.management-evaluator.v1",
+          "evaluator_id": "eval-1"
+        },
+        "decision": "allow",
+        "reason_codes": [
+          "IICP-EVAL-ALLOW"
+        ],
+        "binding": {
+          "request_digest": "sha-256:681a74d74447ff842c9f058da2096ee704ae9d46446d62ef5bbbac7d1968afa5",
+          "request_projection": {
+            "projection_id": "iicp-request-projection",
+            "projection_version": 1,
+            "action": "apply",
+            "target": "resource:db-primary",
+            "audience": "controller-prod-1",
+            "administrative_domain": "prod.example",
+            "authority_context": {
+              "authority_id": "iicp:authority:treasury"
+            },
+            "request_id": "req-001",
+            "intent_digest": "sha-256:fde87429a79727852e2d6c66a868a2527c12f12ee21f07813231a4f83520115a",
+            "policy_generation": 7,
+            "parameter_ids": [
+              "param:operation"
+            ]
+          }
+        },
+        "policy": {
+          "digest": "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        "freshness": {
+          "issued_at": 1792996400,
+          "expires_at": 1793003600
+        },
+        "unresolved": [],
+        "evidence": [
+          {
+            "kind": "policy-snapshot",
+            "digest": "sha-256:3333333333333333333333333333333333333333333333333333333333333333"
+          }
+        ],
+        "extensions": [],
+        "authorizes_mutation": false,
+        "management_context": {
+          "requirement_digest": "sha-256:ddbe3252850c67b20bd89a0ef4f415d38307d1106a82fd9fd15a98825f832b92",
+          "controller_id": "controller-prod-1",
+          "administrative_domain": "prod.example",
+          "api_version": "iicp.management.v1",
+          "policy_evaluator": "iicp.management-evaluator",
+          "canonicalization": "rfc8785"
+        }
+      },
+      "expected": {
+        "outcome": "reject",
+        "reason_codes": [
+          "IICP-EVAL-REQUIREMENT-UNTRUSTED"
+        ],
+        "derivation": "The controller pins the requirement digest; an unpinned one is refused."
+      },
+      "accepted_request_projections": [
+        "iicp-request-projection.v1"
+      ],
+      "accepted_profile_ids": [
+        "iicp.management-evaluator"
+      ],
+      "accepted_evaluator_ids": [
+        "eval-1"
+      ],
+      "accepted_policy_digests": [
+        "sha-256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "max_validity": 7200,
+      "known_parameter_ids": [
+        "param:operation"
+      ],
+      "management_requirement": {
+        "controller_id": "controller-prod-1",
+        "administrative_domain": "prod.example",
+        "api_version": "iicp.management.v1",
+        "policy_evaluator": "iicp.management-evaluator",
+        "canonicalization": "rfc8785"
+      },
+      "accepted_requirement_digests": [
+        "sha-256:9999999999999999999999999999999999999999999999999999999999999999"
+      ]
+    }
+  ]
+}
