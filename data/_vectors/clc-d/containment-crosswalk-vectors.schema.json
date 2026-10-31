@@ -50,12 +50,20 @@
       },
       "expect": {
         "type": "object",
-        "required": ["contains"],
+        "oneOf": [
+          {"required": ["contains"]},
+          {"required": ["map_error"]}
+        ],
         "properties": {
           "contains": {"type": "boolean"},
           "reason": {
             "type": ["string", "null"],
             "description": "Expected reason on a false result (child_exceeds_parent / params_not_narrower / different_namespace)."
+          },
+          "map_error": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Expected profile-level failure code raised before the containment relation (for example linkage_mismatch, or the catch-all mapping_failed). When present, contains is not evaluated."
           }
         }
       },

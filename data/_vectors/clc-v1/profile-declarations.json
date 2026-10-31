@@ -115,7 +115,7 @@
     },
     {
       "profile": "iicp->clc-v1",
-      "corpora": ["clc-d/authorize-crosswalk-vectors.json"],
+      "corpora": ["clc-d/authorize-crosswalk-vectors.json", "clc-d/containment-crosswalk-vectors.json"],
       "chain_check": {
         "iterates_hops": true,
         "relies_on_transitivity": false,
