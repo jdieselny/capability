@@ -1148,5 +1148,61 @@
    "network:outbound_url_validation",
    "system:command_injection"
   ]
+ },
+ {
+  "id": "ccx-047",
+  "kind": "contain-crosswalk",
+  "spec_clause": "CLC §13.4.2 / §13.4.3",
+  "profile": "iicp->clc-v1",
+  "parent_source": {
+   "capabilities": [
+    {
+     "constraints": [
+      "varwof/constraint-v1:network:cidr:[\"10.0.0.0/16\"]",
+      "varwof/constraint-v1:time:window:[{\"end\":\"18:00\",\"start\":\"08:00\"}]"
+     ],
+     "id": "example/power-v1:curtail:*",
+     "params": {
+      "circuit_groups": [
+       1,
+       2,
+       3
+      ],
+      "duration_sec": 7200,
+      "max_shed_kw": 10
+     }
+    }
+   ],
+   "grant_id": "grant-example-curtail-001"
+  },
+  "child_source": {
+   "capabilities": [
+    {
+     "constraints": [
+      "varwof/constraint-v1:network:cidr:[\"10.0.1.0/24\"]",
+      "varwof/constraint-v1:time:window:[{\"end\":\"15:00\",\"start\":\"14:00\"}]"
+     ],
+     "id": "example/power-v1:curtail:ups-unit-01",
+     "params": {
+      "circuit_groups": [
+       2
+      ],
+      "duration_sec": 900,
+      "max_shed_kw": 2.5
+     }
+    }
+   ],
+   "parent_grant_id": "grant-other-001",
+   "workorder_id": "wo-example-curtail-082"
+  },
+  "expect": {
+   "map_error": "linkage_mismatch"
+  },
+  "derivation": "Negative linkage case contributed by the CLC editor: the child narrows the macro capability but names a different parent grant. The iicp->clc-v1 profile must fail closed with linkage_mismatch before the containment relation rather than report contains. Execution-boundary checks, not part of Contains: filesystem:path_canonicalization, filesystem:traversal, network:outbound_url_validation, system:command_injection.",
+  "out_of_scope": [
+   "grant_id",
+   "parent_grant_id",
+   "workorder_id"
+  ]
  }
 ]
